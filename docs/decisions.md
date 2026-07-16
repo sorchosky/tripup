@@ -6,6 +6,15 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-16 — Real Lisbon venue & lodging data locked
+- **Lodging, 2 landmarks, and dinner/lunch/coffee/breakfast options are now real, named Lisbon
+  places** (address, lat/lng, rating, phone) — see `CONTENT.md`. Resolves the poll's "3 named spots"
+  TBD.
+- **Belém Tower is closed for restoration** as of early 2026 per recent reviews — kept as a landmark
+  stop, noted as a caveat rather than dropped.
+- **Dinner poll options aren't a literal "trattoria"** — flags a mismatch with the existing brand
+  reference line ("Trattoria wins, 4 to 2"); Question/Result wording still `TBD`.
+
 ### 2026-07-16 — Repo framework scaffolded (this pass)
 - **Local MD files are the source of truth** in the repo (mirrored from Notion), so the design intent
   travels with the code and is readable at generate-time. Notion remains upstream/narrative.
@@ -30,4 +39,5 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 ### Pending (not yet decided — tracked elsewhere)
 - Design token values — see `DESIGN.md`.
 - Which 2 screens become the hi-fi pair (lean: poll voting + settle up).
-- Final mock-data values (restaurant names, amounts, 4th participant?) — see `CONTENT.md`.
+- Final mock-data values (expense amounts, 4th participant) — restaurant/lodging/landmark names now
+  locked, see `CONTENT.md`.

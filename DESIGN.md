@@ -119,4 +119,4 @@ demo values ad hoc — add them to `CONTENT.md` first.
 
 - Design tokens (all of the above) — pending Day 1–3 design decisions.
 - Which 2 screens become the full hi-fi pair (current lean: poll voting + settle up).
-- Final restaurant names and expense amounts — see `CONTENT.md`.
+- Final expense amounts — restaurant/lodging/landmark names now locked, see `CONTENT.md`.
