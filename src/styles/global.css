@@ -1,0 +1,76 @@
+/*
+ * global.css — base reset + the locked device frame.
+ *
+ * The app always renders inside a 390x844 frame (the iPhone 14 reference device, no scaling).
+ * On desktop the frame is centered on a neutral backdrop; the frame's interior behaves as the device.
+ */
+
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  background: #d9d9d9; /* backdrop behind the device frame (desktop only) */
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The locked device frame. */
+.device-frame {
+  width: var(--device-width);
+  height: var(--device-height);
+  background: var(--color-surface);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* On an actual small screen, fill it instead of showing the backdrop. */
+@media (max-width: 430px) {
+  body {
+    background: var(--color-surface);
+  }
+  .device-frame {
+    width: 100vw;
+    height: 100vh;
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
+
+@media (min-width: 431px) {
+  .device-frame {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--elevation-2);
+  }
+}
+
+.screen {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-4);
+}
+
+a {
+  color: var(--color-primary);
+}

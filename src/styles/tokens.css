@@ -1,0 +1,60 @@
+/*
+ * tokens.css — TripUp design token layer
+ *
+ * This is the contract components consume. Reference tokens by role (var(--color-owed)), never raw
+ * literals. See DESIGN.md for the spec these mirror.
+ *
+ * STATUS: PLACEHOLDER. Color/type values below are neutral grayscale defaults so the shell runs —
+ * they are NOT the real brand system. Replace them (here and in DESIGN.md, together) when the tokens
+ * are finalized. Each PLACEHOLDER line is a design decision still pending.
+ */
+
+:root {
+  /* ---- Spacing scale (8pt) — real system decision, safe to use ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Type ramp — PLACEHOLDER sizes/weights (TBD in DESIGN.md) ---- */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-size-display: 32px; /* PLACEHOLDER */
+  --font-size-title: 22px;   /* PLACEHOLDER */
+  --font-size-body: 16px;    /* PLACEHOLDER */
+  --font-size-label: 14px;   /* PLACEHOLDER */
+  --font-size-caption: 12px; /* PLACEHOLDER */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --line-height-tight: 1.2;
+  --line-height-body: 1.5;
+
+  /* ---- Semantic color roles — PLACEHOLDER grayscale (real palette TBD) ---- */
+  --color-primary: #3a3a3a;         /* PLACEHOLDER */
+  --color-on-primary: #ffffff;      /* PLACEHOLDER */
+  --color-settled: #4a4a4a;         /* PLACEHOLDER — success / "everyone's even" */
+  --color-owed: #6a6a6a;            /* PLACEHOLDER — warning / "you owe" */
+  --color-surface: #ffffff;         /* PLACEHOLDER */
+  --color-surface-raised: #f4f4f4;  /* PLACEHOLDER */
+  --color-border: #e2e2e2;          /* PLACEHOLDER */
+  --color-text: #1a1a1a;            /* PLACEHOLDER */
+  --color-text-muted: #6a6a6a;      /* PLACEHOLDER */
+
+  /* ---- Corner radius scale — PLACEHOLDER (TBD) ---- */
+  --radius-sm: 6px;    /* PLACEHOLDER */
+  --radius-md: 12px;   /* PLACEHOLDER */
+  --radius-lg: 20px;   /* PLACEHOLDER */
+  --radius-full: 999px;
+
+  /* ---- Elevation — PLACEHOLDER (TBD) ---- */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.06);  /* PLACEHOLDER */
+  --elevation-2: 0 4px 12px rgba(0, 0, 0, 0.10); /* PLACEHOLDER */
+
+  /* ---- Reference device (locked) ---- */
+  --device-width: 390px;
+  --device-height: 844px;
+}
