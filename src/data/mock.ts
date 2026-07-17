@@ -122,49 +122,27 @@ export const LANDMARKS: Landmark[] = [
   },
 ];
 
-// TODO: add a Poll type (question, options, closesAt, result) once CONTENT.md's Poll section locks
-// Question/Result copy. Screens 4-6 consume DINNER_POLL_OPTIONS directly until then.
-export const DINNER_POLL_OPTIONS: Venue[] = [
-  {
-    id: 'a-nossa-casa',
-    name: 'A Nossa Casa',
-    vibe: 'intimate, homey',
-    cuisine: 'Portuguese-Nepali fusion, small plates',
-    neighborhood: 'Bairro Alto',
-    address: 'R. da Atalaia 31, 1200-037 Lisboa, Portugal',
-    lat: 38.7118452,
-    lng: -9.1449444,
-    rating: 4.8,
-    priceLevel: 2,
-    phone: '+351 21 342 0484',
-  },
-  {
-    id: 'taberna-sal-grosso',
-    name: 'Taberna Sal Grosso',
-    vibe: 'casual, lively tavern',
-    cuisine: 'Portuguese tapas',
-    neighborhood: 'Santa Apolónia',
-    address: 'Calçada do Forte 22, 1100-256 Lisboa, Portugal',
-    lat: 38.7136987,
-    lng: -9.1244447,
-    rating: 4.7,
-    priceLevel: 1,
-    phone: '+351 910 137 713',
-  },
-  {
-    id: 'black-pavilion-restaurant',
-    name: 'Black Pavilion Restaurant',
-    vibe: 'upscale, romantic rooftop view',
-    cuisine: 'Contemporary Portuguese',
-    neighborhood: 'Torel Palace',
-    address: 'R. Câmara Pestana 45, 1150-082 Lisboa, Portugal',
-    lat: 38.7184707,
-    lng: -9.140129,
-    rating: 4.7,
-    priceLevel: 3,
-    phone: '+351 21 809 9132',
-  },
-];
+export interface PollOption {
+  id: string;
+  name: string;
+  votes: number;
+}
+
+// Poll result (CONTENT.md → Poll). Sourced from the poll-status-and-reveal hi-fi mock — this
+// supersedes an earlier draft candidate list that didn't match the mock's actual venues/result.
+export const DINNER_POLL = {
+  question: 'Where should we eat tonight?',
+  closedAt: '6:32 PM',
+  totalVoters: 3,
+  votesIn: 3,
+  options: [
+    { id: 'cervejaria-ramiro', name: 'Cervejaria Ramiro', votes: 2 },
+    { id: 'time-out-market', name: 'Time Out Market', votes: 1 },
+    { id: 'a-cevicheria', name: 'A Cevicheria', votes: 0 },
+  ] as PollOption[],
+  winnerId: 'cervejaria-ramiro',
+  winnerMeta: 'Seafood · 4 min walk · €€',
+};
 
 export const LUNCH_OPTIONS: Venue[] = [
   {

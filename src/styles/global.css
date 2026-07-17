@@ -60,8 +60,8 @@ body {
 
 @media (min-width: 431px) {
   .device-frame {
-    border-radius: var(--radius-lg);
-    box-shadow: var(--elevation-2);
+    border-radius: var(--radius-device);
+    box-shadow: var(--elevation-glass);
   }
 }
 
