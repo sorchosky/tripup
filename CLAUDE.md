@@ -41,6 +41,7 @@ amounts, or brief language to make a file look finished. If a real value is need
 | `CONTENT.md` | Canonical mock data (names, restaurants, amounts) — one source so copy and code agree |
 | `docs/brief.md` | Evaluator-facing QA & scoring rubric. The acceptance gate for every iteration |
 | `docs/decisions.md` | Dated log of decisions already made |
+| `docs/wireframe-handoff.md` | **Transient.** One-time Figma→code handoff for the first pass — screen-state logic not visible in the layer tree. Retire once screens are ported |
 
 Upstream source of truth for the design/brand narrative is the user's Notion project space; these
 files are the machine-readable mirror that travels with the code. Notion links are in each file's
