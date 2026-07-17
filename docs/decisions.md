@@ -6,6 +6,33 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-17 — First pass of the coded flow built (all 9 routes)
+
+The skeleton is now a working prototype. Ari's Lisbon journey plays end to end and every graded state
+change fires through the shared `useReducer` store (`src/state/TripContext.tsx`).
+
+- **Screens 7 + 8 fused** into one `/split` "Scan & assign" screen, matching the hi-fi mock's two-step
+  "Scan & assign · Settle up" framing (this resolves the DESIGN.md open question). Settle-up is the
+  second step at `/settle`. Net flow is 9 routes, under the ≤10 budget.
+- **Single-user Ari POV.** No "view as Ren" toggle; the participant-POV wireframe frames
+  (`ren-poll-notification`, `ren-your-share`) are not built. The story reads from Ari's seat; poll
+  voting still animates Ren/Nic's votes arriving live, and settle-up shows who-pays-whom.
+- **Both hi-fi screens ported faithfully** (`PollClosedScreen`, `SplitScreen`) — verified against the
+  Figma via headless-Chromium screenshots. The winner-card photo is a warm CSS-gradient placeholder
+  (the Figma image asset isn't in the repo and the egress policy blocks fetching it); flagged as a
+  stand-in, not invented content.
+- **Real debt logic** implemented in `src/lib/settle.ts` (per-item cent splitting with drift-to-payer
+  + greedy min-transfer). Output matches the hi-fi footer (Ari €57.34 · Ren €25.33 · Nic €25.33) and
+  the "two transfers close it out" narrative, and recomputes live as per-item exclusions toggle.
+- **Trip starts with Ari + Nic**; Ari adds Ren on screen 3 (the 2→3 avatar transition). Roster is kept
+  in canonical A · R · N order for display.
+- **Type system loaded** via Google Fonts (Bricolage Grotesque + Hanken Grotesk) in `index.html`.
+- **Honest placeholders kept visible:** Home's "past trips" is an empty state (no invented trips);
+  the itinerary is seeded only from CONTENT.md's real Lisbon places; trip dates stay TBD (day labels
+  are relative). No fabricated names/amounts/dates were added to make screens look finished.
+- Component set built in `src/components/` (chrome, avatar/pill/button primitives, icons) consuming
+  tokens by role; new glass/avatar/tracking tokens added to `tokens.css` + DESIGN.md's token notes.
+
 ### 2026-07-17 — Hi-fi mocks landed; visual design tokens locked
 - Two screens drafted at high fidelity in Figma (`poll-status-and-reveal`, `receipt-capture-itemize`)
   are now the **source of truth for visual design** — see `DESIGN.md` → "Visual design reference

@@ -38,7 +38,9 @@
   --line-height-body: 1.5;
   --tracking-display: -0.52px;
   --tracking-title: -0.2px;
-  --tracking-eyebrow: 0.72px;
+  --tracking-eyebrow: 0.72px;       /* section eyebrows (CAPTURED RECEIPT, ITEMS) */
+  --tracking-eyebrow-wide: 1.08px;  /* RESULTS · 3/3 VOTED, "Winner" badge */
+  --tracking-pill: 0.48px;          /* status-pill labels ("Poll closed") */
 
   /* ---- Semantic color roles — LOCKED, from hi-fi mocks ---- */
   --color-primary: #5a45d6;
@@ -69,6 +71,19 @@
   --elevation-card: 0px 4px 7px rgba(22, 25, 42, 0.08);
   --elevation-glass: 0px 8px 40px rgba(0, 0, 0, 0.12);       /* nav buttons, sticky footer */
   --elevation-primary-button: 0px 6px 16px rgba(90, 69, 214, 0.24);
+
+  /* ---- Frosted "liquid glass" chrome — LOCKED, from hi-fi mocks ----
+   * iOS-26-style refraction faked by stacking a white layer, a color-burn layer, and a darken layer
+   * over whatever scrolls beneath. Reserved for floating chrome (nav icon buttons, sticky footer). */
+  --glass-white: rgba(255, 255, 255, 0.65);
+  --glass-burn: #dddddd;    /* mix-blend-mode: color-burn */
+  --glass-darken: #f7f7f7;  /* mix-blend-mode: darken */
+
+  /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */
+  --avatar-sm: 24px;   /* rank badges, poll rows */
+  --avatar-md: 28px;   /* footer subtotals, home/trip avatar groups */
+  --avatar-lg: 32px;   /* per-item "Assigned to" chips */
+  --avatar-outline-width: 1.5px;
 
   /* ---- Reference device (locked) ---- */
   --device-width: 390px;

@@ -17,28 +17,73 @@ export const PARTICIPANTS: Participant[] = [
   { id: 'ari', name: 'Ari', role: 'organizer' },
   { id: 'ren', name: 'Ren', role: 'participant' },
   { id: 'nic', name: 'Nic', role: 'participant' },
-  // TODO: a 4th participant if debt consolidation needs to be non-trivial (see CONTENT.md).
 ];
 
+/**
+ * The flow opens with Ari + Nic already on the trip; Ari brings Ren in on screen 3 (Add participant).
+ * This is the wireframe's 2-avatars → 3-avatars transition (wireframe-handoff.md §1), so the "add a
+ * participant" beat has something to actually do. Ren is defined above but not seeded here.
+ */
+export const INITIAL_PARTICIPANT_IDS = ['ari', 'nic'] as const;
+export const ORGANIZER_ID = 'ari' as const;
+
+export function participantById(id: string): Participant {
+  const p = PARTICIPANTS.find((x) => x.id === id);
+  if (!p) throw new Error(`Unknown participant: ${id}`);
+  return p;
+}
+
 export const TRIP = {
+  id: 'lisbon-2026',
   destination: 'Lisbon',
-  name: null as string | null, // TODO: lock in CONTENT.md
-  dates: null as string | null, // TODO: lock in CONTENT.md
+  name: 'Lisbon 2026', // per the poll confirmation "Added to Lisbon 2026" (CONTENT.md → The trip)
+  dates: null as string | null, // Trip dates remain TBD in CONTENT.md — not invented here.
+};
+
+/**
+ * A single line on the scanned receipt (CONTENT.md → Expenses). Amounts are in minor units (euro
+ * cents) so all splitting stays in exact integers — see src/lib/settle.ts.
+ */
+export interface ReceiptItem {
+  id: string;
+  qty: number;
+  label: string;
+  amountCents: number;
+  /** Participant ids this line is split across. The wine defaults to Ari only (Ren + Nic excluded). */
+  defaultSharedBy: string[];
+  /** One line carries a mocked low-confidence OCR flag (the Vinho Verde), per the hi-fi mock. */
+  needsReview?: boolean;
+}
+
+/**
+ * The dinner at Cervejaria Ramiro — the one shared cost that drives the whole money flow. Sourced
+ * from the receipt on the `receipt-capture-itemize` hi-fi mock (CONTENT.md → Expenses / Receipt scan).
+ * Ari paid the tab; the split (and the wine exclusion) resolve balances and, in turn, the settle-up.
+ */
+export const DINNER_RECEIPT = {
+  id: 'dinner-ramiro',
+  merchant: 'Cervejaria Ramiro',
+  locationDate: 'Lisbon · Jun 17, 21:44',
+  payerId: 'ari',
+  totalCents: 10800,
+  items: [
+    { id: 'couvert', qty: 3, label: 'Couvert (bread & olives)', amountCents: 750, defaultSharedBy: ['ari', 'ren', 'nic'] },
+    { id: 'arroz', qty: 2, label: 'Arroz de marisco', amountCents: 4400, defaultSharedBy: ['ari', 'ren', 'nic'] },
+    { id: 'gambas', qty: 1, label: 'Gambas à guilho', amountCents: 1850, defaultSharedBy: ['ari', 'ren', 'nic'] },
+    { id: 'vinho', qty: 2, label: 'Vinho Verde (bottle)', amountCents: 3200, defaultSharedBy: ['ari'], needsReview: true },
+    { id: 'nata', qty: 3, label: 'Pastéis de nata', amountCents: 600, defaultSharedBy: ['ari', 'ren', 'nic'] },
+  ] as ReceiptItem[],
 };
 
 export interface Expense {
   id: string;
   label: string;
   payerId: string;
-  /** Minor units (e.g. cents). */
+  /** Minor units (euro cents). */
   amount: number;
   /** Participant ids sharing this expense (exclusions are simply omitted). */
   sharedBy: string[];
 }
-
-// TODO: lock the expense set (amounts, venue names, the wine exclusion of Ren + Nic) in CONTENT.md,
-// then populate this array. The wine expense's `sharedBy` must exclude 'ren' and 'nic'.
-export const EXPENSES: Expense[] = [];
 
 export interface Venue {
   id: string;
@@ -193,6 +238,39 @@ export const COFFEE_OPTIONS: Venue[] = [
     phone: '+351 911 845 360',
   },
 ];
+
+/**
+ * Itinerary timeline shown on the trip hub (screen 2). Seeded from CONTENT.md's real Lisbon places
+ * (lodging + landmarks); the dinner slot is intentionally absent at first and gets written in when the
+ * poll closes (screen 6 → itinerary), then flips paid → after settle-up. `time` is only set for
+ * time-sensitive events (wireframe annotation 29:2373); day labels stay relative since trip dates are
+ * still TBD in CONTENT.md.
+ */
+export type ItineraryStatus = 'planned' | 'pending' | 'paid';
+
+export interface ItineraryItem {
+  id: string;
+  day: string;
+  time: string | null;
+  title: string;
+  subtitle: string;
+  status: ItineraryStatus;
+}
+
+export const INITIAL_ITINERARY: ItineraryItem[] = [
+  { id: 'checkin', day: 'Today', time: '15:00', title: 'Check in — Dear Lisbon', subtitle: 'Gallery House · São Bento', status: 'paid' },
+  { id: 'belem', day: 'Today', time: null, title: 'Belém Tower & Pastéis de Belém', subtitle: 'Riverfront walk · pastel de nata stop', status: 'planned' },
+];
+
+/** The itinerary card the poll winner writes in (screen 6). Kept here so the copy/venue stay canonical. */
+export const DINNER_ITINERARY_ITEM: ItineraryItem = {
+  id: 'dinner',
+  day: 'Today',
+  time: '21:00',
+  title: 'Dinner — Cervejaria Ramiro',
+  subtitle: DINNER_POLL.winnerMeta,
+  status: 'pending',
+};
 
 export const BREAKFAST_OPTIONS: Venue[] = [
   {

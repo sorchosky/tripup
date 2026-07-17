@@ -1,57 +1,187 @@
 /**
- * TripContext — shared trip state for the flow.
+ * TripContext — the one shared store the whole flow plays through.
  *
- * SKELETON: the reducer is intentionally minimal. As screens are built, extend TripState and the
- * actions so the graded transitions fire through here (adding a participant, casting/closing a vote,
- * logging an expense with exclusions, recalculating balances, settling up). Keeping state in one
- * reducer is what lets the flow actually play out across screens rather than faking each screen.
+ * Every graded state change in the brief fires as an action here, so the screens read from a single
+ * evolving trip rather than faking their own state:
+ *   - ADD_PARTICIPANT  → Ren joins (2 avatars → 3)                        [screen 3]
+ *   - CAST_VOTE        → live vote counts tick up                        [screen 5]
+ *   - CLOSE_POLL       → winner resolves AND writes into the itinerary   [screen 6]
+ *   - TOGGLE_ASSIGNEE  → per-item exclusion; balances recalculate        [screen 7]
+ *   - SETTLE           → transfers confirmed; the dinner flips to paid   [screens 9–10]
  */
 
-import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from 'react';
-import { PARTICIPANTS, type Participant } from '../data/mock';
+import { createContext, useContext, useMemo, useReducer, type Dispatch, type ReactNode } from 'react';
+import {
+  DINNER_ITINERARY_ITEM,
+  DINNER_POLL,
+  DINNER_RECEIPT,
+  INITIAL_ITINERARY,
+  INITIAL_PARTICIPANT_IDS,
+  PARTICIPANTS,
+  participantById,
+  type ItineraryItem,
+  type Participant,
+} from '../data/mock';
+import { computeBalances, computeShares, settle, type Assignment, type Transfer } from '../lib/settle';
+
+export type PollStatus = 'none' | 'open' | 'closed';
+
+export interface PollOptionState {
+  id: string;
+  name: string;
+  votes: number;
+  /** Participant ids who have voted for this option. */
+  votedBy: string[];
+}
+
+export interface PollState {
+  status: PollStatus;
+  question: string;
+  closedAt: string;
+  options: PollOptionState[];
+  winnerId: string | null;
+}
 
 export interface TripState {
   participants: Participant[];
-  // TODO: poll (options, votes, status, winner), expenses (with exclusions), balances, settlements.
+  poll: PollState;
+  itinerary: ItineraryItem[];
+  /** Per-receipt-item assignment for the dinner; seeded from each line's default split. */
+  assignment: Assignment;
+  settled: boolean;
 }
 
 export type TripAction =
-  | { type: 'ADD_PARTICIPANT'; participant: Participant };
-// TODO: | { type: 'CAST_VOTE'; ... } | { type: 'CLOSE_POLL' } | { type: 'LOG_EXPENSE'; ... } | { type: 'SETTLE' }
+  | { type: 'ADD_PARTICIPANT'; id: string }
+  | { type: 'CAST_VOTE'; optionId: string; voterId: string }
+  | { type: 'CLOSE_POLL' }
+  | { type: 'TOGGLE_ASSIGNEE'; itemId: string; personId: string }
+  | { type: 'SETTLE' }
+  | { type: 'RESET' };
 
-const initialState: TripState = {
-  participants: PARTICIPANTS,
-};
+function seedAssignment(): Assignment {
+  return Object.fromEntries(DINNER_RECEIPT.items.map((it) => [it.id, [...it.defaultSharedBy]]));
+}
+
+function initialState(): TripState {
+  return {
+    participants: INITIAL_PARTICIPANT_IDS.map(participantById),
+    poll: {
+      status: 'none',
+      question: DINNER_POLL.question,
+      closedAt: DINNER_POLL.closedAt,
+      options: DINNER_POLL.options.map((o) => ({ id: o.id, name: o.name, votes: 0, votedBy: [] })),
+      winnerId: null,
+    },
+    itinerary: INITIAL_ITINERARY,
+    assignment: seedAssignment(),
+    settled: false,
+  };
+}
 
 function reducer(state: TripState, action: TripAction): TripState {
   switch (action.type) {
-    case 'ADD_PARTICIPANT':
-      return { ...state, participants: [...state.participants, action.participant] };
+    case 'ADD_PARTICIPANT': {
+      if (state.participants.some((p) => p.id === action.id)) return state;
+      // Keep the roster in canonical order (Ari · Ren · Nic) so avatar rows read A · R · N on every
+      // screen, matching the hi-fi mocks, regardless of the order people were added in.
+      const order = PARTICIPANTS.map((p) => p.id);
+      const participants = [...state.participants, participantById(action.id)].sort(
+        (a, b) => order.indexOf(a.id) - order.indexOf(b.id),
+      );
+      return { ...state, participants };
+    }
+
+    case 'CAST_VOTE': {
+      // Poll opens on the first vote if it hasn't yet. One vote per person; ignore repeats.
+      if (state.poll.options.some((o) => o.votedBy.includes(action.voterId))) return state;
+      const options = state.poll.options.map((o) =>
+        o.id === action.optionId ? { ...o, votes: o.votes + 1, votedBy: [...o.votedBy, action.voterId] } : o,
+      );
+      return { ...state, poll: { ...state.poll, status: 'open', options } };
+    }
+
+    case 'CLOSE_POLL': {
+      if (state.poll.status === 'closed') return state;
+      const winner = [...state.poll.options].sort((a, b) => b.votes - a.votes)[0];
+      const alreadyOnItinerary = state.itinerary.some((i) => i.id === DINNER_ITINERARY_ITEM.id);
+      return {
+        ...state,
+        poll: { ...state.poll, status: 'closed', winnerId: winner?.id ?? null },
+        // The result writes into the itinerary as a pending dinner (graded transition, screen 6).
+        itinerary: alreadyOnItinerary ? state.itinerary : [...state.itinerary, DINNER_ITINERARY_ITEM],
+      };
+    }
+
+    case 'TOGGLE_ASSIGNEE': {
+      const current = state.assignment[action.itemId] ?? [];
+      const next = current.includes(action.personId)
+        ? current.filter((id) => id !== action.personId)
+        : [...current, action.personId];
+      return { ...state, assignment: { ...state.assignment, [action.itemId]: next } };
+    }
+
+    case 'SETTLE': {
+      return {
+        ...state,
+        settled: true,
+        // Once everyone's square, the dinner reads as paid on the itinerary (pending → paid).
+        itinerary: state.itinerary.map((i) =>
+          i.id === DINNER_ITINERARY_ITEM.id ? { ...i, status: 'paid' } : i,
+        ),
+      };
+    }
+
+    case 'RESET':
+      return initialState();
+
     default:
       return state;
   }
 }
 
-const TripStateContext = createContext<TripState | null>(null);
-const TripDispatchContext = createContext<Dispatch<TripAction> | null>(null);
+interface TripStore {
+  state: TripState;
+  dispatch: Dispatch<TripAction>;
+  /** Derived, memoized read models the screens consume. */
+  derived: {
+    votesIn: number;
+    totalVoters: number;
+    leaderId: string | null;
+    /** person id → their share of the dinner, in cents. */
+    shares: Record<string, number>;
+    balances: ReturnType<typeof computeBalances>;
+    transfers: Transfer[];
+  };
+}
+
+const TripContext = createContext<TripStore | null>(null);
 
 export function TripProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  return (
-    <TripStateContext.Provider value={state}>
-      <TripDispatchContext.Provider value={dispatch}>{children}</TripDispatchContext.Provider>
-    </TripStateContext.Provider>
-  );
+  const [state, dispatch] = useReducer(reducer, undefined, initialState);
+
+  const derived = useMemo(() => {
+    const votesIn = state.poll.options.reduce((n, o) => n + o.votes, 0);
+    const ranked = [...state.poll.options].sort((a, b) => b.votes - a.votes);
+    const leaderId = votesIn > 0 && ranked[0].votes > 0 ? ranked[0].id : null;
+
+    const ids = state.participants.map((p) => p.id);
+    const shares = computeShares(DINNER_RECEIPT, state.assignment);
+    const balances = computeBalances(DINNER_RECEIPT, state.assignment, ids);
+    const transfers = settle(balances);
+
+    return { votesIn, totalVoters: state.participants.length, leaderId, shares, balances, transfers };
+  }, [state]);
+
+  const store = useMemo<TripStore>(() => ({ state, dispatch, derived }), [state, derived]);
+  return <TripContext.Provider value={store}>{children}</TripContext.Provider>;
 }
 
-export function useTripState(): TripState {
-  const ctx = useContext(TripStateContext);
-  if (!ctx) throw new Error('useTripState must be used within TripProvider');
+export function useTrip(): TripStore {
+  const ctx = useContext(TripContext);
+  if (!ctx) throw new Error('useTrip must be used within TripProvider');
   return ctx;
 }
 
-export function useTripDispatch(): Dispatch<TripAction> {
-  const ctx = useContext(TripDispatchContext);
-  if (!ctx) throw new Error('useTripDispatch must be used within TripProvider');
-  return ctx;
-}
+/** Convenience re-export so screens don't reach into mock.ts just for the roster type. */
+export const ALL_PARTICIPANTS = PARTICIPANTS;
