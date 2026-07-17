@@ -130,3 +130,108 @@ in, not just Ari's. Concretely:
 switching (a way to toggle "view as Ren" for demo purposes), or is Ren's POV screen just a one-off
 mockup to illustrate the concept, with the real app defaulting to a single logged-in user's context
 from auth? This changes scope meaningfully — worth deciding before Claude Code starts.
+
+---
+
+## 7. Annotation overlay (section 29:854, "Wireframe") — matched by position, not by data
+
+**This section is a different part of the Figma file than sections 1–3 and 6 above.** Those are
+sourced from node **16:501** ("Rev 3"). This section is sourced from node **29:854** ("Wireframe"),
+which has its own `Annotation overlay` frame (29:2348) floating on top of the screens rather than
+living inside them.
+
+**Why this section exists, and why it's shaky.** The Figma API returns each annotation note and each
+connector line as its own positioned object — it does not return which frame or layer a connector is
+*attached to*. So when this file (or the Figma MCP tool) reads the section, it can see an annotation's
+literal x/y coordinates and a nearby screen frame's x/y coordinates, but not the semantic link between
+them. The table below was built by inferring that link from proximity and connector direction — it is
+a best guess, not extracted fact. If an annotation looks like it's floating over the wrong screen, or
+an arrow seems to point at empty space, or a note that should clearly apply to a modal instead reads as
+attached to the frame behind it — that's this same limitation, not a new bug. Re-check against the live
+Figma file (node 29:2348) before trusting a Medium/Low row.
+
+**How to use this table:** treat the Confidence column as a checklist priority, not ground truth.
+- **High** — position + content both point to one obvious target; safe to build against directly.
+- **Medium** — plausible match, but verify direction/attachment in Figma before encoding it as behavior.
+- **Low, verify** — do not build against this row until confirmed; note it as an open question instead.
+
+### Home screen
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| Slide in from right | 29:2371 | Home screen, entry transition | Medium |
+| Slide out toward right | 29:2376 | Home screen, exit transition | Medium |
+| Show avatars for active trip members | 29:2374 | Home, active-card avatar-group (29:886) | High |
+| Not final visual, replace with map outline graphic | 29:2375 | Home, image-placeholder "Lisbon Map Outline" (29:875 / 29:878) | High |
+
+### Home to TripHub transition
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| Liquid glass expanding animation | 29:2377 | Transition when tapping the active trip card on Home, into TripHub | Medium |
+
+### TripHub (itinerary states)
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| "Paid" badge denotes that all delegated costs in Settle Up have been reimbursed | 29:2372 | PAID badge component, used across itinerary event cards (e.g. 29:956) | High |
+| Time only shows for reservations or time-sensitive events | 29:2373 | Event time field on itinerary cards (e.g. "19:00", "11:30") | High |
+| Menu animates away, modal animates in from bottom of screen | 29:2378 | TripHub with Menu open (frame at x=1240) transitioning to Add Member Sheet | Medium |
+| Liquid glass animation takes over tab bar with action menu | 29:2382 | TripHub tab bar opening into the Menu - iPhone action overlay | Medium |
+| Slide in from right | 29:2383 | Transition into TripHub state with Menu overlay open (frame at x=3520) | Medium |
+| Slide out toward right | 29:2388 | Transition out of that TripHub Menu state, into Create Poll | Medium |
+
+### Add Member Sheet
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| Suggested results animate in, capped at 3 most relevant results to not overwhelm the UI | 29:2379 | Add Member Sheet, suggested-results section (29:1482, 29:1613) | Medium |
+| Profile bubble animates in above next to existing participants | 29:2380 | Add Member Sheet, participant avatar row (Frame 4, 29:1478) | Medium |
+| Full section shown for wireframe, this would be positioned higher due to keyboard, overlapping longer list of existing participants | 29:2389 | Add Member Sheet, participant list layout note for keyboard-open state | Medium |
+| Animates down to reveal current trip | 29:2381 | Transition between the two Add Member Sheet states as a participant gets added | Low, verify |
+
+### Create Poll
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| Clear, starts a new form | 29:2387 | Create Poll, "Clear" text button in nav-header (29:1641) | High |
+| AI Suggest, pulls restaurant data from previous trips to suggest restaurants you and frequent travelers may like | 29:2384 | Create Poll, "AI Suggest" button (29:1675 / 29:1678) | Medium |
+| Pick from map, show a map view to multi-select restaurants near you | 29:2385 | Create Poll, "Pick from map" button (29:1679 / 29:1682) | Medium |
+| "Participant view" (bracket label) | 29:2366 | Grouping label spanning Create Poll and Ren Poll Notification, marking these as the non-creator participant's view | High |
+
+### Poll dashboard
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| Changes to confirmation state 'added to trip', adds itinerary item to Lisbon 2026 trip | 29:2386 | Poll Status and Reveal, "Add to Trip" button in state-c (29:1804 / 29:1805) | High |
+| Slide out toward left | 29:2390 | Transition out of Poll Status and Reveal screen | Medium |
+
+### Receipt capture and itemize
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| Slide out toward right | 29:2393 | Transition out of TripHub (Ramiro pending dinner, frame at x=5800), into receipt flow | Medium |
+| Slide in from right | 29:2395 | Transition into receipt capture flow, paired with the above | Medium |
+| Slide out toward right | 29:2392 | Transition out of the receipt scrollable-form screen (x=6370) | Medium |
+| Slide in from right | 29:2394 | Transition into the receipt camera/populated screen | Medium |
+| Skeleton state while loading before showing uploaded line items pulled from receipt image | 29:2391 | Receipt capture loading state, between camera capture and populated items screen | High |
+
+### Settle Up flow
+
+| Annotation | Node | Target | Confidence |
+|---|---|---|---|
+| "Participant view" (bracket label) | 29:2370 | Grouping label spanning Settle Up (Ari), Ren's Your Share, and Settle Up Confirmation, marking these as the non-payer participant's view | High |
+
+**Cross-check against section 1–3/6 above:** several of these annotations reinforce state logic
+already captured from node 16:501 rather than introducing new behavior — e.g. the PAID badge note
+(29:2372) matches the `status` field described in §1's pending-item driver, and the receipt skeleton
+note (29:2391) matches §3's State 2 exactly. Where they overlap, that's corroboration; where a 29:854
+annotation implies something §1–3/6 doesn't mention (e.g. the transition directions, the "AI Suggest"
+and "Pick from map" buttons, the 3-result cap on Add Member suggestions), treat it as new information
+to fold into the real build, not a conflict to resolve.
+
+**Recommended next step:** open the Figma file to node 29:2348 and do a quick visual pass on the
+Medium and Low confidence rows above — those depend on connector-line direction that this table
+inferred from layout position rather than confirmed directly. Once confirmed, either correct this
+table in place or move those specific notes into their target frames as real text layers, so future
+reads (including future MCP reads) don't have to re-guess the same attachments.
