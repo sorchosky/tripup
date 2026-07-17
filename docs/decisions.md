@@ -6,6 +6,18 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-17 — Hi-fi mocks landed; visual design tokens locked
+- Two screens drafted at high fidelity in Figma (`poll-status-and-reveal`, `receipt-capture-itemize`)
+  are now the **source of truth for visual design** — see `DESIGN.md` → "Visual design reference
+  (hi-fi mocks)". Figma: node `29:2972` in "Steve Orchosky — Bending Spoons Design Task."
+- Real palette, type (Bricolage Grotesque display / Hanken Grotesk body), radii, and shadow/elevation
+  values replace the neutral-grayscale placeholders in `DESIGN.md` and `src/styles/tokens.css`.
+- Screens 7 and 8 (log expense, exclusions/balances) read in the mock as one fused "Scan & assign" step
+  with a 2-step indicator ("Scan & assign · Settle up") — flagged as an open question whether to build
+  them as one routed screen or two screens sharing the step-indicator component.
+- Mock data (venue names, poll result, receipt line items, per-person subtotals) sourced from the mocks
+  into `CONTENT.md`, replacing several `TBD`s. No 4th participant needed.
+
 ### 2026-07-16 — Repo framework scaffolded (this pass)
 - **Local MD files are the source of truth** in the repo (mirrored from Notion), so the design intent
   travels with the code and is readable at generate-time. Notion remains upstream/narrative.

@@ -22,21 +22,119 @@ to Lisbon, splitting dinners and wine.
 - The app always renders inside a locked 390×844 frame; on desktop the frame is centered. No
   responsive breakpoints.
 
+## Visual design reference (hi-fi mocks) — SOURCE OF TRUTH
+
+> Figma: [Steve Orchosky — Bending Spoons Design Task](https://www.figma.com/design/opM4qfaNmCgOTiBlteUcMS/Steve-Orchosky---Bending-Spoons-Design-Task?node-id=29-2972), frame `Hi-fidelity mocks` (node
+> `29:2972`). Logged 2026-07-17. **This section is the reference point for any future visual-design
+> question** — check here before inventing a value.
+
+Two screens are drafted at high fidelity and establish the real look and feel for the whole app. Every
+other screen should read as a sibling of these two, not a departure.
+
+1. **`poll-status-and-reveal`** (node `29:2750`) — covers screen 6, "Poll closed → itinerary updated."
+   Poll header with a `Poll closed` status pill + close time, a "Winner" card (photo, venue name,
+   category/distance/price, a confirmation row — "Added to Lisbon 2026"), then a ranked results list
+   (`RESULTS · 3/3 VOTED`) with numbered avatars and vote counts.
+2. **`receipt-capture-itemize`** (node `29:2783`) — covers screen 7 (Log expense / receipt-scan) fused
+   with the assignment part of screen 8 (exclusions). Framed as a 2-step flow, **"Scan & assign · Settle
+   up"**. Shows the captured receipt (thumbnail + merchant/date/total), an itemized list where each line
+   has a quantity, name, price, and "Assigned to" avatar-chip row (filled navy chip = assigned, outlined
+   chip = excluded — this is how exclusion reads visually), an inline warning affordance for an
+   OCR line that needs review, "+ Add item manually," and a sticky footer with live per-person subtotals
+   and a primary CTA.
+
+Both screens share a consistent system, described below. Treat every value here as **locked**, not
+placeholder — it supersedes the neutral-grayscale defaults that used to be in this section.
+
+### Color roles
+
+| Role | Value | Used for |
+| --- | --- | --- |
+| `primary` | `#5a45d6` (indigo/violet) | Primary buttons (`Review split`), primary CTA shadow `rgba(90,69,214,0.24)` |
+| `surface` (app background) | `#f6f6f4` | Screen/device background — warm off-white, not pure white |
+| `surface-raised` (cards) | `#ffffff` | Cards: winner card, receipt card, item rows |
+| `surface-neutral` (chips/inactive) | `#efede7` | Inactive avatar chips, retake button, results rank badge (2nd/3rd place) |
+| `border` (hairline) | `#e6e1d7` | Card borders (0.5px), row dividers — warm, not cool gray |
+| `text` (ink, primary) | `#16192a` | Headlines, primary body text, filled avatar chip fill |
+| `text-muted` (secondary) | `#565b7b` | Meta text, secondary labels, eyebrow labels, non-leading result rows |
+| `settled` / `success` | `#0e7a5f` on `rgba(14,122,95,0.1)` bg | "Poll closed" pill, "Added to Lisbon 2026" confirmation row |
+| `owed` / `warning` | `#8a5a08` text on `#fef6da` bg, border `rgba(212,169,71,0.4)` | Inline receipt-line warning ("This price needs a second look") |
+| avatar unassigned outline | border `#d8d2c6`, text `#565b7b`, fill `#ffffff` | Excluded/unassigned participant chip |
+| avatar assigned fill | bg `#16192a`, text `#ffffff` | Assigned participant chip (initials) |
+
+Semantic roles hold: `settled` (green) is never reused for `primary` (indigo) or vice versa, and the
+warning amber is distinct from both. Carry these exact roles into `tokens.css`, not the raw hex, inside
+components.
+
+### Typography
+
+Two-family system:
+- **Display / headline — Bricolage Grotesque.** ExtraBold, 26px, tracking -0.52px, line-height 1.12 for
+  page titles ("Where should we eat tonight?", "Split the bill"). Bold, 20px, tracking -0.2px for card
+  titles (winner card venue name).
+- **Body / UI — Hanken Grotesk.** Full weight range used deliberately by hierarchy level:
+  - ExtraBold 12px, uppercase, tracking ~0.72–1.08px, color `text-muted` — eyebrow/section labels
+    (`RESULTS · 3/3 VOTED`, `ITEMS`, `CAPTURED RECEIPT`, pill labels).
+  - Bold 16px `text` — item names, leading result row, receipt merchant name.
+  - SemiBold/Medium 13–16px `text-muted` — non-leading rows, step indicator inactive state, "Retake."
+  - Regular 14px `text-muted` — meta/secondary lines (receipt date, "Assigned to" label).
+
+### Corner radius
+
+- `999px` — pills, avatar chips (fully round).
+- `44px` — the device frame itself, and the glass footer bar (matches frame radius — footer reads as
+  part of the device chrome, not a floating card).
+- `24px` — winner-card image/media block.
+- `16px` — winner-card outer container.
+- `8px` — item rows, receipt card, primary button, inline warning banner. This is the default
+  "component" radius — use it unless a node above overrides it.
+- `6px` — receipt thumbnail, small nested elements.
+
+### Elevation / shadow
+
+- **Card elevation:** `0px 4px 7px rgba(22,25,42,0.08)` — winner card.
+- **Floating-glass elevation:** `0px 8px 40px rgba(0,0,0,0.12)` — nav icon buttons, sticky footer bar.
+  These use a frosted "liquid glass" treatment (iOS 26 style): a `rgba(255,255,255,0.65)` white layer,
+  a `color-burn` blend at `#dddddd`, and a `darken` blend at `#f7f7f7` stacked to fake refraction/frost
+  over whatever scrolls beneath. Reserve this treatment for chrome that floats over content (nav bar,
+  bottom action bar) — not for regular cards.
+- **Primary-button elevation:** `0px 6px 16px rgba(90,69,214,0.24)` — colored to match the button
+  (`primary`), not a neutral shadow.
+
+### Component patterns to reuse
+
+- **Status pill:** rounded-999px, tinted 10%-opacity background of the semantic color, bold uppercase
+  12px label in the full-opacity semantic color (see "Poll closed" pill).
+- **Avatar-initial chip:** 28–32px circle, single-letter initial, Bold 12px. Assigned/active = filled
+  navy; unassigned/excluded = white fill with a `1.5px` `#d8d2c6` outline. This is the exclusion
+  affordance for screen 8 — don't invent a checkbox/toggle pattern instead.
+- **Step indicator:** small text label pairs separated by a 3px dot, active step Bold `text`, inactive
+  step Medium `text-muted` (see "Scan & assign · Settle up").
+- **Inline warning row:** amber-tinted banner nested *inside* an item row (not a separate toast/modal) —
+  keeps the fix affordance next to the thing that needs fixing.
+- **Sticky footer bar:** glass-chrome container, live per-person subtotal row (avatar chip + amount)
+  above a full-width primary button.
+
 ## Design tokens
 
 The token layer is the contract components consume (`src/styles/tokens.css`). Components reference
-tokens by role, never raw values. Current values in `tokens.css` are **neutral grayscale placeholders**
-so the shell runs; replace them here and there together when the real system is set.
+tokens by role, never raw values. Values below are now **locked**, sourced from the hi-fi mocks above —
+`tokens.css` mirrors them exactly. Anything not covered by the two hi-fi screens (e.g. a color role
+never used in either mock) stays `TBD` until a screen that needs it is drafted.
 
-- **Type ramp:** `TBD` — sizes, weights, line-heights (e.g. display / title / body / caption / label).
-- **Spacing scale (8pt):** `TBD` — the step set (e.g. 4 / 8 / 12 / 16 / 24 / 32 …).
-- **Color roles (semantic):** `primary`, `success`/`settled`, `warning`/`owed`, plus neutral surface /
-  text roles. Values `TBD`. Roles carry meaning — settled ≠ owed ≠ primary.
-- **Corner radius scale:** `TBD`.
-- **Elevation levels:** `TBD` — shadow/surface steps.
+- **Type ramp:** locked — see "Typography" above. Two font families (Bricolage Grotesque display,
+  Hanken Grotesk body), weight-driven hierarchy rather than a large size ramp.
+- **Spacing scale (8pt):** unchanged from the existing placeholder — the hi-fi mocks are consistent with
+  an 8pt step set (4 / 8 / 12 / 16 / 24 / 32 …); no revision needed.
+- **Color roles (semantic):** locked — see "Color roles" table above.
+- **Corner radius scale:** locked — see "Corner radius" above (6 / 8 / 16 / 24 / 999 / 44).
+- **Elevation levels:** locked — see "Elevation / shadow" above (card / floating-glass / primary-button
+  are three distinct steps, not one generic shadow).
 
 > Accessibility is a baseline, not a later pass: text and semantic colors must meet WCAG AA contrast,
-> touch targets ≥ 44×44. Bake this in as tokens are set.
+> touch targets ≥ 44×44. `text-muted` (#565b7b) on `surface` (#f6f6f4) and `surface-raised` (#ffffff)
+> should be spot-checked against AA when new combinations show up — the mocks' text/background pairings
+> pass, but don't assume every future pairing will.
 
 ## Screens (from wireflow)
 
@@ -68,19 +166,29 @@ One entry per screen, in build order. Purpose/states are stubs until the wireflo
 - Notes: One of the two strongest hi-fi candidates (state complexity).
 
 ### 6. Poll closed → itinerary updated
-- Purpose: `TBD` — result resolves and writes into the itinerary.
-- Key states: `TBD`
-- Notes:
+- Purpose: **Hi-fi drafted** (`poll-status-and-reveal`, see "Visual design reference" above) — result
+  resolves, shows the winner, and confirms it wrote into the itinerary.
+- Key states: closed-poll header (pill + close time), winner card with confirmation row, ranked results
+  list with vote tallies (`3/3 voted`).
+- Notes: Build this screen directly from the hi-fi reference — tokens, type, and component patterns are
+  locked, not TBD.
 
 ### 7. Log expense
-- Purpose: `TBD` — record a shared cost; includes the receipt-scan state.
-- Key states: `TBD` — manual entry + receipt-scan (mocked) state.
-- Notes: Standout feature lives here.
+- Purpose: **Hi-fi drafted**, fused with screen 8 (`receipt-capture-itemize`, see "Visual design
+  reference" above) — captured receipt + itemized list in one "Scan & assign" step.
+- Key states: captured-receipt summary card, per-item rows (qty/name/price), inline OCR-review warning
+  on a line, "+ Add item manually."
+- Notes: Standout feature lives here. The hi-fi mock frames this and screen 8's assignment step as a
+  single 2-step flow ("Scan & assign · Settle up") — consider merging 7/8 into one screen with a step
+  indicator rather than two separate screens, to match what's drafted.
 
 ### 8. Expense exclusions / balances
-- Purpose: `TBD` — split a cost, excluding some participants (Ren + Nic off the wine); balances update.
-- Key states: `TBD` — exclusion toggles, recalculated balances.
-- Notes:
+- Purpose: **Hi-fi drafted** as part of screen 7's "Scan & assign" step — exclusion happens per-item via
+  the "Assigned to" avatar-chip row, not a separate exclusions screen. Sticky footer shows live
+  per-person subtotals.
+- Key states: filled avatar chip = assigned, outlined chip = excluded (this *is* the exclusion toggle —
+  no separate checkbox pattern); footer subtotals recalculate per assignment.
+- Notes: See screen 7 note above re: merging into one flow.
 
 ### 9. Debt consolidation / settle up
 - Purpose: `TBD` — minimum-transfer settlement across the group.
@@ -117,6 +225,10 @@ demo values ad hoc — add them to `CONTENT.md` first.
 
 ## Open questions / decisions pending
 
-- Design tokens (all of the above) — pending Day 1–3 design decisions.
-- Which 2 screens become the full hi-fi pair (current lean: poll voting + settle up).
-- Final restaurant names and expense amounts — see `CONTENT.md`.
+- ~~Design tokens~~ — **locked**, see "Visual design reference" above.
+- ~~Which 2 screens become the full hi-fi pair~~ — **decided**: poll closed/reveal (screen 6) and
+  receipt-scan/assign (screens 7–8, fused). See "Visual design reference" above.
+- Whether screens 7 and 8 formally merge into a single routed screen (with a step indicator) to match
+  the hi-fi mock, or stay separate screens that share the step-indicator component — pending.
+- Final restaurant names and expense amounts — now sourced from the hi-fi mocks; sync into
+  `CONTENT.md` (see below).
