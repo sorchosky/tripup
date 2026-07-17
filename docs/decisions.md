@@ -17,6 +17,19 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
   them as one routed screen or two screens sharing the step-indicator component.
 - Mock data (venue names, poll result, receipt line items, per-person subtotals) sourced from the mocks
   into `CONTENT.md`, replacing several `TBD`s. No 4th participant needed.
+- The poll's Question/Options/Result are now resolved by this same hi-fi mock (Cervejaria Ramiro wins,
+  2 votes), which supersedes the placeholder 3-venue candidate list from 2026-07-16 below.
+
+### 2026-07-16 — Real Lisbon venue & lodging data locked
+- **Lodging, 2 landmarks, and dinner/lunch/coffee/breakfast options are now real, named Lisbon
+  places** (address, lat/lng, rating, phone) — see `CONTENT.md`.
+- **Belém Tower is closed for restoration** as of early 2026 per recent reviews — kept as a landmark
+  stop, noted as a caveat rather than dropped.
+- The dinner-poll candidate list drafted in this pass (A Nossa Casa, Taberna Sal Grosso, Black Pavilion
+  Restaurant) was **superseded the same day** once the hi-fi poll mock landed (see entry above) — the
+  mock's own three venues (Cervejaria Ramiro, Time Out Market, A Cevicheria) are what's locked in
+  `CONTENT.md` now. The "Trattoria wins, 4 to 2" line in `BRAND.md` is illustrative tone copy, not
+  literal screen copy — left as-is, but note the real result reads "Cervejaria Ramiro, 2 votes."
 
 ### 2026-07-16 — Repo framework scaffolded (this pass)
 - **Local MD files are the source of truth** in the repo (mirrored from Notion), so the design intent
@@ -40,6 +53,10 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 - **Deploy target: Vercel.**
 
 ### Pending (not yet decided — tracked elsewhere)
-- Design token values — see `DESIGN.md`.
-- Which 2 screens become the hi-fi pair (lean: poll voting + settle up).
-- Final mock-data values (restaurant names, amounts, 4th participant?) — see `CONTENT.md`.
+- ~~Design token values~~ — locked, see `DESIGN.md`.
+- ~~Which 2 screens become the hi-fi pair~~ — decided: poll closed/reveal + receipt-scan/assign, see
+  `DESIGN.md`.
+- ~~Final mock-data values~~ — restaurant/lodging/landmark names and dinner amounts now locked, see
+  `CONTENT.md`. Trip dates still `TBD`.
+- Whether screens 7/8 merge into one routed screen or stay separate with a shared step indicator — see
+  `DESIGN.md` → "Open questions."

@@ -15,6 +15,23 @@ amounts or names ad hoc elsewhere — add them here first.
 - **Trip name:** Lisbon 2026 (per the poll-screen confirmation: "Added to Lisbon 2026")
 - **Dates:** `TBD`
 
+## Lodging
+
+- **Name:** Dear Lisbon - Gallery House
+- **Type:** Boutique hotel
+- **Neighborhood:** São Bento
+- **Address:** R de S. Bento 31, 1200-815 Lisboa, Portugal
+- **Coordinates:** 38.710795, -9.152734 · **Rating:** 4.6 · **Phone:** +351 932 210 150
+- **Notes:** Central, walkable to Bairro Alto and Chiado; ~15–20 min to Belém by train from Cais do
+  Sodré/Santos. "The house" the group returns to in the scenario.
+
+## Landmarks
+
+| Name | Category | Address | Coordinates | Rating | Phone | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| Belém Tower | Landmark | Av. Brasília, 1400-038 Lisboa, Portugal | 38.6915837, -9.2159773 | 4.5 | +351 21 362 0034 | UNESCO riverfront monument. Closed for restoration as of early 2026 per recent reviews — still a valid photo/itinerary stop; flag the closure if a screen implies visiting the interior. |
+| Pastéis de Belém | Bakery | R. de Belém 84-92, 1300-085 Lisboa, Portugal | 38.6975105, -9.2032276 | 4.6 | +351 21 363 7423 | The original pastel de nata bakery (1800s), by Belém Tower — good quick-bite filler between attraction and dinner. |
+
 ## Participants
 
 The reference group from the scenario. Ari is the Organizer; Ren and Nic are Participants. Confirmed
@@ -61,6 +78,40 @@ The "where to eat" decision used on screens 4–6. Sourced from the `poll-status
 - **Options / result:** Cervejaria Ramiro (winner, 2 votes) · Time Out Market (1 vote) · A Cevicheria
   (0 votes). `RESULTS · 3/3 VOTED`, poll closed at 6:32 PM.
 - **Winner card meta:** Seafood · 4 min walk · €€.
+- Address/coordinates/rating/phone for these three venues aren't captured yet (unlike Lodging/Landmarks
+  below) — add them here if a screen needs them.
+
+> Supersedes an earlier placeholder candidate list (A Nossa Casa, Taberna Sal Grosso, Black Pavilion
+> Restaurant) drafted before the hi-fi poll mock existed. The mock is the rendered screen, so it's
+> authoritative — the placeholder list is dropped rather than kept as a second, contradictory "poll
+> options" table. It also resolves the old "Trattoria wins, 4 to 2" reference copy: the real result is
+> Cervejaria Ramiro, 2 votes, not a trattoria — update any lingering copy that still says "trattoria."
+
+## Itinerary options (lunch, coffee, breakfast)
+
+Not tied to a specific numbered screen in the current flow (no lunch/coffee/breakfast screen exists
+yet) — locked reference data available for screen 2 (trip detail/itinerary) or future extension.
+
+**Lunch**
+
+| Name | Vibe | Cuisine | Address | Coordinates | Rating | Price | Phone | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Tapa do BairroAlto | Energetic, hidden gem | Portuguese tapas | R. da Barroca 129A, 1200-049 Lisboa, Portugal | 38.7126383, -9.1446924 | 4.9 | — | +351 963 012 182 | — |
+| Lisbon Tu e Eu | Cozy, no-frills soul food | Traditional Portuguese | R da Adiça 58, 1100-116 Lisboa, Portugal | 38.7109511, -9.1300522 | 4.5 | $ | none | **Cash only per reviews** — worth flagging if used in an expense-tracking scenario. |
+
+**Coffee**
+
+| Name | Vibe | Address | Coordinates | Rating | Phone |
+| --- | --- | --- | --- | --- | --- |
+| The Coffee | Minimalist, specialty | Calçada do Duque 47, 1200-016 Lisboa, Portugal | 38.7131868, -9.142473 | 4.8 | +351 41 99279-7895 |
+| PUT IT ON LISBON | Cozy, vegan and gluten-free | CC do Conde de Pombeiro 15C, 1150-099 Lisboa, Portugal | 38.7235029, -9.1370858 | 4.9 | +351 911 845 360 |
+
+**Breakfast**
+
+| Name | Vibe | Address | Coordinates | Rating | Price | Phone |
+| --- | --- | --- | --- | --- | --- | --- |
+| Hygge Kaffe | Build-your-own, minimalist Scandinavian | R. Tomás Ribeiro 95B, 1050-227 Lisboa, Portugal | 38.7315413, -9.1490725 | 4.8 | $$ | +351 931 329 691 |
+| Breakfast Lovers Chiado | Bright, extensive Eggs Benedict menu | R. Vítor Cordon 26, 1200-484 Lisboa, Portugal | 38.7080494, -9.141487 | 4.9 | — | +351 939 531 673 |
 
 ## Receipt scan (mock)
 

@@ -230,5 +230,6 @@ demo values ad hoc — add them to `CONTENT.md` first.
   receipt-scan/assign (screens 7–8, fused). See "Visual design reference" above.
 - Whether screens 7 and 8 formally merge into a single routed screen (with a step indicator) to match
   the hi-fi mock, or stay separate screens that share the step-indicator component — pending.
-- Final restaurant names and expense amounts — now sourced from the hi-fi mocks; sync into
-  `CONTENT.md` (see below).
+- ~~Final restaurant names and expense amounts~~ — dinner (Cervejaria Ramiro) and poll result locked
+  from the hi-fi mocks; lodging, landmarks, and lunch/coffee/breakfast options locked separately — all
+  in `CONTENT.md`. Trip dates remain `TBD`.
