@@ -7,7 +7,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Pill, AvatarGroup, Button, TabBar } from '../components/ui';
-import { ArrowLeft, Ellipsis, Plus } from '../components/icons';
+import { ArrowLeft, Ellipsis } from '../components/icons';
 import { TRIP } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import type { ItineraryStatus } from '../data/mock';
@@ -61,17 +61,11 @@ export default function TripDetailScreen() {
       <div className={styles.overview}>
         <h1 className={styles.title}>{TRIP.name}</h1>
         <p className={styles.subtitle}>
-          Lisbon · the house in São Bento · {formatDateRange(TRIP.dates.start, TRIP.dates.end)}
+          {TRIP.destination} · {formatDateRange(TRIP.dates.start, TRIP.dates.end)}
         </p>
 
         <div className={styles.memberRow}>
           <AvatarGroup personIds={state.participants.map((p) => p.id)} size="md" />
-          {!hasRen ? (
-            <button type="button" className={styles.addBtn} onClick={() => navigate('/trip/add')}>
-              <Plus size={14} />
-              Add
-            </button>
-          ) : null}
         </div>
       </div>
 
