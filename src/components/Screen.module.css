@@ -23,6 +23,23 @@
   padding: var(--space-2) var(--space-5) var(--space-6);
 }
 
+/* Bleed content fills the scroll area's full height instead of collapsing to its own content size, so
+   a full-bleed child that wants to vertically center itself (e.g. a full-screen camera-capture mock)
+   has real space to center within. A flex column with a stretching child (rather than a plain
+   `height: 100%`) so content taller than the available space still grows the box properly — a plain
+   percentage height would let taller content silently overflow past where the scroll container's own
+   bottom padding starts (its scrollable-overflow box only counts as tall as the *layout* height of its
+   children, not however far overflow:visible content spills past it), swallowing that padding instead
+   of adding real clearance below the content. */
+.bleedFill {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.bleedFill > * {
+  flex: 1 0 auto;
+}
+
 /* Sticky glass footer host (receipt "Review split" bar, settle-up CTA, etc.). */
 .footer {
   flex: 0 0 auto;
@@ -34,6 +51,22 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+/* Floating-footer variant (Screen's `floatingFooter` prop): the footer overlays the scroll area
+   instead of sitting below it in flex flow, so `.glass`'s backdrop-filter has scrolled content behind
+   it to blur. Scroll gets bottom clearance roughly matching the footer's rendered height (subtotal
+   row + button + padding) so content can still scroll fully clear of it — a measured chrome constant,
+   same as .statusBar/.navHeader's literal heights above, not a design token. */
+.scrollUnderFooter {
+  padding-bottom: 140px;
+}
+.footerFloating {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
 }
 
 /* Tab bar host — sits below the footer CTA bar, above the home indicator. */

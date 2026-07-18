@@ -111,7 +111,10 @@ Two-family system:
 - **Step indicator:** small text label pairs separated by a 3px dot, active step Bold `text`, inactive
   step Medium `text-muted` (see "Scan & assign · Settle up").
 - **Inline warning row:** amber-tinted banner nested *inside* an item row (not a separate toast/modal) —
-  keeps the fix affordance next to the thing that needs fixing.
+  keeps the fix affordance next to the thing that needs fixing. **Dropped from the build** per design
+  review (issue #19, see `docs/decisions.md`) — a replacement tap/swipe-to-edit interaction is a
+  follow-up design pitch, not built yet. The `owed`/`warning` color role and `needsReview` mock field
+  still exist (kept for that follow-up); only the rendered row is gone.
 - **Sticky footer bar:** glass-chrome container, live per-person subtotal row (avatar chip + amount)
   above a full-width primary button.
 

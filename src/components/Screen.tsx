@@ -17,23 +17,31 @@ interface ScreenProps {
   tabBar?: ReactNode;
   /** Remove the default content padding for full-bleed layouts. */
   bleed?: boolean;
+  /**
+   * Float the footer over the scrolling content instead of stacking below it in flex flow, so the
+   * `.glass` blur has something scrolled behind it to actually blur (otherwise it just reads as a
+   * solid rounded bar). Also suppresses the home indicator, which otherwise adds a margin below the
+   * floating bar that doesn't match the hi-fi pattern. Opt-in per screen — most footers (settle-up,
+   * poll voting) are meant to read as fixed device chrome, not overlay content.
+   */
+  floatingFooter?: boolean;
 }
 
-export function Screen({ nav, children, footer, tabBar, bleed }: ScreenProps) {
+export function Screen({ nav, children, footer, tabBar, bleed, floatingFooter }: ScreenProps) {
   return (
     <div className={styles.screen}>
       <StatusBar />
       {nav}
-      <div className={styles.scroll}>
-        <div className={bleed ? undefined : styles.pad}>{children}</div>
+      <div className={`${styles.scroll} ${floatingFooter ? styles.scrollUnderFooter : ''}`}>
+        <div className={bleed ? styles.bleedFill : styles.pad}>{children}</div>
       </div>
       {footer ? (
-        <div className={styles.footer}>
+        <div className={`${styles.footer} ${floatingFooter ? styles.footerFloating : ''}`}>
           <div className={`${styles.footerBar} ${glassClass}`}>{footer}</div>
         </div>
       ) : null}
       {tabBar ? <div className={styles.tabBarSlot}>{tabBar}</div> : null}
-      <HomeIndicator />
+      {floatingFooter ? null : <HomeIndicator />}
     </div>
   );
 }
