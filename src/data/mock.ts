@@ -229,6 +229,17 @@ export const LANDMARKS: Landmark[] = [
     notes:
       'The original pastel de nata bakery, dating to the 1800s, right by Belém Tower. Good filler stop between attraction and dinner.',
   },
+  {
+    id: 'oceanario-de-lisboa',
+    name: 'Oceanário de Lisboa',
+    category: 'landmark',
+    address: 'Esplanada D. Carlos I, 1990-005 Lisboa, Portugal',
+    lat: 38.7635435,
+    lng: -9.0937415,
+    rating: 4.6,
+    phone: '+351 218 917 002',
+    notes: 'One of Europe’s largest aquariums, in Parque das Nações. A mid-trip day activity, distinct from the Belém/dinner cluster.',
+  },
 ];
 
 export interface PollOption {
@@ -303,49 +314,6 @@ export const COFFEE_OPTIONS: Venue[] = [
   },
 ];
 
-/**
- * Itinerary timeline shown on the trip hub (screen 2). Seeded from CONTENT.md's real Lisbon places
- * (lodging + landmarks); the dinner slot is intentionally absent at first and gets written in when the
- * poll closes (screen 6 → itinerary), then flips paid → after settle-up. `time` is only set for
- * time-sensitive events (wireframe annotation 29:2373); day labels stay relative since trip dates are
- * still TBD in CONTENT.md.
- */
-export type ItineraryStatus = 'planned' | 'pending' | 'paid';
-
-export interface ItineraryItem {
-  id: string;
-  day: string;
-  time: string | null;
-  title: string;
-  subtitle: string;
-  status: ItineraryStatus;
-}
-
-export const INITIAL_ITINERARY: ItineraryItem[] = [
-  { id: 'checkin', day: 'Today', time: '15:00', title: 'Check in — Dear Lisbon', subtitle: 'Gallery House · São Bento', status: 'paid' },
-  { id: 'belem', day: 'Today', time: null, title: 'Belém Tower & Pastéis de Belém', subtitle: 'Riverfront walk · pastel de nata stop', status: 'planned' },
-];
-
-/** The itinerary card the poll winner writes in (screen 6). Kept here so the copy/venue stay canonical. */
-export const DINNER_ITINERARY_ITEM: ItineraryItem = {
-  id: 'dinner',
-  day: 'Today',
-  time: '21:00',
-  title: 'Dinner — Cervejaria Ramiro',
-  subtitle: DINNER_POLL.winnerMeta,
-  status: 'pending',
-};
-
-/** The Trip Hub FAB's "Add to itinerary" quick stop — sourced from CONTENT.md's locked coffee options. */
-export const COFFEE_STOP_ITINERARY_ITEM: ItineraryItem = {
-  id: 'coffee-stop',
-  day: 'Today',
-  time: null,
-  title: `Coffee run — ${COFFEE_OPTIONS[0].name}`,
-  subtitle: 'Minimalist, specialty coffee',
-  status: 'planned',
-};
-
 export const BREAKFAST_OPTIONS: Venue[] = [
   {
     id: 'hygge-kaffe',
@@ -369,3 +337,50 @@ export const BREAKFAST_OPTIONS: Venue[] = [
     phone: '+351 939 531 673',
   },
 ];
+
+/**
+ * Itinerary timeline shown on the trip hub (screen 2) — chronological, day-grouped (issue #12; see
+ * CONTENT.md → Itinerary for the locked day-by-day sequence). `day` is a real ISO date inside the
+ * locked trip range (2026-06-10 – 2026-06-18); `time` is only set for time-sensitive events (wireframe
+ * annotation 29:2373) and null items sort last within their day. The dinner slot is intentionally
+ * absent at first and gets written in when the poll closes (screen 6 → itinerary), then flips
+ * pending → paid after settle-up.
+ */
+export type ItineraryStatus = 'planned' | 'pending' | 'paid';
+
+export interface ItineraryItem {
+  id: string;
+  day: string;
+  time: string | null;
+  title: string;
+  subtitle: string;
+  status: ItineraryStatus;
+}
+
+export const INITIAL_ITINERARY: ItineraryItem[] = [
+  { id: 'checkin', day: '2026-06-10', time: '15:00', title: 'Check in — Dear Lisbon', subtitle: 'Gallery House · São Bento', status: 'paid' },
+  { id: 'belem', day: '2026-06-11', time: null, title: 'Belém Tower & Pastéis de Belém', subtitle: 'Riverfront walk · pastel de nata stop', status: 'planned' },
+  { id: 'oceanario', day: '2026-06-15', time: '11:00', title: LANDMARKS[2].name, subtitle: 'Parque das Nações · aquarium visit', status: 'planned' },
+  { id: 'breakfast', day: '2026-06-17', time: '08:30', title: `Breakfast — ${BREAKFAST_OPTIONS[0].name}`, subtitle: 'Build-your-own, minimalist Scandinavian', status: 'planned' },
+  { id: 'lunch', day: '2026-06-17', time: '13:00', title: `Lunch — ${LUNCH_OPTIONS[0].name}`, subtitle: `${LUNCH_OPTIONS[0].cuisine} · ${LUNCH_OPTIONS[0].vibe}`, status: 'planned' },
+];
+
+/** The itinerary card the poll winner writes in (screen 6). Kept here so the copy/venue stay canonical. */
+export const DINNER_ITINERARY_ITEM: ItineraryItem = {
+  id: 'dinner',
+  day: '2026-06-17',
+  time: '21:00',
+  title: 'Dinner — Cervejaria Ramiro',
+  subtitle: DINNER_POLL.winnerMeta,
+  status: 'pending',
+};
+
+/** The Trip Hub FAB's "Add to itinerary" quick stop — sourced from CONTENT.md's locked coffee options. */
+export const COFFEE_STOP_ITINERARY_ITEM: ItineraryItem = {
+  id: 'coffee-stop',
+  day: '2026-06-17',
+  time: null,
+  title: `Coffee run — ${COFFEE_OPTIONS[0].name}`,
+  subtitle: 'Minimalist, specialty coffee',
+  status: 'planned',
+};

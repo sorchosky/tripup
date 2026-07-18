@@ -6,6 +6,35 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-18 — Trip Hub itinerary: chronological, day-grouped, anchored to now (issue #12)
+
+Rebuilt the itinerary from a flat list under a static "Itinerary" eyebrow into a real day-grouped
+timeline, now that #7 locked the trip's actual dates (Jun 10–18, 2026). **Supersedes the 2026-07-17
+entry's "day labels stay relative since trip dates are still TBD" framing** — every `ItineraryItem.day`
+is now a real ISO date, not the placeholder literal `'Today'`.
+
+- **Chronological, day-grouped rendering:** `src/lib/itinerary.ts` (new) exports
+  `groupItineraryByDay` (days ascending, each day's items earliest → latest, `time: null` items sorted
+  last as "anytime" stops) and `findAnchorId`. Per-day `Eyebrow`s (`formatItineraryDay`, `dates.ts`)
+  replace the single static "Itinerary" heading; the dead `.dayLabel` CSS rule is gone.
+- **Anchor-to-now:** on load, the screen scrolls to and visually emphasizes (accent border + "Up
+  next"/"Most recent" label) the next upcoming item, or — once nothing's left today — the most recent
+  one. Everything before the anchor reads demoted (`--opacity-demoted`, new token). Driven by a new
+  `NARRATIVE_NOW` (`2026-06-17T22:00:00Z`, dates.ts) — a more granular sibling to the existing
+  `NARRATIVE_TODAY` (kept untouched at midnight so Home's "1 day left" doesn't shift). Verified against
+  pre-trip, mid-trip, and the demo's actual last-evening-of-trip state (anchors to the dinner, since
+  nothing's scheduled after 21:00) by calling `findAnchorId` directly with each reference time.
+- **Content additions:** Oceanário de Lisboa added to `CONTENT.md`'s Landmarks (real address/
+  coordinates/phone, web-verified rather than invented) and to `LANDMARKS` in `mock.ts`, placed on a
+  mid-trip day. One breakfast (Hygge Kaffe) and one lunch (Tapa do BairroAlto) stop — both already
+  locked in CONTENT.md's "Itinerary options" — are now seeded on the narrative day (Jun 17) ahead of
+  the dinner, demonstrating the breakfast → lunch → dinner clock ordering within a day. A new
+  `## Itinerary` section in `CONTENT.md` documents the resulting locked day-by-day sequence.
+- `CLOSE_POLL`/`SETTLE` in `TripContext.tsx` are unchanged — they already mutate `state.itinerary` by
+  id (append / status flip) rather than relying on array order, so render-time grouping/sorting doesn't
+  disturb them; verified by driving vote → close poll → split → settle end-to-end against the new
+  timeline.
+
 ### 2026-07-18 — Trip Hub chrome: shared tab bar + glass FAB (issue #13)
 
 Replaced the single evolving footer CTA on the Trip Hub with the shared `TabBar` (already mounted per

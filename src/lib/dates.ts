@@ -1,14 +1,24 @@
 /**
- * dates.ts — date-range formatting + "days left" helper for trip cards.
+ * dates.ts — date-range formatting + "days left"/"day eyebrow" helpers for trip cards and the
+ * itinerary timeline.
  *
  * The flow narrates around a fixed "today" (Jun 17, 2026 — the day the Cervejaria Ramiro dinner is
- * logged, and the day the itinerary's "Today" labels refer to). That's a deliberate demo constant,
- * not `Date.now()` — real wall-clock time would desync the narrative from the mock data.
+ * logged). That's a deliberate demo constant, not `Date.now()` — real wall-clock time would desync the
+ * narrative from the mock data.
  */
 
 export const NARRATIVE_TODAY = new Date('2026-06-17T00:00:00Z');
 
+/**
+ * A more granular sibling of NARRATIVE_TODAY, used only for the itinerary's anchor-to-now logic
+ * (issue #12) — an hour after the 21:00 dinner, so the demo lands on "last evening of trip, nothing
+ * left today" rather than "midnight." Kept separate from NARRATIVE_TODAY so daysLeft's "1 day left"
+ * whole-day rounding doesn't shift.
+ */
+export const NARRATIVE_NOW = new Date('2026-06-17T22:00:00Z');
+
 const MONTH_FORMAT = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' });
+const WEEKDAY_FORMAT = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' });
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** "Jun 10–18, 2026" for a same-year range; "Mar 13 – Apr 2, 2026" if it crosses months. */
@@ -33,4 +43,10 @@ export function formatDateRange(startISO: string, endISO: string): string {
 export function daysLeft(endISO: string): number {
   const end = new Date(endISO);
   return Math.round((end.getTime() - NARRATIVE_TODAY.getTime()) / DAY_MS);
+}
+
+/** "Wed · Jun 17" — a per-day eyebrow label for the itinerary timeline (dateISO is a plain "YYYY-MM-DD"). */
+export function formatItineraryDay(dateISO: string): string {
+  const date = new Date(`${dateISO}T00:00:00Z`);
+  return `${WEEKDAY_FORMAT.format(date)} · ${MONTH_FORMAT.format(date)} ${date.getUTCDate()}`;
 }

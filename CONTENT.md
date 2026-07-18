@@ -55,6 +55,7 @@ one trip in it.
 | --- | --- | --- | --- | --- | --- | --- |
 | Belém Tower | Landmark | Av. Brasília, 1400-038 Lisboa, Portugal | 38.6915837, -9.2159773 | 4.5 | +351 21 362 0034 | UNESCO riverfront monument. Closed for restoration as of early 2026 per recent reviews — still a valid photo/itinerary stop; flag the closure if a screen implies visiting the interior. |
 | Pastéis de Belém | Bakery | R. de Belém 84-92, 1300-085 Lisboa, Portugal | 38.6975105, -9.2032276 | 4.6 | +351 21 363 7423 | The original pastel de nata bakery (1800s), by Belém Tower — good quick-bite filler between attraction and dinner. |
+| Oceanário de Lisboa | Landmark | Esplanada D. Carlos I, 1990-005 Lisboa, Portugal | 38.7635435, -9.0937415 | 4.6 | +351 218 917 002 | Aquarium in Parque das Nações — one of Europe's largest, a strong mid-trip day activity distinct from the Belém/dinner cluster. Added for issue #12's multi-day itinerary. |
 
 ## Participants
 
@@ -121,6 +122,26 @@ The "where to eat" decision used on screens 4–6. Sourced from the `poll-status
 > authoritative — the placeholder list is dropped rather than kept as a second, contradictory "poll
 > options" table. It also resolves the old "Trattoria wins, 4 to 2" reference copy: the real result is
 > Cervejaria Ramiro, 2 votes, not a trattoria — update any lingering copy that still says "trattoria."
+
+## Itinerary
+
+The Trip Hub's locked, chronological, day-grouped timeline (issue #12) — one source for the actual
+seeded sequence in `INITIAL_ITINERARY`/`DINNER_ITINERARY_ITEM` in `src/data/mock.ts`, distinct from the
+"Itinerary options" candidate pool below. Dates fall inside the locked trip range (Jun 10–18, 2026);
+the narrative "today" (Jun 17) is the day the dinner poll resolves, per "The trip" above.
+
+| Date | Time | Item | Status |
+| --- | --- | --- | --- |
+| Jun 10 | 15:00 | Check in — Dear Lisbon (Gallery House · São Bento) | paid |
+| Jun 11 | — | Belém Tower & Pastéis de Belém | planned |
+| Jun 15 | 11:00 | Oceanário de Lisboa | planned |
+| Jun 17 | 08:30 | Breakfast — Hygge Kaffe | planned |
+| Jun 17 | 13:00 | Lunch — Tapa do BairroAlto | planned |
+| Jun 17 | 21:00 | Dinner — Cervejaria Ramiro | written in dynamically when the poll closes (pending → paid on settle) |
+
+Breakfast/lunch picks are one of the two locked options each from "Itinerary options" below — Hygge
+Kaffe and Tapa do BairroAlto were chosen for this pass; the other two (Breakfast Lovers Chiado, Lisbon
+Tu e Eu) remain available for a future extension.
 
 ## Itinerary options (lunch, coffee, breakfast)
 

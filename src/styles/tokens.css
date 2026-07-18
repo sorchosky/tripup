@@ -80,6 +80,9 @@
   --glass-darken: #f7f7f7;  /* mix-blend-mode: darken */
   --blur-glass: 20px;       /* backdrop-filter blur radius for floating chrome */
 
+  /* ---- Opacity (itinerary anchor-to-now demoted state, issue #12) ---- */
+  --opacity-demoted: 0.5;
+
   /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */
   --avatar-sm: 24px;   /* rank badges, poll rows */
   --avatar-md: 28px;   /* footer subtotals, home/trip avatar groups */
