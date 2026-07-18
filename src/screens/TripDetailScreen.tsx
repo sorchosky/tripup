@@ -7,6 +7,7 @@
  * tappable itinerary row.
  */
 
+import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, type MenuItemDef } from '../components/ui';
@@ -14,7 +15,8 @@ import { ArrowLeft, Ellipsis, Vote, CalendarPlus } from '../components/icons';
 import { TRIP, COFFEE_STOP_ITINERARY_ITEM } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import type { ItineraryStatus } from '../data/mock';
-import { formatDateRange } from '../lib/dates';
+import { formatDateRange, formatItineraryDay, NARRATIVE_NOW } from '../lib/dates';
+import { groupItineraryByDay, findAnchorId, isUpcoming } from '../lib/itinerary';
 import styles from './TripDetailScreen.module.css';
 
 function statusPill(status: ItineraryStatus) {
@@ -26,6 +28,18 @@ function statusPill(status: ItineraryStatus) {
 export default function TripDetailScreen() {
   const navigate = useNavigate();
   const { state, dispatch } = useTrip();
+  const itemRefs = useRef(new Map<string, HTMLElement>());
+
+  const dayGroups = useMemo(() => groupItineraryByDay(state.itinerary), [state.itinerary]);
+  const anchorId = useMemo(() => findAnchorId(state.itinerary, NARRATIVE_NOW), [state.itinerary]);
+  const flatOrder = useMemo(() => dayGroups.flatMap((group) => group.items.map((item) => item.id)), [dayGroups]);
+  const anchorIndex = anchorId ? flatOrder.indexOf(anchorId) : -1;
+
+  // Scroll to "now" once on load — deliberately not re-run on itinerary changes, so closing the poll
+  // or settling up while already on this screen doesn't yank the user's scroll position.
+  useEffect(() => {
+    if (anchorId) itemRefs.current.get(anchorId)?.scrollIntoView({ block: 'center' });
+  }, []);
 
   const fabItems: MenuItemDef[] = [
     {
@@ -80,42 +94,70 @@ export default function TripDetailScreen() {
         </button>
       ) : null}
 
-      <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <Eyebrow>Itinerary</Eyebrow>
-        </div>
-        <div className={styles.timeline}>
-          {state.itinerary.map((item) => {
-            const clickable = item.status === 'pending';
-            const body = (
-              <>
-                <span className={`${styles.time} ${item.time ? '' : styles.timeEmpty}`}>{item.time ?? '·'}</span>
-                <div className={styles.eventBody}>
-                  <div className={styles.eventTitleRow}>
-                    <span className={styles.eventTitle}>{item.title}</span>
-                    {statusPill(item.status)}
+      {dayGroups.map((group) => (
+        <section key={group.day} className={styles.section}>
+          <div className={styles.sectionHead}>
+            <Eyebrow>{formatItineraryDay(group.day)}</Eyebrow>
+          </div>
+          <div className={styles.timeline}>
+            {group.items.map((item) => {
+              const clickable = item.status === 'pending';
+              const isAnchor = item.id === anchorId;
+              const isPast = anchorIndex >= 0 && flatOrder.indexOf(item.id) < anchorIndex;
+              const eventClassName = [
+                styles.event,
+                clickable ? styles.eventButton : '',
+                isAnchor ? styles.eventAnchor : '',
+                isPast ? styles.eventPast : '',
+              ]
+                .filter(Boolean)
+                .join(' ');
+              const body = (
+                <>
+                  {isAnchor ? (
+                    <span className={styles.anchorLabel}>
+                      {isUpcoming(item, NARRATIVE_NOW) ? 'Up next' : 'Most recent'}
+                    </span>
+                  ) : null}
+                  <div className={styles.eventRow}>
+                    <span className={`${styles.time} ${item.time ? '' : styles.timeEmpty}`}>{item.time ?? '·'}</span>
+                    <div className={styles.eventBody}>
+                      <div className={styles.eventTitleRow}>
+                        <span className={styles.eventTitle}>{item.title}</span>
+                        {statusPill(item.status)}
+                      </div>
+                      <p className={styles.eventSub}>{item.subtitle}</p>
+                    </div>
                   </div>
-                  <p className={styles.eventSub}>{item.subtitle}</p>
+                </>
+              );
+              return clickable ? (
+                <button
+                  key={item.id}
+                  ref={(el) => {
+                    if (el) itemRefs.current.set(item.id, el);
+                  }}
+                  type="button"
+                  className={eventClassName}
+                  onClick={() => navigate('/split')}
+                >
+                  {body}
+                </button>
+              ) : (
+                <div
+                  key={item.id}
+                  ref={(el) => {
+                    if (el) itemRefs.current.set(item.id, el);
+                  }}
+                  className={eventClassName}
+                >
+                  {body}
                 </div>
-              </>
-            );
-            return clickable ? (
-              <button
-                key={item.id}
-                type="button"
-                className={`${styles.event} ${styles.eventButton}`}
-                onClick={() => navigate('/split')}
-              >
-                {body}
-              </button>
-            ) : (
-              <div key={item.id} className={styles.event}>
-                {body}
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
+      ))}
     </Screen>
   );
 }

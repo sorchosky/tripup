@@ -55,7 +55,7 @@
 .timeline { display: flex; flex-direction: column; gap: var(--space-2); }
 .event {
   display: flex;
-  gap: var(--space-3);
+  flex-direction: column;
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -64,9 +64,11 @@
 .eventButton {
   width: 100%;
   cursor: pointer;
+  text-align: left;
   -webkit-tap-highlight-color: transparent;
 }
 .eventButton:active { background: var(--color-surface-neutral); }
+.eventRow { display: flex; gap: var(--space-3); }
 .time {
   flex: 0 0 44px;
   font-weight: var(--font-weight-bold);
@@ -85,4 +87,14 @@
 .eventTitle { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
 .eventSub { margin-top: 2px; font-size: var(--font-size-label); color: var(--color-text-muted); }
 
-.dayLabel { margin: var(--space-2) 0 var(--space-2); }
+/* ---- Anchor-to-now state (issue #12): the current/next item, and everything before it ---- */
+.eventAnchor { border-color: var(--color-primary); }
+.anchorLabel {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-caption);
+  color: var(--color-primary);
+}
+.eventPast { opacity: var(--opacity-demoted); }
