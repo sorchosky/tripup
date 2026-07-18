@@ -54,6 +54,12 @@ interface NavHeaderProps {
   rightText?: string;
   rightAriaLabel?: string;
   leftAriaLabel?: string;
+  /** Ref to the right icon button — lets a popover passed via `menu` anchor to it. */
+  rightRef?: RefObject<HTMLButtonElement>;
+  /** Popover (e.g. a `Menu`) anchored to the right icon button; rendered alongside it. */
+  menu?: ReactNode;
+  /** `aria-expanded` on the right icon button while `menu` is present. */
+  rightExpanded?: boolean;
 }
 
 export function NavHeader({
@@ -65,6 +71,9 @@ export function NavHeader({
   rightText,
   rightAriaLabel,
   leftAriaLabel = 'Back',
+  rightRef,
+  menu,
+  rightExpanded,
 }: NavHeaderProps) {
   return (
     <div className={styles.navHeader}>
@@ -88,14 +97,20 @@ export function NavHeader({
           {rightText}
         </button>
       ) : rightIcon ? (
-        <button
-          type="button"
-          className={`${styles.iconButton} ${styles.glass}`}
-          onClick={onRight}
-          aria-label={rightAriaLabel}
-        >
-          {rightIcon}
-        </button>
+        <span className={styles.navRightAnchor}>
+          {menu}
+          <button
+            ref={rightRef}
+            type="button"
+            className={`${styles.iconButton} ${styles.glass}`}
+            onClick={onRight}
+            aria-label={rightAriaLabel}
+            aria-haspopup={menu ? 'menu' : undefined}
+            aria-expanded={menu ? rightExpanded : undefined}
+          >
+            {rightIcon}
+          </button>
+        </span>
       ) : (
         <span className={styles.navSpacer} />
       )}
