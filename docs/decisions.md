@@ -6,6 +6,39 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-18 — Split the bill: capture-receipt flow, glass footer, drop review warning (issue #19)
+
+`SplitScreen` no longer opens directly into the pre-populated receipt — it now walks the mocked
+capture flow the wireframe annotations describe (`docs/wireframe-handoff.md` §3, node `29:2391`):
+empty state → mocked camera view → skeleton loading → the existing populated itemized list. All
+screen-local (`useState`), not routed through `TripContext`, since it's view-state for a mocked
+capture, not one of the graded reducer transitions.
+
+- **Ellipsis replaces the top-right `X`**, matching the (currently inert, no menu wired yet)
+  ellipsis pattern already on `TripDetailScreen` — consistent placeholder, not this issue's job to
+  build #14's actual menu.
+- **`needsReview` / "tap to fix" warning row removed** from item rows entirely, per the issue — no
+  replacement tap/swipe-to-edit interaction built here (flagged as a follow-up design pitch). The
+  `needsReview` field stays on `ReceiptItem`/`DINNER_RECEIPT` in `mock.ts`, just unused by this
+  screen now.
+- **"Add item manually" is now a bottom sheet** (local to `SplitScreen`, following the same
+  scrim/sheet/grabber pattern `AddParticipantScreen` already uses locally, since #15's shared
+  `BottomSheet` component hasn't landed yet). The sheet's fields are real inputs, but submitting just
+  closes it — real manual-entry persistence (and the settle-up math it would feed) is out of scope
+  here, same spirit as the receipt scan itself being mocked.
+- **`Screen` gained an opt-in `floatingFooter` prop** (`Screen.tsx` + `.module.css`): the footer
+  overlays the scroll area instead of stacking below it in flex flow, so `.glass`'s backdrop blur
+  actually has scrolled content behind it — verified visually (the wine line's price shows through the
+  blurred footer). Also suppresses `HomeIndicator` while active, since the floating bar replaces its
+  margin. Scoped as an opt-in prop rather than a global change, so `SettleUpScreen`/`CreatePollScreen`/
+  `PollVotingScreen` footers are unaffected. Split's footer only floats in the `populated` stage (no
+  footer at all in the empty/capture/loading stages).
+- **`bleed` content now stretches to fill the scroll area** (`Screen.module.css`'s new `.bleedFill`,
+  flex column + `flex: 1 0 auto` on its single child) instead of collapsing to its own content size —
+  needed so the full-bleed mocked-camera view can vertically center within the real available space.
+  Verified this doesn't regress `PollClosedScreen`/`SettlementConfirmationScreen`, the other two
+  `bleed` screens, via screenshot diff.
+
 ### 2026-07-18 — Trip Hub chrome: shared tab bar + glass FAB (issue #13)
 
 Replaced the single evolving footer CTA on the Trip Hub with the shared `TabBar` (already mounted per
