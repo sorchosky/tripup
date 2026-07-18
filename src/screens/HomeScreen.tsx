@@ -40,7 +40,7 @@ export default function HomeScreen() {
 
       {upcoming.length > 0 ? (
         <div className={styles.pastSection}>
-          <Eyebrow>Upcoming</Eyebrow>
+          <Eyebrow>Upcoming trip</Eyebrow>
           <div className={styles.cardStack}>
             {upcoming.map((trip) => (
               <TripCard
