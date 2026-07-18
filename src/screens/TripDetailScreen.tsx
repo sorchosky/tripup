@@ -7,11 +7,11 @@
  * tappable itinerary row.
  */
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
-import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, type MenuItemDef } from '../components/ui';
-import { ArrowLeft, Ellipsis, Vote, CalendarPlus } from '../components/icons';
+import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, Menu, type MenuItemDef } from '../components/ui';
+import { ArrowLeft, Ellipsis, Vote, CalendarPlus, Edit, Users, Trash2 } from '../components/icons';
 import { TRIP, COFFEE_STOP_ITINERARY_ITEM } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import type { ItineraryStatus } from '../data/mock';
@@ -29,6 +29,8 @@ export default function TripDetailScreen() {
   const navigate = useNavigate();
   const { state, dispatch } = useTrip();
   const itemRefs = useRef(new Map<string, HTMLElement>());
+  const [tripMenuOpen, setTripMenuOpen] = useState(false);
+  const tripMenuBtnRef = useRef<HTMLButtonElement>(null);
 
   const dayGroups = useMemo(() => groupItineraryByDay(state.itinerary), [state.itinerary]);
   const anchorId = useMemo(() => findAnchorId(state.itinerary, NARRATIVE_NOW), [state.itinerary]);
@@ -56,6 +58,28 @@ export default function TripDetailScreen() {
     },
   ];
 
+  const tripMenuItems: MenuItemDef[] = [
+    {
+      key: 'edit-trip',
+      label: 'Edit trip details',
+      icon: <Edit size={18} />,
+      onSelect: () => {},
+    },
+    {
+      key: 'participants',
+      label: 'Add/edit participants',
+      icon: <Users size={18} />,
+      onSelect: () => navigate('/trip/add'),
+    },
+    {
+      key: 'delete-trip',
+      label: 'Delete trip',
+      icon: <Trash2 size={18} />,
+      onSelect: () => {},
+      tone: 'destructive',
+    },
+  ];
+
   return (
     <Screen
       nav={
@@ -65,6 +89,19 @@ export default function TripDetailScreen() {
           leftAriaLabel="Back to trips"
           rightIcon={<Ellipsis />}
           rightAriaLabel="Trip options"
+          onRight={() => setTripMenuOpen((open) => !open)}
+          rightRef={tripMenuBtnRef}
+          rightExpanded={tripMenuOpen}
+          menu={
+            <Menu
+              open={tripMenuOpen}
+              onClose={() => setTripMenuOpen(false)}
+              anchorRef={tripMenuBtnRef}
+              items={tripMenuItems}
+              align="end"
+              side="bottom"
+            />
+          }
         />
       }
       tabBar={

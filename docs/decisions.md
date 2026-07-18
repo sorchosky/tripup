@@ -6,6 +6,36 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-18 — Trip Hub ellipsis menu: wire the shared glass Menu to NavHeader (issue #14)
+
+`Menu` itself needed no changes — #13 already built it generically (`MenuItemDef[]`, `tone`,
+dismiss-on-outside, Escape-to-close + refocus, autofocus-first-item) so #14 could reuse it directly.
+The actual gap was structural: `Fab` owns its own trigger button and can wrap it in its own
+`position: relative` anchor div, but `NavHeader`'s right-side button is generic and had no such
+wrapper or exposed ref for a caller to anchor a `Menu` to.
+
+- **`NavHeader` gained an opt-in popover slot** (`ui.tsx`): `rightRef` (forwarded to the right icon
+  `<button>`), `menu` (rendered next to that button inside a new `.navRightAnchor` positioned wrapper,
+  same shape as `.fabAnchor`), and `rightExpanded` (drives `aria-expanded`; `aria-haspopup="menu"` is
+  set automatically whenever `menu` is passed). This keeps `Menu` itself untouched and reusable — the
+  popover is composed in by the caller, not hardcoded into `NavHeader` — and is fully additive, so
+  every other `NavHeader` consumer (`CreatePollScreen`, `PollClosedScreen`, `SplitScreen`, etc.) is
+  unaffected.
+- **`TripDetailScreen`'s ellipsis** now opens a `Menu` with three actions: **Edit trip details** and
+  **Delete trip** are non-destructive stubs (`onSelect: () => {}`, matching the issue's explicit
+  scope — no edit-trip or delete-trip flow exists yet in the canonical 10-screen build order, so this
+  is intentionally a no-op rather than inventing one); **Delete trip** uses `tone: 'destructive'`
+  (existing `.menuItemDestructive` styling, no CSS change needed). **Add/edit participants** is real:
+  it navigates to `/trip/add`, the already-built `AddParticipantScreen` — the concrete "sheet" the
+  issue refers to. #15 (extracting a *shared* `BottomSheet` primitive from that screen's local
+  scrim/sheet/grabber pattern) is separate, already-deferred scope, not a blocker here.
+- **New `Edit` (pencil) icon** added to `icons.tsx` (same lucide-style/`base()` pattern as the rest of
+  the set) — no edit/pencil glyph existed yet; `Trash2` and `Users` already covered the other two rows.
+- Verified end-to-end with Playwright against the dev server (390×844 viewport): ellipsis opens the
+  menu with the three labeled rows; outside-click and Escape both dismiss it (Escape also refocuses the
+  ellipsis button, `aria-expanded` toggles correctly); "Add/edit participants" lands on
+  `AddParticipantScreen`; the FAB's independent `Menu` instance on the same screen is unaffected.
+
 ### 2026-07-18 — Trip Hub itinerary: chronological, day-grouped, anchored to now (issue #12)
 
 Rebuilt the itinerary from a flat list under a static "Itinerary" eyebrow into a real day-grouped
