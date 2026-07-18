@@ -6,7 +6,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
-import { Eyebrow, Pill, AvatarGroup, Button } from '../components/ui';
+import { Eyebrow, Pill, AvatarGroup, Button, TabBar } from '../components/ui';
 import { ArrowLeft, Ellipsis, Plus } from '../components/icons';
 import { TRIP } from '../data/mock';
 import { useTrip } from '../state/TripContext';
@@ -56,6 +56,7 @@ export default function TripDetailScreen() {
           {step.label}
         </Button>
       }
+      tabBar={<TabBar />}
     >
       <div className={styles.overview}>
         <h1 className={styles.title}>{TRIP.name}</h1>

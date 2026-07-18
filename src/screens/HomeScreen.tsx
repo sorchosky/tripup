@@ -5,7 +5,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
-import { Eyebrow, Pill, AvatarGroup } from '../components/ui';
+import { Eyebrow, Pill, AvatarGroup, TabBar } from '../components/ui';
 import { Compass, ChevronRight, MapPin } from '../components/icons';
 import { TRIP, TRIPS, type TripStatus, type TripSummary } from '../data/mock';
 import { useTrip } from '../state/TripContext';
@@ -68,7 +68,7 @@ export default function HomeScreen() {
   const past = TRIPS.filter((t) => t.status === 'past');
 
   return (
-    <Screen>
+    <Screen tabBar={<TabBar />}>
       <div className={styles.top}>
         <Compass size={24} />
         <span className={styles.wordmark}>TripUp</span>

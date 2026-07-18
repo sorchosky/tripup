@@ -8,6 +8,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import styles from './ui.module.css';
 import { participantById } from '../data/mock';
+import { Activity, Compass, Users as UsersIcon } from './icons';
 
 /* ------------------------------ Status bar / chrome ------------------------------ */
 
@@ -98,6 +99,33 @@ export function NavHeader({
       ) : (
         <span className={styles.navSpacer} />
       )}
+    </div>
+  );
+}
+
+/* ------------------------------ Tab bar ------------------------------ */
+
+const TABS = [
+  { key: 'trips', label: 'Trips', Icon: Compass, active: true },
+  { key: 'activity', label: 'Activity', Icon: Activity, active: false },
+  { key: 'profile', label: 'Profile', Icon: UsersIcon, active: false },
+] as const;
+
+export function TabBar() {
+  return (
+    <div className={`${styles.tabBar} ${styles.glass}`}>
+      {TABS.map(({ key, label, Icon, active }) => (
+        <button
+          key={key}
+          type="button"
+          className={`${styles.tabItem} ${active ? styles.tabItemActive : ''}`}
+          disabled={!active}
+          aria-current={active ? 'page' : undefined}
+        >
+          <Icon size={22} />
+          <span className={styles.tabLabel}>{label}</span>
+        </button>
+      ))}
     </div>
   );
 }

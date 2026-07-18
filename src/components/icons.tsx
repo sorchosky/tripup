@@ -102,6 +102,14 @@ export function Compass({ size = 24, className, strokeWidth = 2 }: IconProps) {
   );
 }
 
+export function Activity({ size = 20, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </svg>
+  );
+}
+
 export function Users({ size = 20, className, strokeWidth = 2 }: IconProps) {
   return (
     <svg {...base(size, className)} strokeWidth={strokeWidth}>
