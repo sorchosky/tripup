@@ -79,7 +79,6 @@ export default function SplitScreen() {
           rightAriaLabel="Split options"
         />
       }
-      floatingFooter={stage === 'populated'}
       footer={
         stage === 'populated' ? (
           <>

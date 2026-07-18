@@ -97,7 +97,10 @@ Two-family system:
   These use a frosted "liquid glass" treatment (iOS 26 style): a `rgba(255,255,255,0.65)` white layer,
   a `color-burn` blend at `#dddddd`, and a `darken` blend at `#f7f7f7` stacked to fake refraction/frost
   over whatever scrolls beneath. Reserve this treatment for chrome that floats over content (nav bar,
-  bottom action bar) — not for regular cards.
+  bottom action bar) — not for regular cards. Structurally, this chrome (nav header, footer bar, tab
+  bar) is pinned via `position: absolute` inside the screen body, with the scrollable content area
+  running full-bleed underneath — the glass must always have real scrolled content behind it to blur,
+  not an opaque scroll boundary.
 - **Primary-button elevation:** `0px 6px 16px rgba(90,69,214,0.24)` — colored to match the button
   (`primary`), not a neutral shadow.
 

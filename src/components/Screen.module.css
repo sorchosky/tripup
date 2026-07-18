@@ -10,12 +10,42 @@
   overflow: hidden;
 }
 
-.scroll {
+/* Positioned wrapper below the status bar: hosts the full-bleed scroll layer plus the floating glass
+   chrome (nav header, footer, tab bar) as absolutely-positioned overlays pinned to its edges — so the
+   scroll area can run full-bleed behind them instead of being flex-inset by their height, and the
+   `.glass` backdrop-filter on each has real scrolled content behind it to blur. */
+.body {
   flex: 1 1 auto;
   min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll {
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Scroll-content clearance so the first/last item isn't hidden under the floating chrome's opaque
+   glass. Measured pixel constants matching each chrome piece's fixed rendered height (same literal-
+   height convention as `.statusBar`/`.navHeader` above), not design tokens. */
+.scrollPadTopNav {
+  padding-top: 56px; /* .navHeader height */
+}
+.scrollPadBottomFooter {
+  padding-bottom: 140px; /* footer bar: subtotal row + button + padding */
+}
+.scrollPadBottomTabBar {
+  padding-bottom: 64px; /* tab bar row (60px) + tabBarFloating's bottom padding (4px) */
+}
+.scrollPadBottomFooterAndTabBar {
+  padding-bottom: 204px; /* footer stacked above tab bar, not used today but supported */
+}
+.scrollPadBottomHome {
+  padding-bottom: 34px; /* .homeIndicator height, for screens with neither footer nor tab bar */
 }
 
 /* Default content padding; screens can opt out with `bleed` for full-width media. */
@@ -40,11 +70,6 @@
   flex: 1 0 auto;
 }
 
-/* Sticky glass footer host (receipt "Review split" bar, settle-up CTA, etc.). */
-.footer {
-  flex: 0 0 auto;
-  padding: var(--space-1);
-}
 .footerBar {
   border-radius: var(--radius-device);
   padding: var(--space-4) var(--space-5);
@@ -53,24 +78,50 @@
   gap: var(--space-4);
 }
 
-/* Floating-footer variant (Screen's `floatingFooter` prop): the footer overlays the scroll area
-   instead of sitting below it in flex flow, so `.glass`'s backdrop-filter has scrolled content behind
-   it to blur. Scroll gets bottom clearance roughly matching the footer's rendered height (subtotal
-   row + button + padding) so content can still scroll fully clear of it — a measured chrome constant,
-   same as .statusBar/.navHeader's literal heights above, not a design token. */
-.scrollUnderFooter {
-  padding-bottom: 140px;
+/* Nav header host — floats over the top of the scroll area. */
+.navFloating {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
 }
+
+/* Sticky glass footer host (receipt "Review split" bar, settle-up CTA, etc.) — floats over the
+   bottom of the scroll area instead of sitting in flex flow, so `.glass`'s backdrop-filter has
+   scrolled content behind it to blur. `env(safe-area-inset-bottom)` replaces the clearance the
+   in-flow `HomeIndicator` used to provide before this became an absolutely-positioned overlay. */
 .footerFloating {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 2;
+  padding: var(--space-1);
+  padding-bottom: calc(var(--space-1) + env(safe-area-inset-bottom, 0px));
+}
+/* Stack above the tab bar when both are present (not exercised by any screen today, but supported). */
+.footerFloatingAboveTabBar {
+  bottom: 64px;
 }
 
-/* Tab bar host — sits below the footer CTA bar, above the home indicator. */
-.tabBarSlot {
-  flex: 0 0 auto;
+/* Tab bar host — floats over the bottom of the scroll area, below the footer when both are present. */
+.tabBarFloating {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
   padding: 0 var(--space-1) var(--space-1);
+  padding-bottom: calc(var(--space-1) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Home indicator host — only rendered when neither footer nor tab bar is present, so the bottom edge
+   still reads as device chrome. Wraps (not replaces) `.homeIndicator`'s own in-flow sizing, which
+   other direct consumers (e.g. AddParticipantScreen) still rely on outside of `Screen`. */
+.homeIndicatorFloating {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
