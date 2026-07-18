@@ -29,8 +29,25 @@ Do P0s before the P1s that depend on them.
 
 Type sets the branch prefix: `feat` (new/changed behavior), `fix` (bug), `refactor`, `chore`, `docs`.
 
-**Branch = `<type>/<issue#>-<kebab-slug>`** — e.g. `feat/9-home-hero-tripcard`. Put the branch name in
-the issue so nobody invents their own.
+**Branch = `<type>/<issue#>-<kebab-slug>`** — e.g. `feat/9-home-hero-tripcard`. The issue number in the
+branch name is what links the branch to its issue. Put the branch name in the issue so nobody invents
+their own.
+
+## PR → issue linking and auto-close
+
+Every PR must link back to the issue its branch was cut from, using a GitHub closing keyword
+(`Closes #n`, `Fixes #n`, or `Resolves #n`) in the PR description — not just the branch name, since
+GitHub only auto-closes on the keyword. This lets merging to `main` close the issue automatically
+instead of requiring a manual close step.
+
+- Add the `Closes #n` line to the PR description as soon as the PR is opened, referencing the issue
+  the branch was cut from.
+- Only merge once the issue's **Acceptance** criteria are actually met — scope checked off, build +
+  typecheck green, the change driven on-screen, doc edits included. The auto-close on merge is a
+  mechanical consequence of that, not a substitute for it: don't add `Closes #n` to a PR that doesn't
+  yet satisfy the issue's acceptance criteria.
+- If a PR only partially addresses an issue, don't use a closing keyword — reference it as `Refs #n`
+  instead so the issue stays open.
 
 ## Issue template
 
