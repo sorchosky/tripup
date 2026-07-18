@@ -133,6 +133,29 @@
   opacity: 0.9;
 }
 
+/* ---------- Real-device chrome ---------- */
+/* On a real touch device the app fills the screen (see the max-width: 430px frame rule in
+   global.css) and the OS draws its own status bar and home indicator — so drop the simulated
+   ones. Their space collapses to the OS safe-area insets so content still clears the real notch
+   and home bar. Desktop keeps the emulated chrome that makes the frame read as a phone. */
+@media (max-width: 430px) and (pointer: coarse) {
+  .statusBar {
+    height: env(safe-area-inset-top, 0px);
+    padding: 0;
+  }
+  .statusTime,
+  .statusIcons {
+    display: none;
+  }
+
+  .homeIndicator {
+    height: env(safe-area-inset-bottom, 0px);
+  }
+  .homeIndicator::after {
+    display: none; /* the pill */
+  }
+}
+
 /* ---------- Avatar chip ---------- */
 .avatar {
   flex: 0 0 auto;
