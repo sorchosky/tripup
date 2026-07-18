@@ -40,6 +40,7 @@ amounts, or brief language to make a file look finished. If a real value is need
 | `BRAND.md` | Voice & tone (locked). All user-facing copy is written from here |
 | `CONTENT.md` | Canonical mock data (names, restaurants, amounts) — one source so copy and code agree |
 | `docs/brief.md` | Evaluator-facing QA & scoring rubric. The acceptance gate for every iteration |
+| `docs/issue-conventions.md` | Ticketing & delivery rules: priority, branch naming, issue template, `main`-is-prod flow |
 | `docs/decisions.md` | Dated log of decisions already made |
 | `docs/wireframe-handoff.md` | **Transient.** One-time Figma→code handoff for the first pass — screen-state logic not visible in the layer tree. Retire once screens are ported |
 
