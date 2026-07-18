@@ -6,17 +6,27 @@
  * invent amounts or names to fill them.
  */
 
+import type { ComponentType } from 'react';
+import ariAvatar from '../assets/avatar-ari.svg';
+import { LisbonSkyline, TokyoSkyline, ParisSkyline } from '../assets/skylines';
+
 export interface Participant {
   id: string;
   name: string;
   role: 'organizer' | 'participant';
+  /** Placeholder headshot (CONTENT.md → Participants). Omitted participants fall back to initials. */
+  avatarUrl?: string;
 }
 
 // Reference group from the scenario (CONTENT.md → Participants). Ari organizes; Ren + Nic participate.
+// Josie/Michael/Genevieve join the Tokyo/Paris trips (CONTENT.md → Other trips).
 export const PARTICIPANTS: Participant[] = [
-  { id: 'ari', name: 'Ari', role: 'organizer' },
+  { id: 'ari', name: 'Ari', role: 'organizer', avatarUrl: ariAvatar },
   { id: 'ren', name: 'Ren', role: 'participant' },
   { id: 'nic', name: 'Nic', role: 'participant' },
+  { id: 'josie', name: 'Josie', role: 'participant' },
+  { id: 'michael', name: 'Michael', role: 'participant' },
+  { id: 'genevieve', name: 'Genevieve', role: 'participant' },
 ];
 
 /**
@@ -33,12 +43,66 @@ export function participantById(id: string): Participant {
   return p;
 }
 
+export type TripStatus = 'live' | 'upcoming' | 'past';
+
 export const TRIP = {
   id: 'lisbon-2026',
   destination: 'Lisbon',
   name: 'Lisbon 2026', // per the poll confirmation "Added to Lisbon 2026" (CONTENT.md → The trip)
-  dates: null as string | null, // Trip dates remain TBD in CONTENT.md — not invented here.
+  status: 'live' as TripStatus,
+  dates: { start: '2026-06-10', end: '2026-06-18' }, // locked (CONTENT.md → The trip)
+  spendCents: 10800, // group spend so far; matches DINNER_RECEIPT.totalCents
 };
+
+/**
+ * Home's trip list (CONTENT.md → Other trips). Tokyo and Paris are summary-only — no itinerary/poll/
+ * expense flow is wired for them (out of scope for #7; TripContext still tracks Lisbon as the one
+ * active trip). Locked dates/spend are new mock values this ticket adds under the approved override
+ * of the "no fabricated trips" stance — see docs/decisions.md.
+ */
+export interface TripSummary {
+  id: string;
+  name: string;
+  destination: string;
+  status: TripStatus;
+  dates: { start: string; end: string };
+  spendCents: number;
+  participantIds: string[];
+  Skyline: ComponentType;
+}
+
+export const TRIPS: TripSummary[] = [
+  {
+    id: TRIP.id,
+    name: TRIP.name,
+    destination: TRIP.destination,
+    status: TRIP.status,
+    dates: TRIP.dates,
+    spendCents: TRIP.spendCents,
+    participantIds: ['ari', 'ren', 'nic'],
+    Skyline: LisbonSkyline,
+  },
+  {
+    id: 'tokyo-2026',
+    name: 'Tokyo',
+    destination: 'Tokyo',
+    status: 'upcoming',
+    dates: { start: '2026-10-03', end: '2026-10-12' },
+    spendCents: 0, // nothing logged yet — upcoming trip
+    participantIds: ['ari', 'josie'],
+    Skyline: TokyoSkyline,
+  },
+  {
+    id: 'paris-2026',
+    name: 'Paris weekend',
+    destination: 'Paris',
+    status: 'past',
+    dates: { start: '2026-03-13', end: '2026-03-15' },
+    spendCents: 54000, // proposed group total (CONTENT.md → Other trips) — flagged for review
+    participantIds: ['ari', 'michael', 'genevieve'],
+    Skyline: ParisSkyline,
+  },
+];
 
 /**
  * A single line on the scanned receipt (CONTENT.md → Expenses). Amounts are in minor units (euro

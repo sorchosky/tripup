@@ -7,14 +7,65 @@ import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { Eyebrow, Pill, AvatarGroup } from '../components/ui';
 import { Compass, ChevronRight, MapPin } from '../components/icons';
-import { TRIP } from '../data/mock';
+import { TRIP, TRIPS, type TripStatus, type TripSummary } from '../data/mock';
 import { useTrip } from '../state/TripContext';
+import { formatDateRange, daysLeft } from '../lib/dates';
+import { LisbonSkyline } from '../assets/skylines';
 import styles from './HomeScreen.module.css';
+
+function statusPill(status: TripStatus) {
+  if (status === 'live') return <Pill tone="settled">Live</Pill>;
+  if (status === 'upcoming') return <Pill tone="neutral">Upcoming</Pill>;
+  return <Pill tone="neutral">Past</Pill>;
+}
+
+function formatSpend(cents: number) {
+  return `€${(cents / 100).toFixed(2)}`;
+}
+
+/** Non-interactive summary card for Tokyo/Paris — no detail flow exists for them yet. */
+function TripCard({ trip }: { trip: TripSummary }) {
+  const Skyline = trip.Skyline;
+  const daysLabel =
+    trip.status === 'upcoming' ? `${daysLeft(trip.dates.start)} days to go` : undefined;
+
+  return (
+    <div className={styles.hero}>
+      <div className={styles.map}>
+        <Skyline />
+        <span className={styles.mapPin}>
+          <MapPin size={14} />
+          {trip.destination}
+        </span>
+      </div>
+
+      <div className={styles.heroBody}>
+        <div className={styles.heroTitleRow}>
+          <span className={styles.heroTitle}>{trip.name}</span>
+          {statusPill(trip.status)}
+        </div>
+        <p className={styles.heroSub}>
+          {formatDateRange(trip.dates.start, trip.dates.end)}
+          {daysLabel ? ` · ${daysLabel}` : ''} · {formatSpend(trip.spendCents)} spent
+        </p>
+
+        <div className={styles.heroFooter}>
+          <div className={styles.heroMembers}>
+            <AvatarGroup personIds={trip.participantIds} size="md" ringColor="var(--color-surface-raised)" />
+            <span className={styles.heroMembersLabel}>{trip.participantIds.length} in the group</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function HomeScreen() {
   const navigate = useNavigate();
   const { state } = useTrip();
   const memberCount = state.participants.length;
+  const upcoming = TRIPS.filter((t) => t.status === 'upcoming');
+  const past = TRIPS.filter((t) => t.status === 'past');
 
   return (
     <Screen>
@@ -29,18 +80,7 @@ export default function HomeScreen() {
 
       <button type="button" className={styles.hero} onClick={() => navigate('/trip')}>
         <div className={styles.map}>
-          {/* Placeholder map graphic — stands in for the "Lisbon map outline" called out in the wireframe. */}
-          <svg viewBox="0 0 342 148" preserveAspectRatio="xMidYMid slice" aria-hidden>
-            <g fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="1.5">
-              <path d="M-10 96 C60 78 96 120 150 104 S250 70 360 96" />
-              <path d="M-10 116 C70 104 110 138 168 122 S260 96 360 118" />
-              <path d="M40 -10 L70 60 L58 150" />
-              <path d="M150 -10 L150 40 L120 74 L134 150" />
-              <path d="M250 -10 L232 56 L262 150" />
-              <path d="M-10 40 L120 40 M180 40 L360 40" />
-            </g>
-            <path d="M-10 128 C90 118 150 150 360 130 L360 160 L-10 160 Z" fill="rgba(90,69,214,0.35)" />
-          </svg>
+          <LisbonSkyline />
           <span className={styles.mapPin}>
             <MapPin size={14} />
             {TRIP.destination}
@@ -50,9 +90,12 @@ export default function HomeScreen() {
         <div className={styles.heroBody}>
           <div className={styles.heroTitleRow}>
             <span className={styles.heroTitle}>{TRIP.name}</span>
-            <Pill tone="settled">Live</Pill>
+            {statusPill(TRIP.status)}
           </div>
-          <p className={styles.heroSub}>Deciding, splitting, settling — all in one place.</p>
+          <p className={styles.heroSub}>
+            {formatDateRange(TRIP.dates.start, TRIP.dates.end)} · {daysLeft(TRIP.dates.end)} day
+            {daysLeft(TRIP.dates.end) === 1 ? '' : 's'} left · {formatSpend(TRIP.spendCents)} spent
+          </p>
 
           <div className={styles.heroFooter}>
             <div className={styles.heroMembers}>
@@ -66,12 +109,31 @@ export default function HomeScreen() {
         </div>
       </button>
 
+      {upcoming.length > 0 ? (
+        <div className={styles.pastSection}>
+          <Eyebrow>Upcoming</Eyebrow>
+          <div className={styles.cardStack}>
+            {upcoming.map((trip) => (
+              <TripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <div className={styles.pastSection}>
         <Eyebrow>Past trips</Eyebrow>
-        <div className={styles.empty}>
-          <span className={styles.emptyStrong}>Nothing behind you yet.</span> Lisbon&apos;s the first one on
-          the board.
-        </div>
+        {past.length > 0 ? (
+          <div className={styles.cardStack}>
+            {past.map((trip) => (
+              <TripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.empty}>
+            <span className={styles.emptyStrong}>Nothing behind you yet.</span> Lisbon&apos;s the first
+            one on the board.
+          </div>
+        )}
       </div>
     </Screen>
   );

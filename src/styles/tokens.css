@@ -78,6 +78,7 @@
   --glass-white: rgba(255, 255, 255, 0.65);
   --glass-burn: #dddddd;    /* mix-blend-mode: color-burn */
   --glass-darken: #f7f7f7;  /* mix-blend-mode: darken */
+  --blur-glass: 20px;       /* backdrop-filter blur radius for floating chrome */
 
   /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */
   --avatar-sm: 24px;   /* rank badges, poll rows */

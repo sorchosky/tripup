@@ -13,7 +13,31 @@ amounts or names ad hoc elsewhere — add them here first.
 
 - **Destination:** Lisbon
 - **Trip name:** Lisbon 2026 (per the poll-screen confirmation: "Added to Lisbon 2026")
-- **Dates:** `TBD`
+- **Dates:** **Jun 10–18, 2026** (locked)
+- **Status:** `live` — the flow's fixed narrative "today" is **Jun 17, 2026** (the day the Cervejaria
+  Ramiro dinner is logged), which lands 1 day before the trip ends → "1 day left."
+- **Group spend so far:** €108.00 (= the dinner receipt total, `DINNER_RECEIPT.totalCents`)
+
+> **Note:** locking these dates, plus the Tokyo/Paris trips and their dates below, is a deliberate,
+> approved override of this doc's earlier "no fabricated trips/dates" stance — see
+> `docs/decisions.md` (2026-07-18 entry).
+
+## Other trips
+
+Home's trip list beyond Lisbon — summary-level only (thumbnail, status, dates, spend, roster). No
+itinerary/poll/expense flow is built for these; they exist to make Home read as an app with more than
+one trip in it.
+
+| Trip | Destination | Status | Dates | Roster | Group spend |
+| --- | --- | --- | --- | --- | --- |
+| Tokyo | Tokyo | `upcoming` | Oct 3–12, 2026 | Ari, Josie | €0.00 (nothing logged yet) |
+| Paris weekend | Paris | `past` | Mar 13–15, 2026 | Ari, Michael, Genevieve | €540.00 (proposed — flagged below) |
+
+- **Josie, Michael, Genevieve** are new participants introduced for these two trips (not part of the
+  Lisbon scenario). Added to the Participants table below.
+- **Paris weekend's €540.00 total is a newly-authored mock value**, not sourced from a hi-fi mock or
+  prior decision — a plausible weekend total (lodging + food) across 3 people, picked to make the
+  "past trip" card read as real. Flag for review/replacement rather than treating as settled fact.
 
 ## Lodging
 
@@ -39,9 +63,20 @@ by the hi-fi mocks — no 4th participant appears (avatar rows are consistently 
 
 | Name | Role | Notes |
 | --- | --- | --- |
-| Ari | Organizer | Sets up the trip, the "you"/primary user in most flows |
+| Ari | Organizer | Sets up the trip, the "you"/primary user in most flows. Has a placeholder photo avatar (see Avatars below); organizer/POV on all three trips. |
 | Ren | Participant | Shows up hangry (poll-notification reference); excluded from the wine split |
 | Nic | Participant | Excluded from the wine split |
+| Josie | Participant | Joins the Tokyo trip (upcoming) — not part of the Lisbon scenario |
+| Michael | Participant | Joins the Paris weekend trip (past) — not part of the Lisbon scenario |
+| Genevieve | Participant | Joins the Paris weekend trip (past) — not part of the Lisbon scenario |
+
+### Avatars
+
+Ari is the only participant with a photo avatar (`avatarUrl`) — a placeholder gradient-silhouette SVG
+(`src/assets/avatar-ari.svg`), since egress is blocked here and a real headshot can't be fetched. It's
+marked as a placeholder in code and swapped for a real photo later. Ren, Nic, Josie, Michael, and
+Genevieve all render as initials (the `Avatar` component's fallback) — per the issue, only the
+photo/fallback pairing (Ari vs. Nic/Ren) needed to be demonstrated.
 
 > Debt consolidation reads fine with 3 people given the confirmed expense set below (~2 transfers to
 > settle). No 4th participant needed — the hi-fi mocks settle this.

@@ -138,18 +138,24 @@ export function Avatar({
   ariaLabel,
   ariaPressed,
 }: AvatarProps) {
-  const letter = initial ?? (personId ? participantById(personId).name.charAt(0) : '?');
+  const person = personId ? participantById(personId) : undefined;
+  const letter = initial ?? (person ? person.name.charAt(0) : '?');
   const cls = `${styles.avatar} ${sizeClass[size]} ${variantClass[variant]} ${onClick ? styles.avatarButton : ''}`;
+  const content = person?.avatarUrl ? (
+    <img className={styles.avatarPhoto} src={person.avatarUrl} alt="" aria-hidden />
+  ) : (
+    letter
+  );
   if (onClick) {
     return (
       <button type="button" className={cls} onClick={onClick} aria-label={ariaLabel} aria-pressed={ariaPressed}>
-        {letter}
+        {content}
       </button>
     );
   }
   return (
     <span className={cls} aria-hidden={!ariaLabel} aria-label={ariaLabel} role={ariaLabel ? 'img' : undefined}>
-      {letter}
+      {content}
     </span>
   );
 }

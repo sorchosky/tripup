@@ -1,0 +1,13 @@
+<!-- Placeholder "photo" avatar (gradient silhouette, not a real photo) — egress is blocked here, so
+     this stands in for a real headshot until one is dropped into src/assets/ later. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="hsl(262, 55%, 42%)" />
+      <stop offset="100%" stop-color="hsl(302, 55%, 30%)" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#g)" />
+  <circle cx="32" cy="26" r="12" fill="rgba(255,255,255,0.55)" />
+  <path d="M8 60c0-14 10-22 24-22s24 8 24 22" fill="rgba(255,255,255,0.55)" />
+</svg>
