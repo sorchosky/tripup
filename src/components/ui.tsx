@@ -236,13 +236,14 @@ export function Fab({ items, ariaLabel = 'Add' }: { items: MenuItemDef[]; ariaLa
 
 /* ------------------------------ Avatar ------------------------------ */
 
-type AvatarSize = 'sm' | 'md' | 'lg';
+type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 type AvatarVariant = 'filled' | 'neutral' | 'outline';
 
 const sizeClass: Record<AvatarSize, string> = {
   sm: styles.avatarSm,
   md: styles.avatarMd,
   lg: styles.avatarLg,
+  xl: styles.avatarXl,
 };
 const variantClass: Record<AvatarVariant, string> = {
   filled: styles.avatarFilled,

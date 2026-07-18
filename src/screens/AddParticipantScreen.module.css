@@ -1,51 +1,24 @@
-/* AddParticipantScreen — bring Ren into the trip. Presented as a bottom sheet over a dimmed hub. */
+/* AddParticipantScreen — bring Ren into the trip, inside the shared full-height BottomSheet (#15). */
 
-.screen { position: relative; height: 100%; }
-.scrim {
-  position: absolute;
-  inset: 0;
-  background: rgba(22, 25, 42, 0.28);
-  border: none;
-  cursor: pointer;
-}
-.sheet {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--color-surface);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  padding: var(--space-3) var(--space-5) var(--space-6);
-  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.18);
-  max-height: 82%;
-  overflow-y: auto;
-}
-.grabber {
-  width: 40px;
-  height: 5px;
-  border-radius: var(--radius-full);
-  background: var(--color-avatar-outline);
-  margin: 0 auto var(--space-4);
-}
-.title {
-  font-family: var(--font-family-display);
-  font-weight: var(--font-weight-extrabold);
-  font-size: var(--font-size-title);
-  letter-spacing: var(--tracking-title);
-  color: var(--color-text);
-}
-.sub { margin-top: var(--space-1); font-size: var(--font-size-label); color: var(--color-text-muted); }
+.sub { color: var(--color-text-muted); font-size: var(--font-size-label); }
 
-.current {
-  margin-top: var(--space-4);
+.current { margin-top: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+.currentRow { display: flex; align-items: flex-end; gap: var(--space-4); flex-wrap: wrap; }
+
+.profile,
+.profileSmall {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--space-2);
 }
-.currentLabel { font-size: var(--font-size-label); color: var(--color-text-muted); }
+.profileName {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-label);
+  color: var(--color-text);
+}
 
 .search {
-  margin-top: var(--space-4);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -66,28 +39,43 @@
   color: var(--color-text);
 }
 
-.results { margin-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+.results { margin-top: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); }
 .resultRow {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   width: 100%;
-  text-align: left;
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-3);
-  cursor: pointer;
 }
 .resultBody { flex: 1 1 auto; min-width: 0; }
 .resultName { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
 .resultMeta { font-size: var(--font-size-label); color: var(--color-text-muted); }
-.addPlus { flex: 0 0 auto; color: var(--color-primary); }
+
+.addBtn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-caption);
+  cursor: pointer;
+}
+.addBtn:active { transform: scale(0.96); }
 
 .emptyResults {
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
   color: var(--color-text-muted);
   font-size: var(--font-size-label);
   text-align: center;
-  padding: var(--space-5);
+  padding: var(--space-5) 0;
 }
