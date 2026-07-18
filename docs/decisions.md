@@ -6,6 +6,42 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-18 — Data & content model: dates/status/spend locked, avatars, extra trips (issue #7)
+
+**Approved override of the "no fabricated trips/dates" stance** (issue #7): Lisbon's dates were the
+last major `TBD` left after the 2026-07-16/17 content locks, and Home's "Past trips" empty state and
+hardcoded "Live" pill were placeholder debt blocking #8–#15. Per the issue author, this pass
+deliberately fabricates dates/trips that were previously kept honest-and-empty, so screens have real
+data to read from. Docs (`CONTENT.md`) are updated in the same pass rather than left contradicting
+the code.
+
+- **Lisbon dates locked:** Jun 10–18, 2026. `TripStatus` (`'live' | 'upcoming' | 'past'`) added to the
+  trip type, replacing HomeScreen's hardcoded `<Pill tone="settled">Live</Pill>` JSX.
+- **Date helpers added** (`src/lib/dates.ts`): `formatDateRange` and a deterministic `daysLeft`,
+  computed against a fixed `NARRATIVE_TODAY` (2026-06-17) rather than the real clock — the flow
+  already narrates around that date (the dinner receipt, itinerary "Today" labels), so days-left
+  needed to stay pinned to it, not drift with wall-clock time.
+- **`spendCents` added** to the trip type — Lisbon's is the dinner receipt total (€108.00); real,
+  derived from existing mock data, not invented.
+- **Two more trips added to Home's list — summary-level only:** Tokyo (upcoming, Oct 3–12, 2026;
+  roster: Ari + Josie) and Paris weekend (past, Mar 13–15, 2026; roster: Ari + Michael + Genevieve).
+  Josie/Michael/Genevieve are new participants, scoped to these two trips only. Paris's €540.00 spend
+  figure is a newly-authored placeholder amount, flagged in `CONTENT.md` for review. **No itinerary/
+  poll/expense flow exists for Tokyo or Paris** — `TripContext` still tracks Lisbon as the one active
+  trip; the other two are non-interactive cards on Home. Expanding them into full flows is out of
+  scope here (not in issue #7's file list, and #8–#15 are all Lisbon-flow tickets).
+- **Avatar photos:** `Participant.avatarUrl?` added; `Avatar` renders an `<img>` when present, falling
+  back to initials otherwise. Only Ari has one (per the issue) — a placeholder gradient-silhouette SVG
+  (`src/assets/avatar-ari.svg`), not a real photo (egress blocked here); Ren/Nic (and the new Josie/
+  Michael/Genevieve) stay on the initials fallback.
+- **Asset pipeline stood up:** `src/assets/` now holds `skylines.tsx` (per-destination gradient/
+  line-art SVGs replacing the one inline Home hero graphic) and `avatar-ari.svg`. All marked as
+  placeholders in code comments, standing in for real stock photography to be dropped in later.
+- **`--blur-glass` token added** (`tokens.css`), replacing the hardcoded `blur(20px)` in `.glass`
+  (`ui.module.css`) — reusable by #8 and #13 per the issue.
+- `src/components/README.md` corrected — it still described the component set as "currently empty by
+  design," which has been stale since the 2026-07-17 build pass.
+
 ### 2026-07-17 — First pass of the coded flow built (all 9 routes)
 
 The skeleton is now a working prototype. Ari's Lisbon journey plays end to end and every graded state
