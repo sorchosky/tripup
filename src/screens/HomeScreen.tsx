@@ -26,10 +26,6 @@ export default function HomeScreen() {
         <span className={styles.wordmark}>TripUp</span>
       </div>
 
-      <div className={styles.sectionLabel}>
-        <Eyebrow>This trip</Eyebrow>
-      </div>
-
       <TripCard
         variant="hero"
         name={TRIP.name}
