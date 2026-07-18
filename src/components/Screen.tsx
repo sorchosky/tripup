@@ -11,13 +11,15 @@ import { StatusBar, HomeIndicator, NavHeader, glassClass } from './ui';
 interface ScreenProps {
   nav?: ReactNode;
   children: ReactNode;
-  /** Sticky glass footer content (e.g. subtotals + CTA). Rendered above the home indicator. */
+  /** Sticky glass footer content (e.g. subtotals + CTA). Rendered above the tab bar / home indicator. */
   footer?: ReactNode;
+  /** Global liquid-glass tab bar (Trips/Activity/Profile). Rendered below the footer. */
+  tabBar?: ReactNode;
   /** Remove the default content padding for full-bleed layouts. */
   bleed?: boolean;
 }
 
-export function Screen({ nav, children, footer, bleed }: ScreenProps) {
+export function Screen({ nav, children, footer, tabBar, bleed }: ScreenProps) {
   return (
     <div className={styles.screen}>
       <StatusBar />
@@ -30,6 +32,7 @@ export function Screen({ nav, children, footer, bleed }: ScreenProps) {
           <div className={`${styles.footerBar} ${glassClass}`}>{footer}</div>
         </div>
       ) : null}
+      {tabBar ? <div className={styles.tabBarSlot}>{tabBar}</div> : null}
       <HomeIndicator />
     </div>
   );
