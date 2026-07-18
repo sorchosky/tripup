@@ -72,6 +72,7 @@
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-title);
   letter-spacing: var(--tracking-title);
+  line-height: var(--line-height-tight);
   color: var(--color-text);
 }
 .venueMeta {
