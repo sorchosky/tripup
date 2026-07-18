@@ -6,6 +6,20 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-18 — Home hero restyled to spec (issue #9)
+
+`TripCard`'s extraction (hero/row variants) had already shipped in an earlier pass, but the hero's
+visual details still lagged issue #9's scope. This pass finishes the restyle without touching
+`mock.ts`, tokens, or the tab bar — all of that groundwork (#7, #8) was already in place.
+
+- **"This trip" eyebrow removed** from `HomeScreen` above the hero card.
+- **Status pill moved on-card, top-left**, replacing the old map-pin + destination-text badge
+  (`TripCard.tsx`'s `.map` block); the destination is still implied by the skyline art and title.
+- **Subline trimmed** to dates + "N day(s) left" only — spend moved out of the sentence and into the
+  footer.
+- **Footer swapped**: "{n} in the group" + chevron removed; the two-avatar group now sits alongside
+  the formatted group spend (`spendCents`, via the existing `formatSpend` helper).
+
 ### 2026-07-18 — Data & content model: dates/status/spend locked, avatars, extra trips (issue #7)
 
 **Approved override of the "no fabricated trips/dates" stance** (issue #7): Lisbon's dates were the

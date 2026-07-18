@@ -15,8 +15,6 @@
   color: var(--color-text);
 }
 
-.sectionLabel { margin-bottom: var(--space-3); }
-
 /* ---- Upcoming / past trip sections ---- */
 .pastSection { margin-top: var(--space-6); }
 .cardStack {

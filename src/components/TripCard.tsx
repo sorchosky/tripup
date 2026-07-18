@@ -9,7 +9,7 @@
 import type { ComponentType } from 'react';
 import styles from './TripCard.module.css';
 import { Pill, AvatarGroup } from './ui';
-import { ChevronRight, MapPin } from './icons';
+import { ChevronRight } from './icons';
 import type { TripStatus } from '../data/mock';
 import { formatDateRange, daysLeft } from '../lib/dates';
 
@@ -45,7 +45,7 @@ interface TripCardRowProps extends TripCardBase {
 type TripCardProps = TripCardHeroProps | TripCardRowProps;
 
 export function TripCard(props: TripCardProps) {
-  const { Skyline, name, destination, dates } = props;
+  const { Skyline, name, dates } = props;
 
   if (props.variant === 'row') {
     return (
@@ -69,28 +69,20 @@ export function TripCard(props: TripCardProps) {
     <button type="button" className={styles.hero} onClick={onClick}>
       <div className={styles.map}>
         <Skyline />
-        <span className={styles.mapPin}>
-          <MapPin size={14} />
-          {destination}
-        </span>
+        <span className={styles.statusBadge}>{statusPill(status)}</span>
       </div>
 
       <div className={styles.heroBody}>
         <div className={styles.heroTitleRow}>
           <span className={styles.heroTitle}>{name}</span>
-          {statusPill(status)}
         </div>
         <p className={styles.heroSub}>
-          {formatDateRange(dates.start, dates.end)} · {days} day{days === 1 ? '' : 's'} left ·{' '}
-          {formatSpend(spendCents)} spent
+          {formatDateRange(dates.start, dates.end)} · {days} day{days === 1 ? '' : 's'} left
         </p>
 
         <div className={styles.heroFooter}>
-          <div className={styles.heroMembers}>
-            <AvatarGroup personIds={participantIds} size="md" ringColor="var(--color-surface-raised)" />
-            <span className={styles.heroMembersLabel}>{participantIds.length} in the group</span>
-          </div>
-          <ChevronRight size={20} />
+          <AvatarGroup personIds={participantIds} size="md" ringColor="var(--color-surface-raised)" />
+          <span className={styles.heroSpend}>{formatSpend(spendCents)}</span>
         </div>
       </div>
     </button>
