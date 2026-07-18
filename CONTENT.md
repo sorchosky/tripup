@@ -116,6 +116,11 @@ The "where to eat" decision used on screens 4–6. Sourced from the `poll-status
 - **Winner card meta:** Seafood · 4 min walk · €€.
 - Address/coordinates/rating/phone for these three venues aren't captured yet (unlike Lodging/Landmarks
   below) — add them here if a screen needs them.
+- **AI Suggest source (screen 4):** the "AI Suggest" button on Create poll starts the form empty and,
+  when tapped, fills it with these same three venues — framed per the wireframe annotation (29:2384) as
+  restaurants "you and frequent travelers may like" pulled from past trips. Deliberately reuses the poll
+  candidates above (not a separate list) so the poll that gets sent matches the voting screen that
+  follows. Mirrored in code as `AI_SUGGESTED_SPOTS` (derived from the options), not hand-duplicated.
 
 > Supersedes an earlier placeholder candidate list (A Nossa Casa, Taberna Sal Grosso, Black Pavilion
 > Restaurant) drafted before the hi-fi poll mock existed. The mock is the rendered screen, so it's
