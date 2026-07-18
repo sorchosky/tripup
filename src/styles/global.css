@@ -52,7 +52,8 @@ body {
   }
   .device-frame {
     width: 100vw;
-    height: 100vh;
+    height: 100vh; /* fallback for browsers without dvh support */
+    height: 100dvh; /* tracks the live viewport as iOS Safari's address bar shows/hides */
     box-shadow: none;
     border-radius: 0;
   }
