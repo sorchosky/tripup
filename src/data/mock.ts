@@ -336,6 +336,16 @@ export const DINNER_ITINERARY_ITEM: ItineraryItem = {
   status: 'pending',
 };
 
+/** The Trip Hub FAB's "Add to itinerary" quick stop — sourced from CONTENT.md's locked coffee options. */
+export const COFFEE_STOP_ITINERARY_ITEM: ItineraryItem = {
+  id: 'coffee-stop',
+  day: 'Today',
+  time: null,
+  title: `Coffee run — ${COFFEE_OPTIONS[0].name}`,
+  subtitle: 'Minimalist, specialty coffee',
+  status: 'planned',
+};
+
 export const BREAKFAST_OPTIONS: Venue[] = [
   {
     id: 'hygge-kaffe',

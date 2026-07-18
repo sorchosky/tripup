@@ -5,10 +5,10 @@
  * which is exactly what the rubric grades for system consistency (C5).
  */
 
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode, type RefObject } from 'react';
 import styles from './ui.module.css';
 import { participantById } from '../data/mock';
-import { Activity, Compass, Users as UsersIcon } from './icons';
+import { Activity, Compass, Users as UsersIcon, Plus } from './icons';
 
 /* ------------------------------ Status bar / chrome ------------------------------ */
 
@@ -126,6 +126,110 @@ export function TabBar() {
           <span className={styles.tabLabel}>{label}</span>
         </button>
       ))}
+    </div>
+  );
+}
+
+/* ------------------------------ Menu / Popover ------------------------------ */
+
+/** One row in a glass Menu — shared shape for the FAB menu (#13) and the ellipsis action menu (#14). */
+export interface MenuItemDef {
+  key: string;
+  label: string;
+  icon?: ReactNode;
+  onSelect: () => void;
+  tone?: 'default' | 'destructive';
+}
+
+interface MenuProps {
+  open: boolean;
+  onClose: () => void;
+  /** The trigger button — excluded from "click outside" dismissal, refocused on Escape. */
+  anchorRef: RefObject<HTMLElement | null>;
+  items: MenuItemDef[];
+  align?: 'start' | 'end';
+  side?: 'top' | 'bottom';
+}
+
+/** Glass panel anchored to a trigger: dismiss-on-outside-click, Escape-to-close, focuses the first item. */
+export function Menu({ open, onClose, anchorRef, items, align = 'end', side = 'bottom' }: MenuProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      const target = e.target as Node;
+      if (panelRef.current?.contains(target) || anchorRef.current?.contains(target)) return;
+      onClose();
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        onClose();
+        anchorRef.current?.focus();
+      }
+    }
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open, onClose, anchorRef]);
+
+  useEffect(() => {
+    if (open) panelRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
+  }, [open]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      ref={panelRef}
+      role="menu"
+      className={`${styles.menu} ${styles.glass} ${side === 'top' ? styles.menuTop : styles.menuBottom} ${
+        align === 'start' ? styles.menuStart : styles.menuEnd
+      }`}
+    >
+      {items.map((item) => (
+        <button
+          key={item.key}
+          type="button"
+          role="menuitem"
+          className={`${styles.menuItem} ${item.tone === 'destructive' ? styles.menuItemDestructive : ''}`}
+          onClick={() => {
+            onClose();
+            item.onSelect();
+          }}
+        >
+          {item.icon}
+          <span>{item.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------ FAB ------------------------------ */
+
+/** Floating glass action button; opens a Menu of quick actions above itself. */
+export function Fab({ items, ariaLabel = 'Add' }: { items: MenuItemDef[]; ariaLabel?: string }) {
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <div className={styles.fabAnchor}>
+      <Menu open={open} onClose={() => setOpen(false)} anchorRef={btnRef} items={items} align="end" side="top" />
+      <button
+        ref={btnRef}
+        type="button"
+        className={`${styles.fab} ${styles.glass}`}
+        aria-label={ariaLabel}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <Plus size={22} className={open ? styles.fabIconOpen : undefined} />
+      </button>
     </div>
   );
 }

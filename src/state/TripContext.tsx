@@ -55,6 +55,7 @@ export type TripAction =
   | { type: 'ADD_PARTICIPANT'; id: string }
   | { type: 'CAST_VOTE'; optionId: string; voterId: string }
   | { type: 'CLOSE_POLL' }
+  | { type: 'ADD_ITINERARY_ITEM'; item: ItineraryItem }
   | { type: 'TOGGLE_ASSIGNEE'; itemId: string; personId: string }
   | { type: 'SETTLE' }
   | { type: 'RESET' };
@@ -111,6 +112,12 @@ function reducer(state: TripState, action: TripAction): TripState {
         // The result writes into the itinerary as a pending dinner (graded transition, screen 6).
         itinerary: alreadyOnItinerary ? state.itinerary : [...state.itinerary, DINNER_ITINERARY_ITEM],
       };
+    }
+
+    case 'ADD_ITINERARY_ITEM': {
+      // Idempotent, same guard as CLOSE_POLL's itinerary write — re-adding a stop no-ops.
+      if (state.itinerary.some((i) => i.id === action.item.id)) return state;
+      return { ...state, itinerary: [...state.itinerary, action.item] };
     }
 
     case 'TOGGLE_ASSIGNEE': {

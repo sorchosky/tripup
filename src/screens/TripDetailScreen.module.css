@@ -23,6 +23,34 @@
 .section { margin-top: var(--space-5); }
 .sectionHead { margin-bottom: var(--space-3); }
 
+/* ---- Trip Hub chrome: tab bar (center) + FAB (right), laid out so they don't collide ---- */
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.tabBarFlex {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ---- Open-poll banner: the only way back to /poll once the footer CTA is gone ---- */
+.pollBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: var(--space-4);
+  text-align: left;
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+}
+.pollBannerText { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
+
 /* ---- Itinerary timeline ---- */
 .timeline { display: flex; flex-direction: column; gap: var(--space-2); }
 .event {
@@ -33,6 +61,12 @@
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
 }
+.eventButton {
+  width: 100%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.eventButton:active { background: var(--color-surface-neutral); }
 .time {
   flex: 0 0 44px;
   font-weight: var(--font-weight-bold);
