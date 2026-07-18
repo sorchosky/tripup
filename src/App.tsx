@@ -1,11 +1,12 @@
 /**
- * App — router + the locked 390x844 device frame.
+ * App — router + the locked 390×844 device frame.
  *
- * Routes are derived from the screen registry so the flow lives in one place. Each route currently
- * renders a placeholder stub; swap in the real screen UI as it's built.
+ * The flow is Ari's Lisbon journey end to end. Screens 7 (log expense) and 8 (exclusions/balances) are
+ * fused into one "Scan & assign" screen (/split) to match the hi-fi mock, so the ≤10-screen flow lands
+ * at nine routes. See src/screens/registry.ts for the canonical list.
  */
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { TripProvider } from './state/TripContext';
 
 import HomeScreen from './screens/HomeScreen';
@@ -14,8 +15,7 @@ import AddParticipantScreen from './screens/AddParticipantScreen';
 import CreatePollScreen from './screens/CreatePollScreen';
 import PollVotingScreen from './screens/PollVotingScreen';
 import PollClosedScreen from './screens/PollClosedScreen';
-import LogExpenseScreen from './screens/LogExpenseScreen';
-import BalancesScreen from './screens/BalancesScreen';
+import SplitScreen from './screens/SplitScreen';
 import SettleUpScreen from './screens/SettleUpScreen';
 import SettlementConfirmationScreen from './screens/SettlementConfirmationScreen';
 
@@ -31,10 +31,10 @@ export default function App() {
             <Route path="/poll/new" element={<CreatePollScreen />} />
             <Route path="/poll" element={<PollVotingScreen />} />
             <Route path="/poll/closed" element={<PollClosedScreen />} />
-            <Route path="/expense/new" element={<LogExpenseScreen />} />
-            <Route path="/balances" element={<BalancesScreen />} />
+            <Route path="/split" element={<SplitScreen />} />
             <Route path="/settle" element={<SettleUpScreen />} />
             <Route path="/settle/done" element={<SettlementConfirmationScreen />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </TripProvider>

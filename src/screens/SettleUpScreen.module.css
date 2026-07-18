@@ -1,0 +1,59 @@
+/* SettleUpScreen — step 2: the fewest transfers that make everyone even. */
+
+.body { padding-bottom: var(--space-5); }
+.header { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-5); }
+.title {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+}
+.steps { display: flex; align-items: center; gap: var(--space-2); font-size: var(--font-size-caption); }
+.stepDone { font-weight: var(--font-weight-medium); color: var(--color-text-muted); }
+.stepActive { font-weight: var(--font-weight-bold); color: var(--color-text); }
+.stepDot { width: 3px; height: 3px; border-radius: var(--radius-full); background: var(--color-text-muted); }
+
+.lede {
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-body);
+  margin-bottom: var(--space-5);
+}
+.ledeStrong { color: var(--color-text); font-weight: var(--font-weight-semibold); }
+
+.sectionHead { margin-bottom: var(--space-3); }
+
+/* ---- Transfer rows ---- */
+.transfers { display: flex; flex-direction: column; gap: var(--space-2); }
+.transfer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+.who { display: flex; align-items: center; gap: var(--space-2); flex: 1 1 auto; min-width: 0; }
+.name { font-weight: var(--font-weight-semibold); font-size: var(--font-size-label); color: var(--color-text); }
+.arrow { color: var(--color-text-muted); flex: 0 0 auto; }
+.amount { font-weight: var(--font-weight-extrabold); font-size: var(--font-size-body); color: var(--color-text); white-space: nowrap; }
+
+/* ---- Balances recap ---- */
+.balances { margin-top: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); }
+.balanceRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.balanceRow:last-child { border-bottom: none; }
+.balWho { display: flex; align-items: center; gap: var(--space-2); }
+.balName { font-size: var(--font-size-label); color: var(--color-text); }
+.balNet { font-weight: var(--font-weight-bold); font-size: var(--font-size-label); }
+.owed { color: var(--color-settled); }
+.owes { color: var(--color-owed); }
+.even { color: var(--color-text-muted); }

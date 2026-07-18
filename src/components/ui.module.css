@@ -1,0 +1,205 @@
+/* ui.module.css — shared primitives. Every value comes from a token (DESIGN.md contract). */
+
+/* ---------- Frosted "liquid glass" chrome ---------- */
+.glass {
+  position: relative;
+  isolation: isolate;
+  background: var(--glass-white);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow:
+    var(--elevation-glass),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+}
+
+/* ---------- Status bar ---------- */
+.statusBar {
+  flex: 0 0 auto;
+  height: 54px;
+  padding: 0 var(--space-5) 4px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  color: var(--color-text);
+}
+.statusTime {
+  font-weight: var(--font-weight-bold);
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  padding-bottom: 2px;
+}
+.statusIcons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 4px;
+}
+
+/* ---------- Nav header ---------- */
+.navHeader {
+  flex: 0 0 auto;
+  height: 56px;
+  padding: 8px var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.navTitle {
+  flex: 1 1 auto;
+  text-align: center;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.iconButton {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: none;
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+}
+.navSpacer {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+}
+.textButton {
+  flex: 0 0 auto;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-label);
+  cursor: pointer;
+  padding: 8px 4px;
+}
+
+/* ---------- Home indicator ---------- */
+.homeIndicator {
+  flex: 0 0 auto;
+  height: 34px;
+  display: grid;
+  place-items: center;
+}
+.homeIndicator::after {
+  content: '';
+  width: 140px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: var(--color-text);
+  opacity: 0.9;
+}
+
+/* ---------- Avatar chip ---------- */
+.avatar {
+  flex: 0 0 auto;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.2px;
+  border: 0 solid transparent;
+  background: none;
+  padding: 0;
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.avatarSm { width: var(--avatar-sm); height: var(--avatar-sm); }
+.avatarMd { width: var(--avatar-md); height: var(--avatar-md); }
+.avatarLg { width: var(--avatar-lg); height: var(--avatar-lg); }
+
+.avatarFilled { background: var(--color-avatar-fill); color: var(--color-on-primary); }
+.avatarNeutral { background: var(--color-surface-neutral); color: var(--color-text-muted); }
+.avatarOutline {
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  border-width: var(--avatar-outline-width);
+  border-color: var(--color-avatar-outline);
+}
+.avatarButton { cursor: pointer; }
+
+/* ---------- Avatar group (overlapping) ---------- */
+.avatarGroup {
+  display: inline-flex;
+  align-items: center;
+}
+.avatarGroup > * + * {
+  margin-left: -8px;
+}
+.avatarGroup > * {
+  box-shadow: 0 0 0 2px var(--ring-color, var(--color-surface));
+}
+
+/* ---------- Status pill ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-eyebrow);
+  letter-spacing: var(--tracking-pill);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pillSettled { background: var(--color-settled-bg); color: var(--color-settled); }
+.pillOwed { background: var(--color-owed-bg); color: var(--color-owed); border: 1px solid var(--color-owed-border); }
+.pillNeutral { background: var(--color-surface-neutral); color: var(--color-text-muted); }
+
+/* ---------- Eyebrow / section label ---------- */
+.eyebrow {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+.eyebrowWide { letter-spacing: var(--tracking-eyebrow-wide); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-body);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: transform 80ms ease, opacity 120ms ease, box-shadow 120ms ease;
+}
+.btn:active { transform: scale(0.985); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn:disabled:active { transform: none; }
+
+.btnPrimary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--elevation-primary-button);
+}
+.btnPrimary:disabled { box-shadow: none; }
+
+.btnNeutral {
+  background: var(--color-surface-neutral);
+  color: var(--color-text);
+}

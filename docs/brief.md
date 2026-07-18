@@ -80,6 +80,7 @@ iterations to see whether you're converging.
 | Date | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | Weighted total | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | _init_ | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 / 51 | Skeleton only — no screens built yet |
+| 2026-07-17 | 3 | 3 | 2 | 3 | 3 | 2 | 3 | 2 | 45 / 51 | First pass: full flow coded + verified end-to-end via headless-Chromium walk; both hi-fi screens faithful; real min-transfer logic; per-item exclusion recalcs live. C3 held at Meets pending the live Vercel link + on-device check; C8 Meets pending a full contrast/44px audit. |
 
 _(Max weighted total = 3×(3+3+3+2+2+2+1+1) = 51.)_
 
@@ -87,19 +88,19 @@ _(Max weighted total = 3×(3+3+3+2+2+2+1+1) = 51.)_
 
 Living list of what still needs to be added. Close items as they land; nothing open here at submission.
 
-- [ ] Design tokens finalized (`DESIGN.md` + `tokens.css`) — currently placeholders
-- [ ] Wireflow built (≤10 screens, real content) in Figma
-- [ ] 2 hi-fi screens designed (lean: poll voting + settle up)
-- [ ] Hi-fi screens ported into code
-- [ ] All 10 screen components implemented against tokens + mock data
-- [ ] Shared state wired so graded transitions actually fire
-- [ ] `src/lib/settle.ts` minimum-transfer logic implemented for real
-- [ ] Receipt-scan (mocked) state built into the expense flow
-- [ ] Mock data locked in `CONTENT.md` (restaurant names, amounts)
-- [ ] Deployed to Vercel; public link verified in incognito
-- [ ] Figma sharing set to "Anyone with the link can view"
-- [ ] Full English/lorem-ipsum proofread pass
-- [ ] Verbatim brief pasted below and reconciled against sections 1–3
+- [x] Design tokens finalized (`DESIGN.md` + `tokens.css`) — locked from hi-fi; glass/avatar/tracking tokens added this pass
+- [x] Wireflow built (≤10 screens, real content) in Figma — node 29:854
+- [x] 2 hi-fi screens designed — poll reveal (screen 6) + receipt scan/assign (screens 7–8), node 29:2972
+- [x] Hi-fi screens ported into code — `PollClosedScreen`, `SplitScreen`; verified against Figma
+- [x] All screen components implemented against tokens + mock data — 9 routes (7+8 fused)
+- [x] Shared state wired so graded transitions actually fire — `TripContext` reducer; walked end to end
+- [x] `src/lib/settle.ts` minimum-transfer logic implemented for real — output matches the hi-fi footer
+- [x] Receipt-scan (mocked) state built into the expense flow — canned receipt on `/split`
+- [x] Mock data locked in `CONTENT.md` (restaurant names, amounts) — trip dates still TBD (not invented)
+- [ ] Deployed to Vercel; public link verified in incognito — **in progress this pass**
+- [ ] Figma sharing set to "Anyone with the link can view" — owner action (Steve)
+- [x] Full English/lorem-ipsum proofread pass — all copy English, written from BRAND.md
+- [ ] Verbatim brief pasted below and reconciled against sections 1–3 — owner action (Steve)
 
 ## 5. How to run this as a QA pass
 

@@ -1,0 +1,37 @@
+/* Screen.module.css — the per-screen shell inside the locked 390×844 device frame. */
+
+.screen {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Default content padding; screens can opt out with `bleed` for full-width media. */
+.pad {
+  padding: var(--space-2) var(--space-5) var(--space-6);
+}
+
+/* Sticky glass footer host (receipt "Review split" bar, settle-up CTA, etc.). */
+.footer {
+  flex: 0 0 auto;
+  padding: var(--space-1);
+}
+.footerBar {
+  border-radius: var(--radius-device);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

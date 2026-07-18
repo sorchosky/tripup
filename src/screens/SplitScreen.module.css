@@ -1,0 +1,170 @@
+/* SplitScreen — high-fidelity port of `receipt-capture-itemize` (node 29:2783). Screens 7 + 8 fused. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5) var(--space-2);
+}
+
+/* ---- Header + step indicator ---- */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.title {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+}
+.steps {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-caption);
+}
+.stepActive { font-weight: var(--font-weight-bold); color: var(--color-text); }
+.stepInactive { font-weight: var(--font-weight-medium); color: var(--color-text-muted); }
+.stepDot { width: 3px; height: 3px; border-radius: var(--radius-full); background: var(--color-text-muted); }
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ---- Captured receipt card ---- */
+.receiptCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+.thumb {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: #fbfaf7;
+  overflow: hidden;
+  padding: 6px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+}
+.thumbLine { height: 2px; border-radius: 1px; background: #d8d2c6; }
+.thumbLine.short { width: 60%; }
+.thumbLine.mid { width: 80%; }
+.thumbTotal { height: 3px; border-radius: 1px; background: var(--color-text); margin-top: auto; width: 70%; }
+
+.receiptMeta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.merchant { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
+.receiptSub { font-weight: var(--font-weight-regular); font-size: var(--font-size-label); color: var(--color-text-muted); }
+.receiptTotal { font-weight: var(--font-weight-bold); font-size: var(--font-size-label); color: var(--color-text); }
+
+.retake {
+  flex: 0 0 auto;
+  border: none;
+  background: var(--color-surface-neutral);
+  color: var(--color-text);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-caption);
+  cursor: pointer;
+}
+
+/* ---- Item rows ---- */
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.itemRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+.itemTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.itemName {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.qty { font-weight: var(--font-weight-extrabold); font-size: var(--font-size-eyebrow); color: var(--color-text-muted); }
+.name { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
+.price { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); white-space: nowrap; }
+
+.warning {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-owed-bg);
+  border: 1px solid var(--color-owed-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) 10px;
+  color: var(--color-owed);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-caption);
+}
+.warning svg { flex: 0 0 auto; }
+
+.assignRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border-top: 0.5px solid var(--color-border);
+  padding-top: 10px;
+}
+.assignLabel { font-weight: var(--font-weight-regular); font-size: var(--font-size-label); color: var(--color-text-muted); }
+.chips { display: flex; align-items: center; gap: var(--space-2); }
+
+.addItem {
+  border: 1.5px dashed var(--color-avatar-outline);
+  border-radius: var(--radius-md);
+  height: 48px;
+  display: grid;
+  place-items: center;
+  background: none;
+  width: 100%;
+  cursor: pointer;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-label);
+  color: var(--color-text-muted);
+}
+
+/* ---- Sticky footer (subtotals + CTA) ---- */
+.subtotals {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+}
+.subtotal { display: flex; align-items: center; gap: var(--space-2); }
+.subAmount { font-weight: var(--font-weight-extrabold); font-size: var(--font-size-label); color: var(--color-text); }
