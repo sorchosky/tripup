@@ -87,6 +87,7 @@
   --avatar-sm: 24px;   /* rank badges, poll rows */
   --avatar-md: 28px;   /* footer subtotals, home/trip avatar groups */
   --avatar-lg: 32px;   /* per-item "Assigned to" chips */
+  --avatar-xl: 64px;   /* profile buttons — add/edit participants sheet (#15) */
   --avatar-outline-width: 1.5px;
 
   /* ---- Reference device (locked) ---- */

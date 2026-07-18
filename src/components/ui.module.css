@@ -231,6 +231,7 @@
 .avatarSm { width: var(--avatar-sm); height: var(--avatar-sm); }
 .avatarMd { width: var(--avatar-md); height: var(--avatar-md); }
 .avatarLg { width: var(--avatar-lg); height: var(--avatar-lg); }
+.avatarXl { width: var(--avatar-xl); height: var(--avatar-xl); font-size: var(--font-size-title); }
 
 .avatarFilled { background: var(--color-avatar-fill); color: var(--color-on-primary); }
 .avatarNeutral { background: var(--color-surface-neutral); color: var(--color-text-muted); }
