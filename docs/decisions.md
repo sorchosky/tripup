@@ -6,6 +6,33 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-18 — Trip Hub chrome: shared tab bar + glass FAB (issue #13)
+
+Replaced the single evolving footer CTA on the Trip Hub with the shared `TabBar` (already mounted per
+#8) plus a right-side glass `Fab`, per the issue. Removing that CTA also removed the only way the hub
+itself advanced the linear poll→split→settle journey, so this pass restores the lost entry points
+with affordances native to the hub rather than reintroducing a single CTA:
+
+- **`Fab`** (`ui.tsx`) — round glass button, reuses `.glass`/`--blur-glass`; opens a **`Menu`** (glass
+  popover, dismiss-on-outside via `pointerdown`, Escape-to-close + refocus, autofocuses the first
+  item). `Menu` is written generically (`MenuItemDef[]`, `tone: 'default' | 'destructive'` already
+  modeled) so #14's ellipsis action menu can reuse it directly instead of building its own.
+- **FAB actions:** "Create a poll" → `/poll/new` (unchanged route). "Add to itinerary" → dispatches a
+  new generic `ADD_ITINERARY_ITEM` action (idempotent, same guard shape as `CLOSE_POLL`'s itinerary
+  write) with `COFFEE_STOP_ITINERARY_ITEM`, a real stop sourced from `CONTENT.md`'s already-locked
+  coffee options (that section was explicitly flagged there as "available for screen 2 ... or future
+  extension" — this is that extension, not an invented venue).
+- **Layout:** `TripDetailScreen` composes `TabBar` (flex, center) + `Fab` (fixed, right) in one row
+  passed into `Screen`'s existing `tabBar` slot — `Screen.tsx` itself untouched.
+- **Restoring lost navigation:** an open poll (`poll.status === 'open'`) now surfaces as a tappable
+  banner above the itinerary, routing back to `/poll`. A `pending` itinerary row (the dinner, once the
+  poll closes) is now tappable, routing to `/split`. Together with the FAB's "Create a poll," this
+  keeps `/poll`, `/split`, `/settle` all reachable from the hub with the footer CTA gone — driven
+  end-to-end with a headless-Chromium pass (menu open/close, both FAB actions, poll-open revisit,
+  pending-item → split).
+- **"Add Ren" via the ellipsis stays dead**, unchanged from before this issue — wiring it is #14/#15's
+  scope (the ellipsis menu + add-participant sheet), not this one's.
+
 ### 2026-07-18 — Home hero restyled to spec (issue #9)
 
 `TripCard`'s extraction (hero/row variants) had already shipped in an earlier pass, but the hero's

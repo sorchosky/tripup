@@ -44,6 +44,62 @@
   letter-spacing: var(--tracking-pill);
 }
 
+/* ---------- FAB ---------- */
+.fabAnchor {
+  position: relative;
+  flex: 0 0 auto;
+}
+.fab {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  border: none;
+  display: grid;
+  place-items: center;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: 0;
+}
+.fab:active { transform: scale(0.95); }
+.fab svg { transition: transform 150ms ease; }
+.fabIconOpen { transform: rotate(45deg); }
+
+/* ---------- Menu / Popover ---------- */
+.menu {
+  position: absolute;
+  z-index: 20;
+  min-width: 208px;
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.menuBottom { top: calc(100% + var(--space-2)); }
+.menuTop { bottom: calc(100% + var(--space-2)); }
+.menuEnd { right: 0; }
+.menuStart { left: 0; }
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-label);
+  text-align: left;
+  cursor: pointer;
+}
+.menuItem:active { background: var(--color-surface-neutral); }
+.menuItemDestructive { color: var(--color-owed); }
+
 /* ---------- Status bar ---------- */
 .statusBar {
   flex: 0 0 auto;

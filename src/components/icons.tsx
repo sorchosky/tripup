@@ -164,3 +164,26 @@ export function X({ size = 20, className, strokeWidth = 2 }: IconProps) {
     </svg>
   );
 }
+
+export function Vote({ size = 18, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <path d="m9 12 2 2 4-4" />
+      <path d="M5 7c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2v12H5V7Z" />
+      <path d="M22 19H2" />
+    </svg>
+  );
+}
+
+export function CalendarPlus({ size = 18, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <path d="M8 2v4" />
+      <path d="M16 2v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+      <path d="M10 16h4" />
+      <path d="M12 14v4" />
+    </svg>
+  );
+}
