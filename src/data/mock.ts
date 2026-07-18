@@ -253,6 +253,15 @@ export const DINNER_POLL = {
   winnerMeta: 'Seafood · 4 min walk · €€',
 };
 
+/**
+ * AI Suggest source for Create poll (screen 4). Per the wireframe annotation (29:2384), AI Suggest
+ * "pulls restaurant data from previous trips to suggest restaurants you and frequent travelers may
+ * like." In the demo it fills the empty poll form with the canonical dinner candidates, so the poll
+ * that gets sent lines up with the voting screen (screen 5) that follows. Names stay in sync with
+ * DINNER_POLL rather than being a second, divergent list.
+ */
+export const AI_SUGGESTED_SPOTS: string[] = DINNER_POLL.options.map((o) => o.name);
+
 export const LUNCH_OPTIONS: Venue[] = [
   {
     id: 'tapa-do-bairroalto',
