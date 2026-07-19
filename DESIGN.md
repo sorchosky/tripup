@@ -129,11 +129,11 @@ Two-family system:
   navigating away before the user has actually confirmed anything.
 - **Blurred-image glow** (issue #59, `src/components/ImageGlow.tsx`): a blurred, bled-out copy of a
   photo sits behind its card, standing in for a neutral drop shadow with an ambient, photo-colored one
-  (Sunday-app reference). Used on the poll-reveal winner card now that it has a real photo
-  (`cervejaria-ramiro.webp`); reserved for other photo surfaces once they get real files (settle-up hero,
-  issue #61). Governed by three tokens in `tokens.css` — `--glow-blur` (32px), `--glow-spread` (20px,
-  how far the copy bleeds past the sharp card), `--glow-opacity` (0.55). Don't apply it to non-photo
-  cards — it's a photo-specific pattern, not a general elevation replacement.
+  (Sunday-app reference). Used on the poll-reveal winner card and, as of issue #61, the Settle Up hero
+  (both reuse the same `cervejaria-ramiro.webp` — the one photo asset the mock data actually has).
+  Governed by three tokens in `tokens.css` — `--glow-blur` (32px), `--glow-spread` (20px, how far the
+  copy bleeds past the sharp card), `--glow-opacity` (0.55). Don't apply it to non-photo cards — it's a
+  photo-specific pattern, not a general elevation replacement.
 - **Settlement ring / radial meter** (issue #39, `src/components/SettleRing.tsx`): a radial progress
   ring replacing the flat "you're owed €X" numeral at the top of Settle Up. Fill fraction is binary
   today — `settled` is a single boolean in `TripState`, so the ring reads 0% (outstanding) or 100%
@@ -245,7 +245,11 @@ One entry per screen, in build order. Purpose/states are stubs until the wireflo
 ### 9. Debt consolidation / settle up
 - Purpose: Built from the "Settle Up (Ari)" wireframe (`docs/wireframe-handoff.md`) — a payer-
   perspective hero ("you're owed") plus the minimum-transfer per-debtor breakdown from
-  `src/lib/settle.ts`.
+  `src/lib/settle.ts`. Restyled per issue #61 toward a photo-hero-with-blurred-glow treatment (the
+  dinner photo + `ImageGlow`, a frosted "You're owed" badge on the photo, pill-shaped CTAs/tags scoped
+  to this screen) — inspired by, not a clone of, the Sunday-app reference; copy stays BRAND.md voice
+  throughout. This app only ever renders the payer's (Ari's) perspective, so the framing is "You're
+  owed," not a toggling "You're owed / You're paying" state.
 - Key states: a radial `SettleRing` (issue #39) tops the hero card in place of the old flat euro
   numeral — amber ring/outstanding amount before settling, animates to a full green ring on `SETTLE`
   (`prefers-reduced-motion` skips straight to the end state). The per-debtor "Consolidated debts" rows
