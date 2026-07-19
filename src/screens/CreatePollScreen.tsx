@@ -2,8 +2,8 @@
  * Screen 4 — Create poll. Ari proposes where to eat. The question sits under its own label, and the
  * spots start as an empty set of free-text inputs the creator fills in — one per idea — each with a
  * delete control. "Add option" appends a blank row; "AI Suggest" pulls spots from past trips
- * (frequent-traveler favorites) into the list. "Send poll to …" opens it to the rest of the group
- * (screen 5). No review step in between — one tap sends.
+ * (frequent-traveler favorites) into the list. "Send poll to participants" opens it to the rest of the
+ * group — one tap sends, landing on the poll-sent confirmation (#55) before live voting (screen 5).
  */
 
 import { useState } from 'react';
@@ -30,7 +30,7 @@ function blankRow(value = ''): OptionRow {
 
 export default function CreatePollScreen() {
   const navigate = useNavigate();
-  const { state } = useTrip();
+  const { state, dispatch } = useTrip();
   const [question, setQuestion] = useState(state.poll.question);
   // Empty by default (two blank rows, the minimum a poll needs) — the creator types the spots in.
   const [options, setOptions] = useState<OptionRow[]>(() => [blankRow(), blankRow()]);
@@ -77,7 +77,14 @@ export default function CreatePollScreen() {
       }
       floatingFooter
       footer={
-        <Button variant="primary-glass" disabled={!canSend} onClick={() => navigate('/poll')}>
+        <Button
+          variant="primary-glass"
+          disabled={!canSend}
+          onClick={() => {
+            dispatch({ type: 'OPEN_POLL' });
+            navigate('/poll/sent');
+          }}
+        >
           Send poll to participants
         </Button>
       }

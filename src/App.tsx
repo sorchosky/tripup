@@ -20,6 +20,7 @@ import HomeScreen from './screens/HomeScreen';
 import TripDetailScreen from './screens/TripDetailScreen';
 import AddParticipantScreen from './screens/AddParticipantScreen';
 import CreatePollScreen from './screens/CreatePollScreen';
+import PollSentScreen from './screens/PollSentScreen';
 import PollVotingScreen from './screens/PollVotingScreen';
 import PollClosedScreen from './screens/PollClosedScreen';
 import SplitScreen from './screens/SplitScreen';
@@ -40,6 +41,7 @@ function AppRoutes() {
         <Route path="/" element={<HomeScreen />} />
         <Route path="/trip" element={<TripDetailScreen />} />
         <Route path="/poll/new" element={<CreatePollScreen />} />
+        <Route path="/poll/sent" element={<PollSentScreen />} />
         <Route path="/poll" element={<PollVotingScreen />} />
         <Route path="/poll/closed" element={<PollClosedScreen />} />
         <Route path="/split" element={<SplitScreen />} />
