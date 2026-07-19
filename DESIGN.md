@@ -170,7 +170,15 @@ One entry per screen, in build order. Purpose/states are stubs until the wireflo
 ### 2. Trip detail / group view
 - Purpose: `TBD` — the trip's members, itinerary, money at a glance.
 - Key states: `TBD`
-- Notes:
+- Notes: The itinerary renders as an **Oura-style vertical timeline** (issue #47) — day-grouped
+  (`Eyebrow` per day), each row an icon node on a connecting rail (paid = settled-tone check, planned/
+  pending = a tinted pin, `pending` in the `owed` role) next to a plain tappable card (title, subtitle,
+  status pill, trailing `ChevronRight`). Every row is a real, focusable button for visual/keyboard
+  consistency; only rows with a real downstream screen (the dinner expense: `/split` while owed, `/settle`
+  once paid) actually navigate — the rest are intentional no-op taps, same stub precedent as the trip
+  menu's "Edit trip details." The hub opens **scrolled to the top**, not auto-scrolled to a "now" item —
+  this supersedes issue #12's anchor-to-now scroll/demote treatment (accent border, "Up next"/"Most
+  recent" label, demoted opacity on earlier rows), which is fully removed. See `docs/decisions.md`.
 
 ### 3. Add participant
 - Purpose: `TBD` — bring someone (Ren) into the trip.

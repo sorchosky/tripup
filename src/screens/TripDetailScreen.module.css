@@ -51,30 +51,61 @@
 }
 .pollBannerText { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
 
-/* ---- Itinerary timeline ---- */
+/* ---- Itinerary timeline (issue #47): Oura-style rail — an icon node per row, connected by a vertical
+   line, every row a plain tappable card with a trailing chevron. Supersedes issue #12's anchor-to-now
+   scroll/demote treatment (see docs/decisions.md) — the hub always opens scrolled to the top and every
+   row renders identically, no "current item" emphasis. ---- */
 .timeline { display: flex; flex-direction: column; gap: var(--space-2); }
-.event {
+.row { display: flex; align-items: stretch; gap: var(--space-3); }
+
+/* Rail column: a fixed-width lane holding the node + the connector line down to the next node. The
+   connector deliberately overflows past this row's own box (top: node height, bottom: negative gap) so
+   the line reads as continuous through the gap between cards, without measuring row heights in JS. */
+.rail { position: relative; flex: 0 0 var(--avatar-lg); display: flex; justify-content: center; }
+.node {
+  width: var(--avatar-lg);
+  height: var(--avatar-lg);
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  z-index: 1;
+}
+.nodePaid { background: var(--color-settled-bg); color: var(--color-settled); }
+.nodePending { background: var(--color-owed-bg); color: var(--color-owed); }
+.nodePlanned { background: var(--color-surface-neutral); color: var(--color-text-muted); }
+.connector {
+  position: absolute;
+  top: var(--avatar-lg);
+  bottom: calc(-1 * var(--space-2));
+  left: calc(var(--avatar-lg) / 2 - 1px);
+  width: 2px;
+  background: var(--color-border);
+}
+
+.event {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: 44px;
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
-}
-.eventButton {
   width: 100%;
   cursor: pointer;
   text-align: left;
   -webkit-tap-highlight-color: transparent;
 }
-.eventButton:active { background: var(--color-surface-neutral); }
-.eventRow { display: flex; gap: var(--space-3); }
+.event:active { background: var(--color-surface-neutral); }
 .time {
   flex: 0 0 44px;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-label);
   color: var(--color-text);
-  padding-top: 1px;
 }
 .timeEmpty { color: var(--color-avatar-outline); }
 .eventBody { flex: 1 1 auto; min-width: 0; }
@@ -86,15 +117,4 @@
 }
 .eventTitle { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
 .eventSub { margin-top: 2px; font-size: var(--font-size-label); color: var(--color-text-muted); }
-
-/* ---- Anchor-to-now state (issue #12): the current/next item, and everything before it ---- */
-.eventAnchor { border-color: var(--color-primary); }
-.anchorLabel {
-  display: block;
-  margin-bottom: var(--space-1);
-  font-family: var(--font-family-base);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-caption);
-  color: var(--color-primary);
-}
-.eventPast { opacity: var(--opacity-demoted); }
+.chevron { flex: 0 0 auto; color: var(--color-text-muted); }

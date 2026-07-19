@@ -1,10 +1,12 @@
 /**
- * itinerary.ts — chronological day-grouping + "anchor to now" for the Trip Hub timeline (issue #12).
+ * itinerary.ts — chronological day-grouping for the Trip Hub timeline.
  *
- * Ordering and anchor selection share one comparator so the two can never disagree: an item without a
- * `time` is treated as occurring at the very end of its day (it's a flexible "anytime" stop), which is
- * why it sorts last within the day and also why it won't get picked as the imminent "next" item ahead
- * of a timed one on the same day.
+ * An item without a `time` is treated as occurring at the very end of its day (it's a flexible
+ * "anytime" stop), which is why it sorts last within the day.
+ *
+ * Previously also exported `findAnchorId`/`isUpcoming` (issue #12's "anchor to now" — scroll-and-
+ * demote to the next-up item on load). Issue #47 replaced that with an Oura-style timeline the hub
+ * opens scrolled to the top, with every item rendered the same way — see docs/decisions.md.
  */
 
 import type { ItineraryItem } from '../data/mock';
@@ -37,22 +39,4 @@ export function groupItineraryByDay(items: ItineraryItem[]): ItineraryDayGroup[]
   return [...byDay.entries()]
     .sort(([dayA], [dayB]) => dayA.localeCompare(dayB))
     .map(([day, dayItems]) => ({ day, items: [...dayItems].sort(compareItems) }));
-}
-
-/**
- * The id to scroll to and visually emphasize on load: the next item still ahead of `now`, or — once
- * nothing's left today (the "last evening of trip" case) — the most recent item overall. Returns null
- * for an empty itinerary.
- */
-export function findAnchorId(items: ItineraryItem[], now: Date): string | null {
-  if (items.length === 0) return null;
-  const sorted = groupItineraryByDay(items).flatMap((group) => group.items);
-  const nowMs = now.getTime();
-  const next = sorted.find((item) => itemTimestamp(item) > nowMs);
-  return (next ?? sorted[sorted.length - 1]).id;
-}
-
-/** Whether an item is still ahead of `now` — distinguishes "Up next" from the "Most recent" fallback. */
-export function isUpcoming(item: ItineraryItem, now: Date): boolean {
-  return itemTimestamp(item) > now.getTime();
 }

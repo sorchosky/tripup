@@ -6,6 +6,37 @@ entries short: the decision, and why. Open questions live in `DESIGN.md` and the
 
 ---
 
+### 2026-07-19 — Trip Hub itinerary rebuilt as an Oura-style timeline (issue #47)
+
+**Supersedes the 2026-07-18 entry below ("anchored to now," issue #12)** — the accent-border "current
+item" treatment, the "Up next"/"Most recent" label, the demoted-opacity styling on earlier rows, and
+the on-mount `scrollIntoView` to that anchor are all removed. The hub now opens scrolled to the top,
+every itinerary row renders identically, and every row is a plain tappable card.
+
+- **`src/lib/itinerary.ts`**: dropped `findAnchorId`/`isUpcoming` (grepped first — nothing else
+  referenced them). `groupItineraryByDay` (day-grouping, chronological within a day) is unchanged and
+  still does the real work; only the anchor-selection half of the file is gone.
+- **`src/lib/dates.ts`**: dropped `NARRATIVE_NOW`, the anchor-only sibling of `NARRATIVE_TODAY` — no
+  longer referenced anywhere once the anchor logic left.
+- **`TripDetailScreen.tsx`**: each day's items now render as a rail — a small icon node per row
+  (`Check`/settled tone once `paid`, `MapPin`/`owed` tone while `pending`, `MapPin`/neutral tone while
+  `planned`) connected by a vertical line (`.connector`, absolutely positioned to overflow into the gap
+  between cards so it reads continuous without measuring row heights in JS), each paired with a normal
+  card (time, title, status pill, subtitle) and a trailing `ChevronRight`. Per-day `Eyebrow` headers are
+  unchanged.
+- **Routing is now a small `routeForItem` helper** rather than "only `pending` rows are `<button>`s":
+  the dinner item (the one row with a real downstream screen) routes to `/split` while `pending` and
+  `/settle` once `paid` — previously only the `pending` state was reachable at all. Every other
+  itinerary row (check-in, landmarks, meals) has no detail screen in the ≤10-screen build order, so it's
+  still a real, focusable `<button>` (chevron included, for visual/keyboard consistency with the dinner
+  row) but its tap is an intentional no-op — the same stub precedent already used for the trip-options
+  menu's "Edit trip details" (issue #14, no invented screen to route to).
+- **`--opacity-demoted` token removed** from `tokens.css` (grepped first — it was only ever consumed by
+  the anchor-to-now `.eventPast` rule this pass deletes).
+- Verified against the dev server: the hub loads scrolled to the top (no jump to the dinner row), every
+  row shows a chevron and node, the pending dinner still opens `/split`, and once settled the same row
+  reopens on `/settle` instead.
+
 ### 2026-07-18 — Trip Hub ellipsis menu: wire the shared glass Menu to NavHeader (issue #14)
 
 `Menu` itself needed no changes — #13 already built it generically (`MenuItemDef[]`, `tone`,
