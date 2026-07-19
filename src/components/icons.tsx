@@ -196,6 +196,16 @@ export function Vote({ size = 18, className, strokeWidth = 2 }: IconProps) {
   );
 }
 
+export function Info({ size = 16, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
+    </svg>
+  );
+}
+
 export function CalendarPlus({ size = 18, className, strokeWidth = 2 }: IconProps) {
   return (
     <svg {...base(size, className)} strokeWidth={strokeWidth}>

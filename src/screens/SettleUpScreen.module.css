@@ -25,35 +25,72 @@
 
 .sectionHead { margin-bottom: var(--space-3); }
 
-/* ---- Transfer rows ---- */
-.transfers { display: flex; flex-direction: column; gap: var(--space-2); }
-.transfer {
+/* ---- Hero "you're owed" card ---- */
+.heroCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-card);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+.heroAmountRow { display: flex; align-items: baseline; gap: var(--space-2); }
+.heroAmount {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-text);
+}
+.heroFrom { font-weight: var(--font-weight-semibold); font-size: var(--font-size-label); color: var(--color-text-muted); }
+.heroSub { font-size: var(--font-size-caption); color: var(--color-text-muted); }
+
+/* ---- Consolidated debts list ---- */
+.debtors { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-5); }
+.debtorCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+.debtorWho { display: flex; align-items: center; gap: var(--space-3); flex: 1 1 auto; min-width: 0; }
+.debtorNames { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.debtorName { font-weight: var(--font-weight-semibold); font-size: var(--font-size-label); color: var(--color-text); }
+.debtorItems {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 190px;
+}
+.debtorRight { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); flex: 0 0 auto; }
+.debtorAmount { font-weight: var(--font-weight-extrabold); font-size: var(--font-size-body); color: var(--color-text); white-space: nowrap; }
+.requestTag {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-caption);
+  color: var(--color-on-primary);
+  background: var(--color-text);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+}
+
+/* ---- Reminder tip ---- */
+.tipRow {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3);
 }
-.who { display: flex; align-items: center; gap: var(--space-2); flex: 1 1 auto; min-width: 0; }
-.name { font-weight: var(--font-weight-semibold); font-size: var(--font-size-label); color: var(--color-text); }
-.arrow { color: var(--color-text-muted); flex: 0 0 auto; }
-.amount { font-weight: var(--font-weight-extrabold); font-size: var(--font-size-body); color: var(--color-text); white-space: nowrap; }
-
-/* ---- Balances recap ---- */
-.balances { margin-top: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); }
-.balanceRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-border);
-}
-.balanceRow:last-child { border-bottom: none; }
-.balWho { display: flex; align-items: center; gap: var(--space-2); }
-.balName { font-size: var(--font-size-label); color: var(--color-text); }
-.balNet { font-weight: var(--font-weight-bold); font-size: var(--font-size-label); }
-.owed { color: var(--color-settled); }
-.owes { color: var(--color-owed); }
-.even { color: var(--color-text-muted); }
+.tipIcon { color: var(--color-text-muted); flex: 0 0 auto; }
+.tipText { font-size: var(--font-size-caption); color: var(--color-text-muted); line-height: var(--line-height-body); }
