@@ -9,14 +9,6 @@
 
 export const NARRATIVE_TODAY = new Date('2026-06-17T00:00:00Z');
 
-/**
- * A more granular sibling of NARRATIVE_TODAY, used only for the itinerary's anchor-to-now logic
- * (issue #12) — an hour after the 21:00 dinner, so the demo lands on "last evening of trip, nothing
- * left today" rather than "midnight." Kept separate from NARRATIVE_TODAY so daysLeft's "1 day left"
- * whole-day rounding doesn't shift.
- */
-export const NARRATIVE_NOW = new Date('2026-06-17T22:00:00Z');
-
 const MONTH_FORMAT = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' });
 const WEEKDAY_FORMAT = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' });
 const DAY_MS = 24 * 60 * 60 * 1000;

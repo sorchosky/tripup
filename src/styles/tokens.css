@@ -80,9 +80,6 @@
   --glass-darken: #f7f7f7;  /* mix-blend-mode: darken */
   --blur-glass: 20px;       /* backdrop-filter blur radius for floating chrome */
 
-  /* ---- Opacity (itinerary anchor-to-now demoted state, issue #12) ---- */
-  --opacity-demoted: 0.5;
-
   /* ---- Blurred-image glow (issue #59) — a blurred copy of a photo bled out behind its card, standing
    * in for a drop shadow (Sunday-app reference). Reserve for photo surfaces (poll-reveal winner card
    * today; receipt/settle-up hero once those get real photos) — not a generic shadow replacement. */
