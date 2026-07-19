@@ -45,7 +45,7 @@
   padding-bottom: 204px; /* footer stacked above tab bar, not used today but supported */
 }
 .scrollPadBottomHome {
-  padding-bottom: 34px; /* .homeIndicator height, for screens with neither footer nor tab bar */
+  padding-bottom: 34px; /* bottom safe clearance for screens with neither footer nor tab bar */
 }
 
 /* Default content padding; screens can opt out with `bleed` for full-width media. */
@@ -114,14 +114,4 @@
   z-index: 2;
   padding: 0 var(--space-1) var(--space-1);
   padding-bottom: calc(var(--space-1) + env(safe-area-inset-bottom, 0px));
-}
-
-/* Home indicator host — only rendered when neither footer nor tab bar is present, so the bottom edge
-   still reads as device chrome. Wraps (not replaces) `.homeIndicator`'s own in-flow sizing, which
-   other direct consumers (e.g. AddParticipantScreen) still rely on outside of `Screen`. */
-.homeIndicatorFloating {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }

@@ -1,12 +1,12 @@
 /**
- * Screen — composes the iOS chrome (status bar, nav header, scroll area, sticky glass footer, home
- * indicator) so each screen file only writes its own content. Keeps the 390×844 device contract in one
- * place instead of every screen re-deriving it.
+ * Screen — composes the iOS chrome (status bar, nav header, scroll area, sticky glass footer) so each
+ * screen file only writes its own content. Keeps the 390×844 device contract in one place instead of
+ * every screen re-deriving it.
  */
 
 import type { ReactNode } from 'react';
 import styles from './Screen.module.css';
-import { StatusBar, HomeIndicator, NavHeader, glassClass } from './ui';
+import { StatusBar, NavHeader, glassClass } from './ui';
 
 interface ScreenProps {
   nav?: ReactNode;
@@ -44,11 +44,6 @@ export function Screen({ nav, children, footer, tabBar, bleed }: ScreenProps) {
           </div>
         ) : null}
         {tabBar ? <div className={styles.tabBarFloating}>{tabBar}</div> : null}
-        {footer || tabBar ? null : (
-          <div className={styles.homeIndicatorFloating}>
-            <HomeIndicator />
-          </div>
-        )}
       </div>
     </div>
   );

@@ -41,10 +41,6 @@ export function StatusBar() {
   );
 }
 
-export function HomeIndicator() {
-  return <div className={styles.homeIndicator} aria-hidden />;
-}
-
 interface NavHeaderProps {
   onBack?: () => void;
   leftIcon?: ReactNode;
