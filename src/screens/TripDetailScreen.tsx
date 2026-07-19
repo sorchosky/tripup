@@ -139,7 +139,7 @@ export default function TripDetailScreen() {
           <div className={styles.tabBarFlex}>
             <TabBar />
           </div>
-          <Fab items={fabItems} ariaLabel="Add to trip" />
+          <Fab items={fabItems} ariaLabel="Add to trip" icon={CalendarPlus} />
         </div>
       }
     >
