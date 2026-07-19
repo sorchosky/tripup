@@ -24,8 +24,12 @@ import styles from './SplitScreen.module.css';
 
 type Stage = 'empty' | 'capturing' | 'loading' | 'populated';
 
-/** How long the mocked "OCR" skeleton stays up before the canned scan result populates the screen. */
-const SCAN_DELAY_MS = 900;
+/**
+ * How long the mocked "OCR" skeleton stays up before the canned scan result populates the screen.
+ * Matches the shimmer sweep's ~1s cadence (`--shimmer-duration` in tokens.css) so the loading state
+ * reads as one full shimmer pass, not a cut-off animation.
+ */
+const SCAN_DELAY_MS = 1000;
 
 export default function SplitScreen() {
   const navigate = useNavigate();
@@ -124,20 +128,38 @@ export default function SplitScreen() {
         ) : null}
 
         {stage === 'loading' ? (
-          <section className={styles.section}>
-            <Eyebrow>Captured receipt</Eyebrow>
-            <div className={`${styles.receiptCard} ${styles.receiptSkeleton}`} aria-hidden>
-              <span className={styles.skelThumb} />
-              <div className={styles.skelLines}>
-                <span className={styles.skelLine} style={{ width: '55%' }} />
-                <span className={styles.skelLine} style={{ width: '38%' }} />
-                <span className={styles.skelLine} style={{ width: '46%' }} />
+          <>
+            <section className={styles.section}>
+              <Eyebrow>Captured receipt</Eyebrow>
+              <div className={`${styles.receiptCard} ${styles.receiptSkeleton}`} aria-hidden>
+                <span className={styles.skelThumb} />
+                <div className={styles.skelLines}>
+                  <span className={styles.skelLine} style={{ width: '55%' }} />
+                  <span className={styles.skelLine} style={{ width: '38%' }} />
+                  <span className={styles.skelLine} style={{ width: '46%' }} />
+                </div>
               </div>
-            </div>
+            </section>
+
+            <section className={styles.section}>
+              <Eyebrow>Items</Eyebrow>
+              <div className={styles.items} aria-hidden>
+                {[68, 84, 52].map((width, i) => (
+                  <div key={i} className={styles.itemRowSkeleton}>
+                    <span
+                      className={`${styles.skelLine} ${styles.skelItemName}`}
+                      style={{ width: `${width}%` }}
+                    />
+                    <span className={`${styles.skelLine} ${styles.skelItemChips}`} style={{ width: '60%' }} />
+                  </div>
+                ))}
+              </div>
+            </section>
+
             <p className={styles.loadingCaption} role="status">
               Reading the receipt.
             </p>
-          </section>
+          </>
         ) : null}
 
         {stage === 'populated' ? (
