@@ -82,6 +82,15 @@ photo/fallback pairing (Ari vs. Nic/Ren) needed to be demonstrated.
 > Debt consolidation reads fine with 3 people given the confirmed expense set below (~2 transfers to
 > settle). No 4th participant needed — the hi-fi mocks settle this.
 
+### Suggested participants (Add/edit participants sheet)
+
+With an empty search query, the Add/edit participants sheet (screen 3) surfaces up to 3 people not
+already on the trip under a "Suggested" eyebrow, so the sheet isn't empty until someone types. The
+suggested set is just the existing roster (`ALL_PARTICIPANTS`) filtered to whoever isn't on the trip
+yet, in table order above — no new names invented for this. Starting from Ari + Nic on the trip, that's
+Ren, Josie, Michael (Genevieve falls past the 3-person cap). Typing a query still filters that same
+roster by name prefix, also capped at 3 results.
+
 ### Photo assets (issue #59)
 
 Real user-supplied photos, dropped into `src/assets/photos/`. Everything below is now a real file, not
