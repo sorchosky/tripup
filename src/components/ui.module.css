@@ -177,22 +177,6 @@
   padding: 8px 4px;
 }
 
-/* ---------- Home indicator ---------- */
-.homeIndicator {
-  flex: 0 0 auto;
-  height: 34px;
-  display: grid;
-  place-items: center;
-}
-.homeIndicator::after {
-  content: '';
-  width: 140px;
-  height: 5px;
-  border-radius: var(--radius-full);
-  background: var(--color-text);
-  opacity: 0.9;
-}
-
 /* ---------- Real-device chrome ---------- */
 /* On a real touch device the app fills the screen (see the max-width: 430px frame rule in
    global.css) and the OS draws its own status bar and home indicator — so drop the simulated
@@ -206,13 +190,6 @@
   .statusTime,
   .statusIcons {
     display: none;
-  }
-
-  .homeIndicator {
-    height: env(safe-area-inset-bottom, 0px);
-  }
-  .homeIndicator::after {
-    display: none; /* the pill */
   }
 }
 

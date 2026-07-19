@@ -6,6 +6,9 @@
   display: flex;
   flex-direction: column;
   background: var(--color-surface);
+  /* Reclaims the space the removed home-indicator bar used to occupy as a flex child, so bottom
+     spacing stays pixel-identical (34px, matching the indicator's old fixed height). */
+  padding-bottom: 34px;
   animation-duration: 260ms;
   animation-timing-function: ease-out;
   animation-fill-mode: both;

@@ -5,7 +5,7 @@ Shared, reusable UI components — the product component set, derived from real 
 
 Built so far (`ui.tsx` + `ui.module.css`, `Screen.tsx`):
 
-- **StatusBar / HomeIndicator / NavHeader** — device chrome. `NavHeader` optionally hosts a popover
+- **StatusBar / NavHeader** — device chrome. `NavHeader` optionally hosts a popover
   (`menu` prop, anchored to its right icon button via `rightRef`) — see `Menu` below.
 - **TabBar** — the global Trips/Activity/Profile glass tab bar.
 - **Menu** — glass popover anchored to a trigger (`MenuItemDef[]`, `tone: 'default' | 'destructive'`),

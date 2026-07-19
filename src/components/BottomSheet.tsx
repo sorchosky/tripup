@@ -5,7 +5,7 @@
  */
 
 import { useState, type ReactNode } from 'react';
-import { StatusBar, HomeIndicator, NavHeader } from './ui';
+import { StatusBar, NavHeader } from './ui';
 import { X } from './icons';
 import styles from './BottomSheet.module.css';
 
@@ -14,7 +14,7 @@ interface BottomSheetProps {
   /** Called once the slide-down close animation finishes — do the actual navigation here. */
   onClose: () => void;
   children: ReactNode;
-  /** Pinned above the home indicator, e.g. a search field that should stay reachable while scrolling. */
+  /** Pinned to the bottom of the sheet, e.g. a search field that should stay reachable while scrolling. */
   footer?: ReactNode;
 }
 
@@ -32,7 +32,6 @@ export function BottomSheet({ title, onClose, children, footer }: BottomSheetPro
       <NavHeader title={title} rightIcon={<X />} onRight={() => setClosing(true)} rightAriaLabel="Close" />
       <div className={styles.body}>{children}</div>
       {footer ? <div className={styles.footer}>{footer}</div> : null}
-      <HomeIndicator />
     </div>
   );
 }
