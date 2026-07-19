@@ -4,7 +4,7 @@
  * every screen re-deriving it.
  */
 
-import type { ReactNode } from 'react';
+import type { ReactNode, UIEvent } from 'react';
 import styles from './Screen.module.css';
 import { StatusBar, NavHeader, glassClass } from './ui';
 
@@ -17,9 +17,14 @@ interface ScreenProps {
   tabBar?: ReactNode;
   /** Remove the default content padding for full-bleed layouts. */
   bleed?: boolean;
+  /**
+   * Scroll signal for the content area (issue #48) — e.g. so a screen can fade an in-body heading into
+   * the floating `nav` header once it scrolls underneath it. Omit for screens that don't need it.
+   */
+  onScroll?: (e: UIEvent<HTMLDivElement>) => void;
 }
 
-export function Screen({ nav, children, footer, tabBar, bleed }: ScreenProps) {
+export function Screen({ nav, children, footer, tabBar, bleed, onScroll }: ScreenProps) {
   const scrollPadTop = nav ? styles.scrollPadTopNav : '';
   const scrollPadBottom =
     footer && tabBar
@@ -34,7 +39,7 @@ export function Screen({ nav, children, footer, tabBar, bleed }: ScreenProps) {
     <div className={styles.screen}>
       <StatusBar />
       <div className={styles.body}>
-        <div className={`${styles.scroll} ${scrollPadTop} ${scrollPadBottom}`}>
+        <div className={`${styles.scroll} ${scrollPadTop} ${scrollPadBottom}`} onScroll={onScroll}>
           <div className={bleed ? styles.bleedFill : styles.pad}>{children}</div>
         </div>
         {nav ? <div className={styles.navFloating}>{nav}</div> : null}

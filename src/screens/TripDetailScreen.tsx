@@ -7,7 +7,7 @@
  * tappable itinerary row.
  */
 
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode, type UIEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, Menu, type MenuItemDef } from '../components/ui';
@@ -48,13 +48,27 @@ function routeForItem(item: ItineraryItem): string | null {
   return item.status === 'paid' ? '/settle' : '/split';
 }
 
+// Matches `.navHeader`'s fixed height (ui.module.css) / `.scrollPadTopNav`'s clearance
+// (Screen.module.css) — the same literal-height convention those already use.
+const NAV_HEADER_HEIGHT = 56;
+
 export default function TripDetailScreen() {
   const navigate = useNavigate();
   const { state, dispatch } = useTrip();
   const [tripMenuOpen, setTripMenuOpen] = useState(false);
   const tripMenuBtnRef = useRef<HTMLButtonElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  // Issue #48: fades "Lisbon 2026" into the floating NavHeader once the in-body <h1> scrolls under it.
+  const [showHeaderTitle, setShowHeaderTitle] = useState(false);
 
   const dayGroups = useMemo(() => groupItineraryByDay(state.itinerary), [state.itinerary]);
+
+  function handleScroll(e: UIEvent<HTMLDivElement>) {
+    const titleEl = titleRef.current;
+    if (!titleEl) return;
+    const headerBottom = e.currentTarget.getBoundingClientRect().top + NAV_HEADER_HEIGHT;
+    setShowHeaderTitle(titleEl.getBoundingClientRect().bottom <= headerBottom);
+  }
 
   const fabItems: MenuItemDef[] = [
     {
@@ -95,11 +109,14 @@ export default function TripDetailScreen() {
 
   return (
     <Screen
+      onScroll={handleScroll}
       nav={
         <NavHeader
           onBack={() => navigate('/')}
           leftIcon={<ArrowLeft />}
           leftAriaLabel="Back to trips"
+          centerTitle={TRIP.name}
+          centerTitleVisible={showHeaderTitle}
           rightIcon={<Ellipsis />}
           rightAriaLabel="Trip options"
           onRight={() => setTripMenuOpen((open) => !open)}
@@ -127,7 +144,7 @@ export default function TripDetailScreen() {
       }
     >
       <div className={styles.overview}>
-        <h1 className={styles.title}>{TRIP.name}</h1>
+        <h1 className={styles.title} ref={titleRef}>{TRIP.name}</h1>
         <p className={styles.subtitle}>
           {TRIP.destination} · {formatDateRange(TRIP.dates.start, TRIP.dates.end)}
         </p>

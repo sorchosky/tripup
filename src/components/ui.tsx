@@ -57,6 +57,15 @@ interface NavHeaderProps {
   menu?: ReactNode;
   /** `aria-expanded` on the right icon button while `menu` is present. */
   rightExpanded?: boolean;
+  /**
+   * Scroll-linked title (issue #48) — unlike `title` (always shown, no transition), this stays mounted
+   * at all times and just fades via `centerTitleVisible`, so there's no layout shift when it appears
+   * (e.g. the trip title fading in once the in-body `<h1>` scrolls under the header). Ignored if `title`
+   * is also passed.
+   */
+  centerTitle?: string;
+  /** Whether `centerTitle` is faded in. Defaults to false (faded out). */
+  centerTitleVisible?: boolean;
 }
 
 export function NavHeader({
@@ -71,9 +80,12 @@ export function NavHeader({
   rightRef,
   menu,
   rightExpanded,
+  centerTitle,
+  centerTitleVisible = false,
 }: NavHeaderProps) {
   return (
     <div className={styles.navHeader}>
+      <span className={styles.navBackdrop} aria-hidden />
       {onBack || leftIcon ? (
         <button
           type="button"
@@ -87,7 +99,17 @@ export function NavHeader({
         <span className={styles.navSpacer} />
       )}
 
-      {title ? <span className={styles.navTitle}>{title}</span> : <span style={{ flex: 1 }} />}
+      {title ? (
+        <span className={styles.navTitle}>{title}</span>
+      ) : centerTitle ? (
+        <span
+          className={`${styles.navTitle} ${styles.navTitleFade} ${centerTitleVisible ? styles.navTitleVisible : ''}`}
+        >
+          {centerTitle}
+        </span>
+      ) : (
+        <span style={{ flex: 1 }} />
+      )}
 
       {rightText ? (
         <button type="button" className={styles.textButton} onClick={onRight}>

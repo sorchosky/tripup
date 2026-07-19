@@ -136,6 +136,17 @@ Two-family system:
   before the populated state lands). `role="status"` stays on the "Reading the receipt." caption so
   the loading state is still announced to assistive tech. Base/highlight reuse the existing neutral
   surface roles rather than introducing new raw colors.
+- **Nav-header backdrop + scroll-linked title** (issue #48, `NavHeader` in `src/components/ui.tsx` +
+  `.module.css`): the floating nav header always carries a lightweight separation layer behind its
+  back/ellipsis buttons — a top-to-bottom gradient fade of `--color-surface` at low alpha
+  (`--header-backdrop-top` → `--header-backdrop-bottom`) plus a light `--blur-header` (12px) blur.
+  Deliberately distinct from the `.glass` treatment above (thinner, gradient rather than opaque,
+  no elevation/shadow) — it's chrome separation, not the frosted-glass footer/tab-bar/nav-button
+  material. On the trip hub, `NavHeader`'s `centerTitle`/`centerTitleVisible` props additionally fade
+  the page's in-body `<h1>` into the header's center once it scrolls underneath (tracked via `Screen`'s
+  `onScroll` signal comparing the heading's `getBoundingClientRect()` against the header's own height),
+  and fade it back out at the top — the title span stays mounted at all times so the transition never
+  shifts layout.
 
 ## Design tokens
 
