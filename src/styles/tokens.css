@@ -90,6 +90,13 @@
   --header-backdrop-top: rgba(246, 246, 244, 0.82);    /* --color-surface, near-opaque at the header's top edge */
   --header-backdrop-bottom: rgba(246, 246, 244, 0);    /* fades to fully transparent by the header's bottom edge */
 
+  /* ---- Glass-accent primary button (issue #52) — the poll create/vote CTAs float fixed over scrolling
+   * content with no `.glass` footer card behind them, so the button itself carries the glass read:
+   * `--color-primary` at high alpha (still AA-legible white label against it) plus its own lighter
+   * blur, distinct from `--blur-glass` (chrome) and `--blur-header` (nav backdrop). */
+  --color-primary-glass: rgba(90, 69, 214, 0.85);
+  --blur-accent: 16px;
+
   /* ---- Blurred-image glow (issue #59) — a blurred copy of a photo bled out behind its card, standing
    * in for a drop shadow (Sunday-app reference). Reserve for photo surfaces (poll-reveal winner card
    * today; receipt/settle-up hero once those get real photos) — not a generic shadow replacement. */

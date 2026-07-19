@@ -335,6 +335,16 @@
   color: var(--color-on-primary);
   box-shadow: var(--elevation-primary-button);
 }
+/* Glass-accent primary (issue #52) — same accent shadow/label as .btnPrimary, but translucent with its
+   own blur so it reads as glass when floating fixed over content with no .glass card behind it. */
+.btnPrimaryGlass {
+  background: var(--color-primary-glass);
+  color: var(--color-on-primary);
+  box-shadow: var(--elevation-primary-button);
+  -webkit-backdrop-filter: blur(var(--blur-accent)) saturate(1.4);
+  backdrop-filter: blur(var(--blur-accent)) saturate(1.4);
+}
+
 .btnNeutral {
   background: var(--color-surface-neutral);
   color: var(--color-text);
@@ -372,8 +382,11 @@
    opacity dims the shadow/text/background together in a way that reads inconsistently, and it isn't a
    semantic color role of its own. Never the owed/warning amber: disabled ≠ error. */
 .btnPrimary:disabled,
-.btnNeutral:disabled {
+.btnNeutral:disabled,
+.btnPrimaryGlass:disabled {
   background: var(--color-disabled);
   color: var(--color-on-disabled);
   box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
