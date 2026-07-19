@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Button } from '../components/ui';
 import { ArrowLeft, Plus, Sparkles, Trash2 } from '../components/icons';
-import { AI_SUGGESTED_SPOTS, ORGANIZER_ID } from '../data/mock';
+import { AI_SUGGESTED_SPOTS } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import styles from './CreatePollScreen.module.css';
 
@@ -26,13 +26,6 @@ let rowSeq = 0;
 function blankRow(value = ''): OptionRow {
   rowSeq += 1;
   return { key: `opt-${rowSeq}`, value };
-}
-
-/** "Ren & Nic", "Ren, Nic & Josie", or a single name — the group minus the creator. */
-function recipientList(names: string[]): string {
-  if (names.length === 0) return 'the group';
-  if (names.length === 1) return names[0];
-  return `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}`;
 }
 
 export default function CreatePollScreen() {
@@ -65,7 +58,6 @@ export default function CreatePollScreen() {
     });
   }
 
-  const recipients = state.participants.filter((p) => p.id !== ORGANIZER_ID).map((p) => p.name);
   const filledCount = options.filter((o) => o.value.trim().length > 0).length;
   const canSend = filledCount >= 2 && question.trim().length > 0;
 
@@ -86,7 +78,7 @@ export default function CreatePollScreen() {
       floatingFooter
       footer={
         <Button variant="primary-glass" disabled={!canSend} onClick={() => navigate('/poll')}>
-          Send poll to {recipientList(recipients)}
+          Send poll to participants
         </Button>
       }
     >
