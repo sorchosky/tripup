@@ -96,6 +96,12 @@
   --color-shimmer-highlight: rgba(255, 255, 255, 0.85);
   --shimmer-duration: 1000ms;
 
+  /* ---- Settlement progress ring (issue #39) — the ring's internal geometry (radius, stroke) lives in
+   * viewBox-space unitless numbers in SettleRing.tsx, same precedent as the existing icon SVGs
+   * (src/components/icons.tsx) — this token only governs its rendered footprint, so the container size
+   * stays a real design decision instead of an inline literal. ---- */
+  --ring-size: 132px;
+
   /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */
   --avatar-sm: 24px;   /* rank badges, poll rows */
   --avatar-md: 28px;   /* footer subtotals, home/trip avatar groups */

@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Avatar, Button, SegmentedControl } from '../components/ui';
 import { BottomSheet } from '../components/BottomSheet';
+import { SettleRing } from '../components/SettleRing';
 import { ArrowLeft, Info, Check } from '../components/icons';
 import { participantById, DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
@@ -122,11 +123,10 @@ export default function SettleUpScreen() {
 
           <div className={styles.heroCard}>
             <Eyebrow>You&apos;re owed</Eyebrow>
-            <div className={styles.heroAmountRow}>
-              <span className={styles.heroAmount}>{euros(oweTotal)}</span>
-              <span className={styles.heroFrom}>from {count === 1 ? '1 person' : `${count} people`}</span>
-            </div>
-            <p className={styles.heroSub}>Lisbon 2026 · Ramiro Dinner</p>
+            <SettleRing outstandingCents={oweTotal} settled={state.settled} />
+            <p className={styles.heroSub}>
+              {count === 1 ? 'From 1 person' : `From ${count} people`} · Lisbon 2026 · Ramiro Dinner
+            </p>
           </div>
 
           <div className={styles.sectionHead}>

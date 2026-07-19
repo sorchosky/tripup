@@ -29,7 +29,8 @@
 .heroCard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-4);
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -37,16 +38,7 @@
   padding: var(--space-5);
   margin-bottom: var(--space-5);
 }
-.heroAmountRow { display: flex; align-items: baseline; gap: var(--space-2); }
-.heroAmount {
-  font-family: var(--font-family-display);
-  font-weight: var(--font-weight-extrabold);
-  font-size: var(--font-size-display);
-  letter-spacing: var(--tracking-display);
-  color: var(--color-text);
-}
-.heroFrom { font-weight: var(--font-weight-semibold); font-size: var(--font-size-label); color: var(--color-text-muted); }
-.heroSub { font-size: var(--font-size-caption); color: var(--color-text-muted); }
+.heroSub { font-size: var(--font-size-caption); color: var(--color-text-muted); text-align: center; }
 
 /* ---- Consolidated debts list ---- */
 .debtors { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-5); }

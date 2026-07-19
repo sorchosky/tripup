@@ -1,0 +1,50 @@
+/* SettleRing — see tokens.css → "Settlement progress ring" for the sizing token this consumes. */
+
+.wrap {
+  position: relative;
+  width: var(--ring-size);
+  height: var(--ring-size);
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+}
+
+.track {
+  stroke: var(--color-surface-neutral);
+}
+
+/* Continuous amber → green interpolation driven by the same fraction that draws the arc (--progress,
+   set inline per render) — never a flat two-state color swap. */
+.arc {
+  stroke: color-mix(in srgb, var(--color-settled) var(--progress, 0%), var(--color-owed));
+}
+
+.center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.amount {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-title);
+  letter-spacing: var(--tracking-title);
+  color: var(--color-text);
+}
+
+.label {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
