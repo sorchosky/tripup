@@ -238,13 +238,18 @@ data above. Written from `BRAND.md` (short, dry, state the fact then earn the jo
 
 **Settle-up section** — shown when `!settled` and there's at least one consolidated transfer:
 - One card per transfer: "{Debtor} owes {euros(amount)}" + the same "Request" tag used on
-  `SettleUpScreen`'s debtor cards — e.g. "Ren owes €25.33 · Request."
-- Sub-line reuses the locked settlement narrative: "Two transfers close it out."
+  `SettleUpScreen`'s debtor cards — with the locked result this reads **"Nic owes €25.33 · Request."**
+  (the minimum-transfer solve on the locked expense data resolves to a single transfer, not the ~2 this
+  section originally assumed).
+- Sub-line: "{N} transfer(s) close(s) it out." — singular-safe ("One transfer closes it out.") since the
+  actual data hits the 1-transfer case, not just "Two transfers close it out."
 
 **Settled section** — shown once `settled` is true (replaces the settle-up cards):
 - Card: "Everyone's even." (matches `SettlementConfirmationScreen`'s title) with a `Pill tone="settled"`
   "Settled up" label.
 
-Before any vote is cast and before any expense exists, the feed has nothing to show — no filler/empty
-state copy is defined here since the Lisbon scenario always reaches the poll before Ari would check
-Activity in the intended flow.
+**Empty state** — shown when none of the above apply (before any vote is cast, no expense logged yet,
+nothing outstanding to settle). Genuinely reachable — a user can tap the Activity tab the moment the app
+opens, before touching the poll — so it gets real in-voice copy rather than a blank screen:
+- "**Nothing moving yet.** Vote in a poll or log an expense, and it'll show up here." Same dashed-border
+  empty-card treatment as `HomeScreen`'s "Nothing behind you yet." (same token, same job, per C5).

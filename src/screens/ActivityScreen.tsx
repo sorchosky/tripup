@@ -26,15 +26,30 @@ export default function ActivityScreen() {
   const dinnerLogged = state.itinerary.some((i) => i.id === 'dinner');
   const showSettleUp = dinnerLogged && !state.settled && derived.transfers.length > 0;
   const showSettled = dinnerLogged && state.settled;
+  // Grammar has to hold at 1 transfer too, not just the 2-transfer case the copy was drafted against
+  // (CONTENT.md) — the actual mock split resolves to a single transfer.
   const transferCount = derived.transfers.length;
-  const transferWord = transferCount === 1 ? 'One transfer' : transferCount === 2 ? 'Two transfers' : `${transferCount} transfers`;
+  const settleUpSummary =
+    transferCount === 1
+      ? 'One transfer closes it out.'
+      : transferCount === 2
+        ? 'Two transfers close it out.'
+        : `${transferCount} transfers close it out.`;
+
+  // Genuine empty state (issue #57): before the first vote, `poll.status` is 'none' — neither the
+  // open-poll nor the decided-poll section renders — and there's no expense yet either, so nothing
+  // else has anything to show. Reachable (a user can tap Activity right after opening the app), so it
+  // needs real in-voice copy rather than a blank screen below the title.
+  const showOpenPoll = state.poll.status === 'open';
+  const showDecidedPoll = state.poll.status === 'closed' && !!winner;
+  const hasContent = showOpenPoll || showDecidedPoll || showSettleUp || showSettled;
 
   return (
     <Screen tabBar={<TabBar />}>
       <div className={styles.body}>
         <h1 className={styles.title}>Activity</h1>
 
-        {state.poll.status === 'open' ? (
+        {showOpenPoll ? (
           <section className={styles.section}>
             <div className={styles.sectionHead}>
               <Eyebrow>Active poll</Eyebrow>
@@ -63,7 +78,7 @@ export default function ActivityScreen() {
           </section>
         ) : null}
 
-        {state.poll.status === 'closed' && winner ? (
+        {showDecidedPoll ? (
           <section className={styles.section}>
             <div className={styles.sectionHead}>
               <Eyebrow>Poll decided</Eyebrow>
@@ -97,7 +112,7 @@ export default function ActivityScreen() {
                 </button>
               ))}
             </div>
-            <p className={styles.sectionSub}>{transferWord} close it out.</p>
+            <p className={styles.sectionSub}>{settleUpSummary}</p>
           </section>
         ) : null}
 
@@ -111,6 +126,13 @@ export default function ActivityScreen() {
               <Pill tone="settled">Settled up</Pill>
             </div>
           </section>
+        ) : null}
+
+        {!hasContent ? (
+          <div className={styles.empty}>
+            <span className={styles.emptyStrong}>Nothing moving yet.</span> Vote in a poll or log an
+            expense, and it&apos;ll show up here.
+          </div>
         ) : null}
       </div>
     </Screen>

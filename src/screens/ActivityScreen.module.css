@@ -81,3 +81,14 @@
   padding: var(--space-4);
 }
 .settledText { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
+
+/* ---- Empty state (no active poll, no outstanding transfers, nothing settled yet) ---- */
+.empty {
+  margin-top: var(--space-3);
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-label);
+}
+.emptyStrong { color: var(--color-text); font-weight: var(--font-weight-semibold); }
