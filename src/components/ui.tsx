@@ -352,10 +352,16 @@ export function Eyebrow({ children, wide }: { children: ReactNode; wide?: boolea
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'neutral' };
 
-export function Button({ variant = 'primary', className = '', children, ...rest }: ButtonProps) {
+export function Button({ variant = 'primary', className = '', children, disabled, ...rest }: ButtonProps) {
   const variantClassName = variant === 'primary' ? styles.btnPrimary : styles.btnNeutral;
   return (
-    <button type="button" className={`${styles.btn} ${variantClassName} ${className}`} {...rest}>
+    <button
+      type="button"
+      className={`${styles.btn} ${variantClassName} ${className}`}
+      disabled={disabled}
+      aria-disabled={disabled || undefined}
+      {...rest}
+    >
       {children}
     </button>
   );
