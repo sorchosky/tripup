@@ -82,6 +82,14 @@
   --glass-darken: #f7f7f7;  /* mix-blend-mode: darken */
   --blur-glass: 20px;       /* backdrop-filter blur radius for floating chrome */
 
+  /* ---- Nav-header backdrop (issue #48) — a lighter, thinner separation than `.glass`: a gradient
+   * fade of `--color-surface` at low alpha plus a light blur, so the floating nav header reads as
+   * distinct from content scrolling underneath it without the opaque frosted-glass treatment reserved
+   * for the footer/tab-bar chrome. Not scroll-gated — always present at low intensity. */
+  --blur-header: 12px;
+  --header-backdrop-top: rgba(246, 246, 244, 0.82);    /* --color-surface, near-opaque at the header's top edge */
+  --header-backdrop-bottom: rgba(246, 246, 244, 0);    /* fades to fully transparent by the header's bottom edge */
+
   /* ---- Blurred-image glow (issue #59) — a blurred copy of a photo bled out behind its card, standing
    * in for a drop shadow (Sunday-app reference). Reserve for photo surfaces (poll-reveal winner card
    * today; receipt/settle-up hero once those get real photos) — not a generic shadow replacement. */
