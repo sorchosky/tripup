@@ -61,8 +61,6 @@
   padding: 0;
 }
 .fab:active { transform: scale(0.95); }
-.fab svg { transition: transform 150ms ease; }
-.fabIconOpen { transform: rotate(45deg); }
 
 /* ---------- Menu / Popover ---------- */
 .menu {

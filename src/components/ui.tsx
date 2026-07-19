@@ -9,7 +9,7 @@ import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode,
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './ui.module.css';
 import { participantById } from '../data/mock';
-import { Bell, Compass, User, Plus } from './icons';
+import { Bell, Compass, User, Plus, X } from './icons';
 
 /* ------------------------------ Status bar / chrome ------------------------------ */
 
@@ -258,8 +258,24 @@ export function Menu({ open, onClose, anchorRef, items, align = 'end', side = 'b
 
 /* ------------------------------ FAB ------------------------------ */
 
-/** Floating glass action button; opens a Menu of quick actions above itself. */
-export function Fab({ items, ariaLabel = 'Add' }: { items: MenuItemDef[]; ariaLabel?: string }) {
+type FabIconComponent = (props: { size?: number; className?: string }) => ReactNode;
+
+interface FabProps {
+  items: MenuItemDef[];
+  ariaLabel?: string;
+  /** Resting icon (issue #45) — defaults to a bare `Plus`. */
+  icon?: FabIconComponent;
+}
+
+/**
+ * Floating glass action button; opens a Menu of quick actions above itself.
+ *
+ * Open state (issue #45): a plain `Plus` reads as an "X" once rotated 45° — a glyph like
+ * `CalendarPlus` doesn't read the same way tilted (and an `X` rotated another 45° turns back into a
+ * "+", so it can't reuse the old rotate trick either). So the open state swaps to an explicit `X`
+ * icon, shown at its natural orientation, instead of rotating the resting icon.
+ */
+export function Fab({ items, ariaLabel = 'Add', icon: Icon = Plus }: FabProps) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -275,7 +291,7 @@ export function Fab({ items, ariaLabel = 'Add' }: { items: MenuItemDef[]; ariaLa
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        <Plus size={22} className={open ? styles.fabIconOpen : undefined} />
+        {open ? <X size={22} /> : <Icon size={22} />}
       </button>
     </div>
   );
