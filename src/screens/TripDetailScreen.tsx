@@ -133,7 +133,12 @@ export default function TripDetailScreen() {
         </p>
 
         <div className={styles.memberRow}>
-          <AvatarGroup personIds={state.participants.map((p) => p.id)} size="md" />
+          <AvatarGroup
+            personIds={state.participants.map((p) => p.id)}
+            size="md"
+            onClick={() => navigate('/trip/add')}
+            ariaLabel="Edit participants"
+          />
         </div>
       </div>
 

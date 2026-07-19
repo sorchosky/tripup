@@ -322,17 +322,30 @@ export function AvatarGroup({
   personIds,
   size = 'md',
   ringColor,
+  onClick,
+  ariaLabel,
 }: {
   personIds: string[];
   size?: AvatarSize;
   ringColor?: string;
+  /** Makes the whole cluster a single tappable target (e.g. jump to add/edit participants). */
+  onClick?: () => void;
+  ariaLabel?: string;
 }) {
-  return (
+  const stack = (
     <span className={styles.avatarGroup} style={ringColor ? ({ ['--ring-color' as string]: ringColor }) : undefined}>
       {personIds.map((id) => (
         <Avatar key={id} personId={id} size={size} variant="filled" />
       ))}
     </span>
+  );
+
+  if (!onClick) return stack;
+
+  return (
+    <button type="button" className={styles.avatarGroupButton} onClick={onClick} aria-label={ariaLabel}>
+      {stack}
+    </button>
   );
 }
 
