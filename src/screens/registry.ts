@@ -1,8 +1,9 @@
 /**
  * registry.ts — the canonical screen flow.
  *
- * Single source for the ≤10-screen journey (see CLAUDE.md "Screen flow" and DESIGN.md "Screens").
- * Build order and routing both derive from this list, so the flow stays in one place.
+ * Single source for the ≤10-screen journey (see CLAUDE.md "Screen flow" and DESIGN.md "Screens"), plus
+ * the Activity feed (#11) — a deliberate, flagged exception to that budget per issue #57. Build order
+ * and routing both derive from this list, so the flow stays in one place.
  */
 
 export interface ScreenDef {
@@ -29,4 +30,7 @@ export const SCREENS: ScreenDef[] = [
   { id: '7-8', path: '/split', title: 'Scan & assign (log expense + exclusions)', designRef: 'DESIGN.md §Screens 7–8', note: 'HI-FI. Receipt + itemized split; per-item exclusion; live subtotals.' },
   { id: '9', path: '/settle', title: 'Debt consolidation / Settle up', designRef: 'DESIGN.md §Screens 9', note: 'Minimum-transfer settlement (real logic).' },
   { id: '10', path: '/settle/done', title: 'Settlement confirmation', designRef: 'DESIGN.md §Screens 10', note: 'Settled — everyone’s even.' },
+  // Cross-cutting hub screen, added per issue #57 — deliberately beyond the ≤10-screen budget above
+  // (destination for #55; surfaces the active poll and settle-up state from anywhere via the tab bar).
+  { id: '11', path: '/activity', title: 'Activity feed', designRef: 'DESIGN.md §Screens 11', note: 'Computed digest of the live poll + settle-up state; the Activity tab’s real destination.' },
 ];

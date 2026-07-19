@@ -213,6 +213,19 @@ One entry per screen, in build order. Purpose/states are stubs until the wireflo
 - Key states: `TBD`
 - Notes:
 
+### 11. Activity feed
+- Purpose: Cross-cutting hub, added per issue #57 — surfaces the active poll (and who's responded) plus
+  outstanding settle-up requests, so the Activity tab actually goes somewhere instead of staying a
+  disabled placeholder. **Deliberately exceeds the ≤10-screen budget above** — the user asked for this
+  override explicitly (issue #57), since Activity is the destination for #55 and ties the poll → split →
+  settle journey together. Flagged here rather than silently folded into the "≤10 screens" count.
+- Key states: computed digest, not a persisted event log — sections appear/disappear as
+  `state.poll.status`, `state.itinerary`, `derived.transfers`, and `state.settled` change: open poll +
+  per-participant vote rows, decided-poll result, outstanding settle-up requests, settled confirmation.
+- Notes: Reuses existing tokens/components only (`Pill`, `Avatar`, `Eyebrow`, the card/elevation system)
+  — no new primitives. Reachable from the Activity tab (`TabBar`), which is now route-aware rather than
+  a static, disabled placeholder.
+
 ## Standout feature: receipt scan
 
 Vision-assisted expense entry — photograph/scan a receipt, auto-populate amount and split.
