@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Pill, Eyebrow } from '../components/ui';
 import { ImageGlow } from '../components/ImageGlow';
-import { ArrowLeft, Check, Ellipsis } from '../components/icons';
+import { ArrowLeft, Check } from '../components/icons';
 import { DINNER_POLL, TRIP } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import cervejariaRamiroPhoto from '../assets/photos/cervejaria-ramiro.webp';
@@ -45,8 +45,6 @@ export default function PollClosedScreen() {
           onBack={() => navigate('/trip')}
           leftIcon={<ArrowLeft />}
           leftAriaLabel="Back to trip"
-          rightIcon={<Ellipsis />}
-          rightAriaLabel="Poll options"
         />
       }
     >
