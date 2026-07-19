@@ -121,6 +121,12 @@ Two-family system:
   still exist (kept for that follow-up); only the rendered row is gone.
 - **Sticky footer bar:** glass-chrome container, live per-person subtotal row (avatar chip + amount)
   above a full-width primary button.
+- **Bottom sheet, partial-height variant** (issue #40, `BottomSheet.tsx`): the original `BottomSheet`
+  is a full-height routed screen state (add/edit participants, #15). The `variant="partial"` chrome
+  variant instead overlays the *current* screen without a route change — bottom-anchored, `max-height:
+  72%`, rounded top corners only, a dismissible scrim behind it, no `StatusBar` (it doesn't cover the
+  notch). Used for the Settle Up confirm flow so "Confirm & settle" opens a sheet in place rather than
+  navigating away before the user has actually confirmed anything.
 - **Blurred-image glow** (issue #59, `src/components/ImageGlow.tsx`): a blurred, bled-out copy of a
   photo sits behind its card, standing in for a neutral drop shadow with an ambient, photo-colored one
   (Sunday-app reference). Used on the poll-reveal winner card now that it has a real photo
@@ -128,6 +134,11 @@ Two-family system:
   issue #61). Governed by three tokens in `tokens.css` — `--glow-blur` (32px), `--glow-spread` (20px,
   how far the copy bleeds past the sharp card), `--glow-opacity` (0.55). Don't apply it to non-photo
   cards — it's a photo-specific pattern, not a general elevation replacement.
+- **Segmented control** (issue #40, `ui.tsx`/`ui.module.css`): a 2/3-way tab-style switch for an
+  in-place step, not a boolean toggle — `--color-surface-neutral` track, `--color-surface-raised` +
+  `--color-text` active segment (with `--elevation-card` for separation), `--color-text-muted`
+  inactive, `--radius-full` throughout. No new color token needed. First used by the Settle Up confirm
+  sheet's Review/Pay steps.
 - **Shimmer skeleton** (issue #58, `SplitScreen.module.css`): the post-capture loading moment (between
   the mocked "camera" and the populated receipt) uses a moving highlight sweep across skeleton
   placeholders — the receipt-card thumbnail/lines and three line-item skeleton rows — instead of a
@@ -222,13 +233,22 @@ One entry per screen, in build order. Purpose/states are stubs until the wireflo
 - Notes: See screen 7 note above re: merging into one flow.
 
 ### 9. Debt consolidation / settle up
-- Purpose: `TBD` — minimum-transfer settlement across the group.
-- Key states: `TBD`
+- Purpose: Built from the "Settle Up (Ari)" wireframe (`docs/wireframe-handoff.md`) — a payer-
+  perspective hero ("you're owed") plus the minimum-transfer per-debtor breakdown from
+  `src/lib/settle.ts`.
+- Key states: CTA disabled until the settle math resolves to something real (`transfers.length === 0`
+  or already `state.settled`, issue #41); tapping "Confirm & settle" opens a partial-height confirm
+  sheet (issue #40, not a route) with a Review/Pay segmented control — Review recaps the same
+  transfer rows as the main screen, Pay holds a mocked payment-method choice and the button that
+  actually dispatches `SETTLE`.
 - Notes: The other strongest hi-fi candidate (debt logic + confirmation).
 
 ### 10. Settlement confirmation
-- Purpose: `TBD` — settlement complete, everyone's even.
-- Key states: `TBD`
+- Purpose: Payoff screen after `SETTLE` fires from the confirm sheet's Pay step — settlement complete,
+  everyone's even. Still the post-confirm destination (`/settle/done`, issue #40 kept the existing
+  route rather than showing success inline in the sheet, so the recap gets its own full screen instead
+  of being squeezed into the partial-height sheet).
+- Key states: transfer recap (same solver output), single CTA back to the trip.
 - Notes:
 
 ### 11. Activity feed

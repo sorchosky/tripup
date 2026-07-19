@@ -1,4 +1,5 @@
-/* BottomSheet — full-height sheet over the Trip Hub, slide-up in / slide-down out (#15). */
+/* BottomSheet — full-height sheet over the Trip Hub, slide-up in / slide-down out (#15). Also supports
+   a shorter `partial` variant (#40) presented over the current screen instead of as a route. */
 
 .sheet {
   height: 100%;
@@ -36,3 +37,49 @@
   flex: 0 0 auto;
   padding: 0 var(--space-5) var(--space-2);
 }
+
+/* ---------- Partial-height overlay variant (#40) ---------- */
+/* Anchored inside the device frame (its nearest positioned ancestor is `.device-frame`/`.screen`,
+   both `position: relative`), so this reads as a sheet over the current screen rather than a full
+   second screen. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(22, 25, 42, 0.4);
+  cursor: pointer;
+  animation-duration: 220ms;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+.scrimOpening { animation-name: scrimIn; }
+.scrimClosing { animation-name: scrimOut; animation-timing-function: ease-in; }
+@keyframes scrimIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scrimOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.sheetPartial {
+  position: relative;
+  z-index: 1;
+  height: auto;
+  max-height: 72%;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--elevation-glass);
+  padding-bottom: var(--space-5);
+}
+.closingPartial { animation-name: slideDown; animation-timing-function: ease-in; animation-duration: 200ms; }

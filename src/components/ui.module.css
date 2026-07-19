@@ -301,6 +301,34 @@
   color: var(--color-text);
 }
 
+/* ---------- Segmented control ---------- */
+.segmented {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--color-surface-neutral);
+  border-radius: var(--radius-full);
+}
+.segmentedItem {
+  flex: 1 1 0;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-label);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+.segmentedItemActive {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: var(--elevation-card);
+}
+
 /* Disabled = a distinct neutral CTA role, not a dimmed opacity of whatever variant it started as —
    opacity dims the shadow/text/background together in a way that reads inconsistently, and it isn't a
    semantic color role of its own. Never the owed/warning amber: disabled ≠ error. */
