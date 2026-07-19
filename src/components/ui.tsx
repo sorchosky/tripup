@@ -367,4 +367,42 @@ export function Button({ variant = 'primary', className = '', children, disabled
   );
 }
 
+/* ------------------------------ Segmented control ------------------------------ */
+
+export interface SegmentedOption<T extends string> {
+  key: T;
+  label: string;
+}
+
+interface SegmentedControlProps<T extends string> {
+  options: SegmentedOption<T>[];
+  value: T;
+  onChange: (value: T) => void;
+  ariaLabel: string;
+}
+
+/** Two/three-way tab-style switch (issue #40) — reused wherever a screen needs a step toggle rather than
+ * a single boolean, e.g. the settle-up confirm sheet's Review/Pay steps. */
+export function SegmentedControl<T extends string>({ options, value, onChange, ariaLabel }: SegmentedControlProps<T>) {
+  return (
+    <div className={styles.segmented} role="tablist" aria-label={ariaLabel}>
+      {options.map((opt) => {
+        const active = opt.key === value;
+        return (
+          <button
+            key={opt.key}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            className={`${styles.segmentedItem} ${active ? styles.segmentedItemActive : ''}`}
+            onClick={() => onChange(opt.key)}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export const glassClass = styles.glass;
