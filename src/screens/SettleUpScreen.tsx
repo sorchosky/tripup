@@ -11,6 +11,15 @@
  * two-step Review/Pay segmented control inside it. Advancing to Pay and confirming is what actually
  * dispatches SETTLE; /settle/done stays the post-confirm destination (chosen over an inline sheet
  * success state — see PR).
+ *
+ * Restyled toward a photo-hero-with-blurred-glow treatment (issue #61, Sunday-app inspired, not a
+ * clone): the dinner photo from #59 anchors the hero with an ImageGlow bleeding out behind it (same
+ * pattern as the poll-reveal winner card), a frosted badge gives the "You're owed" framing right on the
+ * photo, and the footer CTA + per-debtor request tag go full-pill for a more confident, of-a-piece look
+ * with the photo treatment — a screen-scoped choice (className override), not a change to the global
+ * `Button`/tag radius locked by the hi-fi mocks elsewhere. This app only ever renders Ari's (the payer's)
+ * perspective, so the framing is "You're owed," not a toggling "You're owed / You're paying" — noted in
+ * the PR rather than inventing a per-viewer switch the app doesn't otherwise support.
  */
 
 import { Fragment, useState } from 'react';
@@ -19,11 +28,13 @@ import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Avatar, Button, SegmentedControl } from '../components/ui';
 import { BottomSheet } from '../components/BottomSheet';
 import { SettleRing } from '../components/SettleRing';
+import { ImageGlow } from '../components/ImageGlow';
 import { ArrowLeft, Info, Check } from '../components/icons';
 import { participantById, DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
 import type { Assignment, Transfer } from '../lib/settle';
+import cervejariaRamiroPhoto from '../assets/photos/cervejaria-ramiro.webp';
 import styles from './SettleUpScreen.module.css';
 
 /** Which receipt lines a person is currently splitting, as display text (e.g. "Couvert, Arroz de marisco"). */
@@ -101,7 +112,7 @@ export default function SettleUpScreen() {
       <Screen
         nav={<NavHeader onBack={() => navigate('/split')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to split" />}
         footer={
-          <Button onClick={openConfirm} disabled={settleDisabled}>
+          <Button onClick={openConfirm} disabled={settleDisabled} className={styles.pillCta}>
             Confirm &amp; settle
           </Button>
         }
@@ -121,12 +132,20 @@ export default function SettleUpScreen() {
             so everyone just squares up with them.
           </p>
 
-          <div className={styles.heroCard}>
-            <Eyebrow>You&apos;re owed</Eyebrow>
-            <SettleRing outstandingCents={oweTotal} settled={state.settled} />
-            <p className={styles.heroSub}>
-              {count === 1 ? 'From 1 person' : `From ${count} people`} · Lisbon 2026 · Ramiro Dinner
-            </p>
+          <div className={styles.heroWrap}>
+            <ImageGlow src={cervejariaRamiroPhoto} className={styles.heroGlow} />
+            <div className={styles.heroCard}>
+              <div className={styles.heroMedia}>
+                <img src={cervejariaRamiroPhoto} alt="" className={styles.heroImage} />
+                <span className={styles.heroBadge}>{state.settled ? "You're even" : "You're owed"}</span>
+              </div>
+              <div className={styles.heroBody}>
+                <SettleRing outstandingCents={oweTotal} settled={state.settled} />
+                <p className={styles.heroSub}>
+                  {count === 1 ? 'From 1 person' : `From ${count} people`} · Lisbon 2026 · Ramiro Dinner
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className={styles.sectionHead}>
@@ -149,7 +168,10 @@ export default function SettleUpScreen() {
           variant="partial"
           onClose={() => setConfirmOpen(false)}
           footer={
-            <Button onClick={step === 'review' ? () => setStep('pay') : confirmPay}>
+            <Button
+              onClick={step === 'review' ? () => setStep('pay') : confirmPay}
+              className={styles.pillCta}
+            >
               {step === 'review' ? 'Continue to pay' : 'Confirm payment'}
             </Button>
           }
