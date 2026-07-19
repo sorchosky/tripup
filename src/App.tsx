@@ -6,9 +6,14 @@
  * at nine routes. Activity (/activity) is a tenth, cross-cutting route added per issue #57 — a deliberate
  * exception to the ≤10 budget (see DESIGN.md → Screens, and docs/decisions.md). See
  * src/screens/registry.ts for the canonical list.
+ *
+ * `/trip/add` (Add/edit participants) is presented as a sheet overlay ON the trip hub rather than a
+ * full route swap (issue #51): the underlying `Routes` always renders the trip hub for that path, and
+ * `AddParticipantScreen` is layered on top as its own overlay, so the hub stays mounted and visible
+ * (no duplicate status bar, no new-screen flash) while the sheet slides up/down over it.
  */
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { TripProvider } from './state/TripContext';
 
 import HomeScreen from './screens/HomeScreen';
@@ -22,24 +27,38 @@ import SettleUpScreen from './screens/SettleUpScreen';
 import SettlementConfirmationScreen from './screens/SettlementConfirmationScreen';
 import ActivityScreen from './screens/ActivityScreen';
 
+function AppRoutes() {
+  const location = useLocation();
+  const isAddParticipantOverlay = location.pathname === '/trip/add';
+  // While the sheet overlay is open, the routed hub underneath renders as if it were still at /trip —
+  // that's what keeps it mounted and visible behind the sheet instead of swapping out.
+  const routesLocation = isAddParticipantOverlay ? { ...location, pathname: '/trip' } : location;
+
+  return (
+    <>
+      <Routes location={routesLocation}>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/trip" element={<TripDetailScreen />} />
+        <Route path="/poll/new" element={<CreatePollScreen />} />
+        <Route path="/poll" element={<PollVotingScreen />} />
+        <Route path="/poll/closed" element={<PollClosedScreen />} />
+        <Route path="/split" element={<SplitScreen />} />
+        <Route path="/settle" element={<SettleUpScreen />} />
+        <Route path="/settle/done" element={<SettlementConfirmationScreen />} />
+        <Route path="/activity" element={<ActivityScreen />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      {isAddParticipantOverlay ? <AddParticipantScreen /> : null}
+    </>
+  );
+}
+
 export default function App() {
   return (
     <div className="device-frame">
       <TripProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomeScreen />} />
-            <Route path="/trip" element={<TripDetailScreen />} />
-            <Route path="/trip/add" element={<AddParticipantScreen />} />
-            <Route path="/poll/new" element={<CreatePollScreen />} />
-            <Route path="/poll" element={<PollVotingScreen />} />
-            <Route path="/poll/closed" element={<PollClosedScreen />} />
-            <Route path="/split" element={<SplitScreen />} />
-            <Route path="/settle" element={<SettleUpScreen />} />
-            <Route path="/settle/done" element={<SettlementConfirmationScreen />} />
-            <Route path="/activity" element={<ActivityScreen />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <AppRoutes />
         </BrowserRouter>
       </TripProvider>
     </div>

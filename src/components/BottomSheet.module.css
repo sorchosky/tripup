@@ -1,51 +1,13 @@
-/* BottomSheet — full-height sheet over the Trip Hub, slide-up in / slide-down out (#15). Also supports
-   a shorter `partial` variant (#40) presented over the current screen instead of as a route. */
+/* BottomSheet — scrim overlay over the still-visible screen behind it (#15, #51), sheet slides up in /
+   down out. Supports a shorter `partial` variant (#40) presented over the current screen instead of as
+   a route. Anchored inside the device frame (its nearest positioned ancestor is `.device-frame`/
+   `.screen`, both `position: relative`), so this reads as a sheet over the current screen rather than a
+   full second screen. */
 
-.sheet {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background: var(--color-surface);
-  /* Reclaims the space the removed home-indicator bar used to occupy as a flex child, so bottom
-     spacing stays pixel-identical (34px, matching the indicator's old fixed height). */
-  padding-bottom: 34px;
-  animation-duration: 260ms;
-  animation-timing-function: ease-out;
-  animation-fill-mode: both;
-}
-.opening { animation-name: slideUp; }
-.closing { animation-name: slideDown; animation-timing-function: ease-in; animation-duration: 220ms; }
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-@keyframes slideDown {
-  from { transform: translateY(0); }
-  to { transform: translateY(100%); }
-}
-
-.body {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  padding: var(--space-2) var(--space-5) var(--space-4);
-}
-
-.footer {
-  flex: 0 0 auto;
-  padding: 0 var(--space-5) var(--space-2);
-}
-
-/* ---------- Partial-height overlay variant (#40) ---------- */
-/* Anchored inside the device frame (its nearest positioned ancestor is `.device-frame`/`.screen`,
-   both `position: relative`), so this reads as a sheet over the current screen rather than a full
-   second screen. */
 .overlay {
   position: absolute;
   inset: 0;
-  z-index: 10;
+  z-index: 30;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -73,6 +35,61 @@
   to { opacity: 0; }
 }
 
+.sheet {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Leaves the hub's own status bar (54px, ui.module.css .statusBar) visible above the sheet instead
+     of drawing a second one — the hub stays visibly present behind/above the overlay. */
+  top: 54px;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--elevation-glass);
+  /* Reclaims the space the removed home-indicator bar used to occupy as a flex child, so bottom
+     spacing stays pixel-identical (34px, matching the indicator's old fixed height). */
+  padding-bottom: 34px;
+  animation-duration: 260ms;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+.opening { animation-name: slideUp; }
+.closing { animation-name: slideDown; animation-timing-function: ease-in; animation-duration: 220ms; }
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes slideDown {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+.grabber {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: var(--color-avatar-outline);
+  margin: var(--space-2) auto 0;
+}
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-5) var(--space-4);
+}
+
+.footer {
+  flex: 0 0 auto;
+  padding: 0 var(--space-5) var(--space-2);
+}
+
+/* ---------- Partial-height overlay variant (#40) ---------- */
 .sheetPartial {
   position: relative;
   z-index: 1;
