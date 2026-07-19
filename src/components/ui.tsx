@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode, type RefObject } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './ui.module.css';
 import { participantById } from '../data/mock';
 import { Bell, Compass, User, Plus } from './icons';
@@ -121,26 +122,39 @@ export function NavHeader({
 /* ------------------------------ Tab bar ------------------------------ */
 
 const TABS = [
-  { key: 'trips', label: 'Trips', Icon: Compass, active: true },
-  { key: 'activity', label: 'Activity', Icon: Bell, active: false },
-  { key: 'profile', label: 'Profile', Icon: User, active: false },
+  { key: 'trips', label: 'Trips', Icon: Compass, path: '/', enabled: true },
+  { key: 'activity', label: 'Activity', Icon: Bell, path: '/activity', enabled: true },
+  { key: 'profile', label: 'Profile', Icon: User, path: '/profile', enabled: false },
 ] as const;
 
+/** Every route in the app belongs to the "Trips" tab except the Activity feed itself. */
+function activeTabKey(pathname: string): (typeof TABS)[number]['key'] {
+  return pathname.startsWith('/activity') ? 'activity' : 'trips';
+}
+
 export function TabBar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentKey = activeTabKey(location.pathname);
+
   return (
     <div className={`${styles.tabBar} ${styles.glass}`}>
-      {TABS.map(({ key, label, Icon, active }) => (
-        <button
-          key={key}
-          type="button"
-          className={`${styles.tabItem} ${active ? styles.tabItemActive : ''}`}
-          disabled={!active}
-          aria-current={active ? 'page' : undefined}
-        >
-          <Icon size={22} />
-          <span className={styles.tabLabel}>{label}</span>
-        </button>
-      ))}
+      {TABS.map(({ key, label, Icon, path, enabled }) => {
+        const active = enabled && key === currentKey;
+        return (
+          <button
+            key={key}
+            type="button"
+            className={`${styles.tabItem} ${active ? styles.tabItemActive : ''}`}
+            disabled={!enabled}
+            aria-current={active ? 'page' : undefined}
+            onClick={enabled ? () => navigate(path) : undefined}
+          >
+            <Icon size={22} />
+            <span className={styles.tabLabel}>{label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

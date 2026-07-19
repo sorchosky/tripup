@@ -206,3 +206,36 @@ Derived from the expenses above via `src/lib/settle.ts` (minimum-transfer). Not 
 reference copy ("Two transfers close it out") implies the final settlement resolves to ~2 transfers.
 Once expense amounts are locked, confirm the algorithm's output matches that narrative and update the
 copy if it doesn't.
+
+## Activity feed (issue #57)
+
+New surface — a computed digest of the same live trip state used elsewhere (poll, settle-up), not a
+separate persisted event log. No new names/amounts; every line below reuses the Poll/Expenses/Settlement
+data above. Written from `BRAND.md` (short, dry, state the fact then earn the joke).
+
+**Active poll section** — shown while `poll.status === 'open'`:
+- Card headline: the poll question, unchanged — "Where should we eat tonight?" — with the same
+  `Pill tone="neutral"` "Poll open" label used on the Trip Detail banner (same token, same job, per C5).
+- Sub-line: "{votesIn} of {totalVoters} in." — e.g. with the demo's 2 early votes: "2 of 3 in."
+- One response row per participant who has voted, in vote order: "{Name} voted" — e.g. "Ari voted",
+  "Nic voted." This is the "free-flowing feed of others responding" the issue asks for, entirely
+  derived from `poll.options[].votedBy` — no invented timestamps or ordering beyond vote order.
+
+**Poll decided section** — shown once `poll.status === 'closed'` (supersedes the open-poll card):
+- Card headline: "{Winner} wins, {winner votes} to {runner-up votes}." — with the locked result this
+  reads **"Cervejaria Ramiro wins, 2 to 1."** (Real numbers, not the "Trattoria wins, 4 to 2" tone
+  reference from `BRAND.md` — see the Poll section above for why that line doesn't apply verbatim.)
+- Pill: reuses the exact "Poll closed" label/tone from `PollClosedScreen`, not a new variant.
+
+**Settle-up section** — shown when `!settled` and there's at least one consolidated transfer:
+- One card per transfer: "{Debtor} owes {euros(amount)}" + the same "Request" tag used on
+  `SettleUpScreen`'s debtor cards — e.g. "Ren owes €25.33 · Request."
+- Sub-line reuses the locked settlement narrative: "Two transfers close it out."
+
+**Settled section** — shown once `settled` is true (replaces the settle-up cards):
+- Card: "Everyone's even." (matches `SettlementConfirmationScreen`'s title) with a `Pill tone="settled"`
+  "Settled up" label.
+
+Before any vote is cast and before any expense exists, the feed has nothing to show — no filler/empty
+state copy is defined here since the Lisbon scenario always reaches the poll before Ari would check
+Activity in the intended flow.
