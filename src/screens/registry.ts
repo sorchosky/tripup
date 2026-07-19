@@ -24,6 +24,10 @@ export const SCREENS: ScreenDef[] = [
   { id: '2', path: '/trip', title: 'Trip detail / Group view', designRef: 'DESIGN.md §Screens 2', note: 'Members, itinerary, money; the contextual next-step CTA lives here.' },
   { id: '3', path: '/trip/add', title: 'Add participant', designRef: 'DESIGN.md §Screens 3', note: 'Bring Ren into the trip (bottom sheet); 2 avatars → 3.' },
   { id: '4', path: '/poll/new', title: 'Create poll', designRef: 'DESIGN.md §Screens 4', note: 'Propose a decision (where to eat).' },
+  // Confirmation beat added per issue #55 — sits between send (4) and live voting (5) so the send
+  // doesn't drop straight into the auto-filling vote counts. A sub-step of "send the poll," not a new
+  // numbered stop in the ≤10-screen budget (same treatment as the add-participant sheet under 3).
+  { id: '4b', path: '/poll/sent', title: 'Poll sent confirmation', designRef: 'DESIGN.md §Screens 4', note: '"Poll’s out." — routes to Activity (primary) or live voting (secondary).' },
   { id: '5', path: '/poll', title: 'Poll voting (live)', designRef: 'DESIGN.md §Screens 5', note: 'Group votes; counts update live.' },
   { id: '6', path: '/poll/closed', title: 'Poll closed → itinerary', designRef: 'DESIGN.md §Screens 6', note: 'HI-FI. Result resolves and writes into the itinerary.' },
   // Screens 7 + 8 are fused into one "Scan & assign" step, matching the hi-fi mock.

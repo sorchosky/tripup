@@ -53,6 +53,7 @@ export interface TripState {
 
 export type TripAction =
   | { type: 'ADD_PARTICIPANT'; id: string }
+  | { type: 'OPEN_POLL' }
   | { type: 'CAST_VOTE'; optionId: string; voterId: string }
   | { type: 'CLOSE_POLL' }
   | { type: 'ADD_ITINERARY_ITEM'; item: ItineraryItem }
@@ -91,6 +92,14 @@ function reducer(state: TripState, action: TripAction): TripState {
         (a, b) => order.indexOf(a.id) - order.indexOf(b.id),
       );
       return { ...state, participants };
+    }
+
+    case 'OPEN_POLL': {
+      // Fired when the poll is sent (#55) — opens it to the group immediately, before any vote lands,
+      // so the Activity feed's "Active poll" card is there the moment Ari checks it. Idempotent: a
+      // poll already open or closed is untouched.
+      if (state.poll.status !== 'none') return state;
+      return { ...state, poll: { ...state.poll, status: 'open' } };
     }
 
     case 'CAST_VOTE': {
