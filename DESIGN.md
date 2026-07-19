@@ -134,6 +134,16 @@ Two-family system:
   issue #61). Governed by three tokens in `tokens.css` — `--glow-blur` (32px), `--glow-spread` (20px,
   how far the copy bleeds past the sharp card), `--glow-opacity` (0.55). Don't apply it to non-photo
   cards — it's a photo-specific pattern, not a general elevation replacement.
+- **Settlement ring / radial meter** (issue #39, `src/components/SettleRing.tsx`): a radial progress
+  ring replacing the flat "you're owed €X" numeral at the top of Settle Up. Fill fraction is binary
+  today — `settled` is a single boolean in `TripState`, so the ring reads 0% (outstanding) or 100%
+  (settled), not a partial per-transfer fill. The arc's color interpolates continuously from
+  `--color-owed` to `--color-settled` via `color-mix(in srgb, var(--color-settled) var(--progress),
+  var(--color-owed))`, driven by the same fraction that draws the arc — never a flat two-color swap.
+  Center holds the outstanding amount (`euros()`) and a short state label. Animates to a complete green
+  ring on `SETTLE`; honors `prefers-reduced-motion` (jumps to the end state). Ring geometry
+  (radius/stroke/circumference) is unitless SVG viewBox coordinates, same precedent as `icons.tsx` —
+  only its rendered footprint comes from a token (`--ring-size`).
 - **Segmented control** (issue #40, `ui.tsx`/`ui.module.css`): a 2/3-way tab-style switch for an
   in-place step, not a boolean toggle — `--color-surface-neutral` track, `--color-surface-raised` +
   `--color-text` active segment (with `--elevation-card` for separation), `--color-text-muted`
@@ -236,11 +246,15 @@ One entry per screen, in build order. Purpose/states are stubs until the wireflo
 - Purpose: Built from the "Settle Up (Ari)" wireframe (`docs/wireframe-handoff.md`) — a payer-
   perspective hero ("you're owed") plus the minimum-transfer per-debtor breakdown from
   `src/lib/settle.ts`.
-- Key states: CTA disabled until the settle math resolves to something real (`transfers.length === 0`
-  or already `state.settled`, issue #41); tapping "Confirm & settle" opens a partial-height confirm
-  sheet (issue #40, not a route) with a Review/Pay segmented control — Review recaps the same
-  transfer rows as the main screen, Pay holds a mocked payment-method choice and the button that
-  actually dispatches `SETTLE`.
+- Key states: a radial `SettleRing` (issue #39) tops the hero card in place of the old flat euro
+  numeral — amber ring/outstanding amount before settling, animates to a full green ring on `SETTLE`
+  (`prefers-reduced-motion` skips straight to the end state). The per-debtor "Consolidated debts" rows
+  stay alongside the ring rather than being subsumed by it — the ring communicates overall progress at
+  a glance, the rows still carry who-owes-what detail the ring can't. CTA disabled until the settle
+  math resolves to something real (`transfers.length === 0` or already `state.settled`, issue #41);
+  tapping "Confirm & settle" opens a partial-height confirm sheet (issue #40, not a route) with a
+  Review/Pay segmented control — Review recaps the same transfer rows as the main screen, Pay holds a
+  mocked payment-method choice and the button that actually dispatches `SETTLE`.
 - Notes: The other strongest hi-fi candidate (debt logic + confirmation).
 
 ### 10. Settlement confirmation
