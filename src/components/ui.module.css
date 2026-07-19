@@ -16,7 +16,7 @@
 .tabBar {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  gap: var(--space-3);
   border-radius: var(--radius-device);
   padding: var(--space-2) var(--space-3);
 }
