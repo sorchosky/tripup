@@ -8,7 +8,7 @@
 import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode, type RefObject } from 'react';
 import styles from './ui.module.css';
 import { participantById } from '../data/mock';
-import { Activity, Compass, Users as UsersIcon, Plus } from './icons';
+import { Bell, Compass, User, Plus } from './icons';
 
 /* ------------------------------ Status bar / chrome ------------------------------ */
 
@@ -122,8 +122,8 @@ export function NavHeader({
 
 const TABS = [
   { key: 'trips', label: 'Trips', Icon: Compass, active: true },
-  { key: 'activity', label: 'Activity', Icon: Activity, active: false },
-  { key: 'profile', label: 'Profile', Icon: UsersIcon, active: false },
+  { key: 'activity', label: 'Activity', Icon: Bell, active: false },
+  { key: 'profile', label: 'Profile', Icon: User, active: false },
 ] as const;
 
 export function TabBar() {
