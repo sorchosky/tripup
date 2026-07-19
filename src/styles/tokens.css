@@ -58,6 +58,8 @@
   --color-text-muted: #565b7b;
   --color-avatar-fill: #16192a;      /* assigned participant chip */
   --color-avatar-outline: #d8d2c6;   /* unassigned/excluded participant chip */
+  --color-disabled: var(--color-surface-neutral);  /* disabled/neutral CTA fill (issue #41) — never owed/amber */
+  --color-on-disabled: var(--color-text-muted);    /* disabled/neutral CTA label */
 
   /* ---- Corner radius scale — LOCKED, from hi-fi mocks ---- */
   --radius-sm: 6px;    /* receipt thumbnail, small nested elements */

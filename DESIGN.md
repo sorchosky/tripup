@@ -61,6 +61,7 @@ placeholder — it supersedes the neutral-grayscale defaults that used to be in 
 | `owed` / `warning` | `#8a5a08` text on `#fef6da` bg, border `rgba(212,169,71,0.4)` | Inline receipt-line warning ("This price needs a second look") |
 | avatar unassigned outline | border `#d8d2c6`, text `#565b7b`, fill `#ffffff` | Excluded/unassigned participant chip |
 | avatar assigned fill | bg `#16192a`, text `#ffffff` | Assigned participant chip (initials) |
+| `disabled` / neutral CTA (issue #41) | `--color-disabled` (= `surface-neutral` `#efede7`) fill, `--color-on-disabled` (= `text-muted` `#565b7b`) label | `Button`'s `:disabled` state, app-wide — a real neutral, not a dimmed-opacity primary/neutral button and never the `owed`/amber warning role. Reserved for a genuine unmet invariant (e.g. Settle Up's CTA before `derived.transfers` resolves to something to confirm), not a loading spinner stand-in. |
 
 Semantic roles hold: `settled` (green) is never reused for `primary` (indigo) or vice versa, and the
 warning amber is distinct from both. Carry these exact roles into `tokens.css`, not the raw hex, inside

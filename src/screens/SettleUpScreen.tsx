@@ -42,6 +42,12 @@ export default function SettleUpScreen() {
   const oweTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
   const debtorNames = transfers.map((t) => participantById(t.fromId).name);
 
+  // The settle math has to actually resolve to something before the CTA is live: no transfers means
+  // there's nothing to confirm (everyone's already square), and once the trip is settled there's
+  // nothing left to re-confirm either. Both are real invariants on derived.transfers/state.settled, not
+  // a faked async "computing" window — transfers/balances are synchronous and always resolved.
+  const settleDisabled = transfers.length === 0 || state.settled;
+
   function settle() {
     dispatch({ type: 'SETTLE' });
     navigate('/settle/done');
@@ -50,7 +56,11 @@ export default function SettleUpScreen() {
   return (
     <Screen
       nav={<NavHeader onBack={() => navigate('/split')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to split" />}
-      footer={<Button onClick={settle}>Confirm &amp; settle</Button>}
+      footer={
+        <Button onClick={settle} disabled={settleDisabled}>
+          Confirm &amp; settle
+        </Button>
+      }
     >
       <div className={styles.body}>
         <div className={styles.header}>

@@ -288,7 +288,7 @@
   transition: transform 80ms ease, opacity 120ms ease, box-shadow 120ms ease;
 }
 .btn:active { transform: scale(0.985); }
-.btn:disabled { opacity: 0.45; cursor: default; }
+.btn:disabled { cursor: default; }
 .btn:disabled:active { transform: none; }
 
 .btnPrimary {
@@ -296,9 +296,17 @@
   color: var(--color-on-primary);
   box-shadow: var(--elevation-primary-button);
 }
-.btnPrimary:disabled { box-shadow: none; }
-
 .btnNeutral {
   background: var(--color-surface-neutral);
   color: var(--color-text);
+}
+
+/* Disabled = a distinct neutral CTA role, not a dimmed opacity of whatever variant it started as —
+   opacity dims the shadow/text/background together in a way that reads inconsistently, and it isn't a
+   semantic color role of its own. Never the owed/warning amber: disabled ≠ error. */
+.btnPrimary:disabled,
+.btnNeutral:disabled {
+  background: var(--color-disabled);
+  color: var(--color-on-disabled);
+  box-shadow: none;
 }
