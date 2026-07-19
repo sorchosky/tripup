@@ -91,7 +91,7 @@ export default function SplitScreen() {
                 </div>
               ))}
             </div>
-            <Button onClick={() => navigate('/settle')}>Review split</Button>
+            <Button onClick={() => navigate('/settle')}>Go to settle up</Button>
           </>
         ) : undefined
       }
