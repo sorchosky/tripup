@@ -222,6 +222,12 @@ Figma file (node 29:2348) before trusting a Medium/Low row.
 |---|---|---|---|
 | "Participant view" (bracket label) | 29:2370 | Grouping label spanning Settle Up (Ari), Ren's Your Share, and Settle Up Confirmation, marking these as the non-payer participant's view | High |
 
+**Resolved frame ids** (from a live read of node 29:854, so a future pass doesn't have to re-derive
+these from annotation position): `settle-up-ari` is **29:2170**, `ren-your-share` is **29:2226**,
+`settle-up-confirmation` is **29:2300**. `SettleUpScreen` (issue #20) is rebuilt from 29:2170;
+29:2226 is not yet built (tracked as a follow-up); 29:2300 already exists as
+`SettlementConfirmationScreen`.
+
 **Cross-check against section 1–3/6 above:** several of these annotations reinforce state logic
 already captured from node 16:501 rather than introducing new behavior — e.g. the PAID badge note
 (29:2372) matches the `status` field described in §1's pending-item driver, and the receipt skeleton

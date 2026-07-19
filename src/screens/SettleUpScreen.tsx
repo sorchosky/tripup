@@ -1,27 +1,46 @@
 /**
  * Screen 9 — Debt consolidation / settle up (step 2 of the "Scan & assign · Settle up" flow).
  *
- * The transfers here are computed by the real minimum-transfer solver in src/lib/settle.ts from the
- * live balances — not hand-authored — so the "two transfers close it out" line is a fact about the
- * data, and the balances recap explains where those transfers come from.
+ * Rebuilt from the "Settle Up (Ari)" wireframe frame (Figma node 29:2170, docs/wireframe-handoff.md
+ * §"Settle Up flow"): a payer-perspective hero ("you're owed") plus a per-debtor breakdown, rather than
+ * a generic from→to transfer list. The transfers/balances are computed by the real minimum-transfer
+ * solver in src/lib/settle.ts from the live balances — not hand-authored — so "you're owed €50.66" is a
+ * fact about the data, and every transfer resolves to Ari because Ari fronted the whole receipt.
  */
 
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Avatar, Button } from '../components/ui';
-import { ArrowLeft, ArrowRight } from '../components/icons';
-import { participantById } from '../data/mock';
+import { ArrowLeft, Info } from '../components/icons';
+import { participantById, DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
+import type { Assignment } from '../lib/settle';
 import styles from './SettleUpScreen.module.css';
+
+/** Which receipt lines a person is currently splitting, as display text (e.g. "Couvert, Arroz de marisco"). */
+function itemsFor(personId: string, assignment: Assignment): string {
+  return DINNER_RECEIPT.items
+    .filter((item) => (assignment[item.id] ?? item.defaultSharedBy).includes(personId))
+    .map((item) => item.label)
+    .join(', ');
+}
+
+function joinNames(names: string[]): string {
+  if (names.length <= 1) return names[0] ?? '';
+  if (names.length === 2) return `${names[0]} and ${names[1]}`;
+  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
+}
 
 export default function SettleUpScreen() {
   const navigate = useNavigate();
-  const { dispatch, derived } = useTrip();
-  const { transfers, balances } = derived;
+  const { dispatch, state, derived } = useTrip();
+  const { transfers } = derived;
 
   const count = transfers.length;
   const countWord = count === 1 ? 'One transfer' : count === 2 ? 'Two transfers' : `${count} transfers`;
+  const oweTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
+  const debtorNames = transfers.map((t) => participantById(t.fromId).name);
 
   function settle() {
     dispatch({ type: 'SETTLE' });
@@ -48,39 +67,41 @@ export default function SettleUpScreen() {
           everyone just squares up with them.
         </p>
 
-        <div className={styles.sectionHead}>
-          <Eyebrow>The transfers</Eyebrow>
+        <div className={styles.heroCard}>
+          <Eyebrow>You&apos;re owed</Eyebrow>
+          <div className={styles.heroAmountRow}>
+            <span className={styles.heroAmount}>{euros(oweTotal)}</span>
+            <span className={styles.heroFrom}>from {count === 1 ? '1 person' : `${count} people`}</span>
+          </div>
+          <p className={styles.heroSub}>Lisbon 2026 · Ramiro Dinner</p>
         </div>
-        <div className={styles.transfers}>
+
+        <div className={styles.sectionHead}>
+          <Eyebrow>Consolidated debts</Eyebrow>
+        </div>
+        <div className={styles.debtors}>
           {transfers.map((t, i) => (
-            <div key={i} className={styles.transfer}>
-              <div className={styles.who}>
+            <div key={i} className={styles.debtorCard}>
+              <div className={styles.debtorWho}>
                 <Avatar personId={t.fromId} size="md" variant="neutral" />
-                <span className={styles.name}>{participantById(t.fromId).name}</span>
-                <ArrowRight size={18} className={styles.arrow} />
-                <Avatar personId={t.toId} size="md" variant="filled" />
-                <span className={styles.name}>{participantById(t.toId).name}</span>
+                <div className={styles.debtorNames}>
+                  <span className={styles.debtorName}>{participantById(t.fromId).name}</span>
+                  <span className={styles.debtorItems}>{itemsFor(t.fromId, state.assignment)}</span>
+                </div>
               </div>
-              <span className={styles.amount}>{euros(t.amount)}</span>
+              <div className={styles.debtorRight}>
+                <span className={styles.debtorAmount}>{euros(t.amount)}</span>
+                <span className={styles.requestTag}>Request</span>
+              </div>
             </div>
           ))}
         </div>
 
-        <div className={styles.balances}>
-          {balances.map((b) => {
-            const cls = b.net > 0 ? styles.owed : b.net < 0 ? styles.owes : styles.even;
-            const label =
-              b.net > 0 ? `is owed ${euros(b.net)}` : b.net < 0 ? `owes ${euros(-b.net)}` : 'is even';
-            return (
-              <div key={b.personId} className={styles.balanceRow}>
-                <div className={styles.balWho}>
-                  <Avatar personId={b.personId} size="sm" variant="neutral" />
-                  <span className={styles.balName}>{participantById(b.personId).name}</span>
-                </div>
-                <span className={`${styles.balNet} ${cls}`}>{label}</span>
-              </div>
-            );
-          })}
+        <div className={styles.tipRow}>
+          <Info size={16} className={styles.tipIcon} />
+          <p className={styles.tipText}>
+            Reminders will send a push notification containing itemized shares to {joinNames(debtorNames)}.
+          </p>
         </div>
       </div>
     </Screen>
