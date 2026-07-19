@@ -117,6 +117,9 @@ export default function SplitScreen() {
               <Camera size={18} />
               Capture receipt
             </Button>
+            <Button variant="neutral" onClick={() => setAddItemOpen(true)}>
+              Add items manually
+            </Button>
           </div>
         ) : null}
 
