@@ -83,8 +83,9 @@ export default function CreatePollScreen() {
           }}
         />
       }
+      floatingFooter
       footer={
-        <Button disabled={!canSend} onClick={() => navigate('/poll')}>
+        <Button variant="primary-glass" disabled={!canSend} onClick={() => navigate('/poll')}>
           Send poll to {recipientList(recipients)}
         </Button>
       }

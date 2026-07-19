@@ -42,8 +42,11 @@ export default function PollVotingScreen() {
   return (
     <Screen
       nav={<NavHeader onBack={() => navigate('/trip')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to trip" />}
+      floatingFooter
       footer={
-        <Button onClick={close}>{allIn ? 'See the result' : 'Close poll now'}</Button>
+        <Button variant="primary-glass" onClick={close}>
+          {allIn ? 'See the result' : 'Close poll now'}
+        </Button>
       }
     >
       <div className={styles.body}>

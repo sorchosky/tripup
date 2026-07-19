@@ -385,10 +385,18 @@ export function Eyebrow({ children, wide }: { children: ReactNode; wide?: boolea
 
 /* ------------------------------ Buttons ------------------------------ */
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'neutral' };
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'neutral' | 'primary-glass' };
+
+const buttonVariantClass: Record<NonNullable<ButtonProps['variant']>, string> = {
+  primary: styles.btnPrimary,
+  neutral: styles.btnNeutral,
+  // Glass-accent primary (issue #52) — for a primary CTA that floats fixed over scrolling content
+  // instead of sitting inside a `.glass` footer card; see CreatePollScreen/PollVotingScreen.
+  'primary-glass': styles.btnPrimaryGlass,
+};
 
 export function Button({ variant = 'primary', className = '', children, disabled, ...rest }: ButtonProps) {
-  const variantClassName = variant === 'primary' ? styles.btnPrimary : styles.btnNeutral;
+  const variantClassName = buttonVariantClass[variant];
   return (
     <button
       type="button"

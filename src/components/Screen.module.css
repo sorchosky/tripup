@@ -38,6 +38,9 @@
 .scrollPadBottomFooter {
   padding-bottom: 140px; /* footer bar: subtotal row + button + padding */
 }
+.scrollPadBottomFooterBare {
+  padding-bottom: 96px; /* floating bare button (issue #52): 48px button + top/bottom margin, no glass card */
+}
 .scrollPadBottomTabBar {
   padding-bottom: 64px; /* tab bar row (60px) + tabBarFloating's bottom padding (4px) */
 }
@@ -103,6 +106,13 @@
 /* Stack above the tab bar when both are present (not exercised by any screen today, but supported). */
 .footerFloatingAboveTabBar {
   bottom: 64px;
+}
+/* Bare floating footer (issue #52) — no `.footerBar`/`.glass` card, so the host's own padding gives
+   the button its margins directly (matching the screen's horizontal content padding) instead of the
+   card supplying them internally. */
+.footerFloatingBare {
+  padding: 0 var(--space-5) var(--space-5);
+  padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
 }
 
 /* Tab bar host — floats over the bottom of the scroll area, below the footer when both are present. */

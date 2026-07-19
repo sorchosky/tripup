@@ -169,6 +169,13 @@ Two-family system:
   `onScroll` signal comparing the heading's `getBoundingClientRect()` against the header's own height),
   and fade it back out at the top — the title span stays mounted at all times so the transition never
   shifts layout.
+- **Floating glass-accent primary button** (issue #52, `Screen`'s `floatingFooter` prop + `Button`'s
+  `primary-glass` variant): on the create-poll and poll-voting footers, the primary CTA is pinned fixed
+  at the bottom directly over scrolling content — no `.footerBar`/`.glass` card behind it. The button
+  itself carries the glass read instead: `--color-primary-glass` (the primary hue at 0.85 alpha, still
+  AA-legible with the white label) plus its own `--blur-accent` (16px) backdrop blur, keeping the same
+  `--elevation-primary-button` accent shadow as the solid `primary` variant. Reserve `floatingFooter`
+  for a single floating CTA with no other footer content (subtotal rows etc. keep the glass footer bar).
 
 ## Design tokens
 

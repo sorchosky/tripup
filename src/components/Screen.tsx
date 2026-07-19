@@ -22,13 +22,21 @@ interface ScreenProps {
    * the floating `nav` header once it scrolls underneath it. Omit for screens that don't need it.
    */
   onScroll?: (e: UIEvent<HTMLDivElement>) => void;
+  /**
+   * Pin `footer` fixed at the bottom with no `.glass` footer-bar card behind it (issue #52) — for a
+   * single floating primary CTA (paired with the `primary-glass` `Button` variant) directly over
+   * scrolling content, rather than the liquid-glass bar used for footers with subtotal rows etc.
+   */
+  floatingFooter?: boolean;
 }
 
-export function Screen({ nav, children, footer, tabBar, bleed, onScroll }: ScreenProps) {
+export function Screen({ nav, children, footer, tabBar, bleed, onScroll, floatingFooter }: ScreenProps) {
   const scrollPadTop = nav ? styles.scrollPadTopNav : '';
   const scrollPadBottom =
     footer && tabBar
       ? styles.scrollPadBottomFooterAndTabBar
+      : footer && floatingFooter
+      ? styles.scrollPadBottomFooterBare
       : footer
       ? styles.scrollPadBottomFooter
       : tabBar
@@ -44,8 +52,12 @@ export function Screen({ nav, children, footer, tabBar, bleed, onScroll }: Scree
         </div>
         {nav ? <div className={styles.navFloating}>{nav}</div> : null}
         {footer ? (
-          <div className={`${styles.footerFloating} ${tabBar ? styles.footerFloatingAboveTabBar : ''}`}>
-            <div className={`${styles.footerBar} ${glassClass}`}>{footer}</div>
+          <div
+            className={`${styles.footerFloating} ${tabBar ? styles.footerFloatingAboveTabBar : ''} ${
+              floatingFooter ? styles.footerFloatingBare : ''
+            }`}
+          >
+            {floatingFooter ? footer : <div className={`${styles.footerBar} ${glassClass}`}>{footer}</div>}
           </div>
         ) : null}
         {tabBar ? <div className={styles.tabBarFloating}>{tabBar}</div> : null}
