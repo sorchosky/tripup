@@ -127,6 +127,15 @@ Two-family system:
   issue #61). Governed by three tokens in `tokens.css` — `--glow-blur` (32px), `--glow-spread` (20px,
   how far the copy bleeds past the sharp card), `--glow-opacity` (0.55). Don't apply it to non-photo
   cards — it's a photo-specific pattern, not a general elevation replacement.
+- **Shimmer skeleton** (issue #58, `SplitScreen.module.css`): the post-capture loading moment (between
+  the mocked "camera" and the populated receipt) uses a moving highlight sweep across skeleton
+  placeholders — the receipt-card thumbnail/lines and three line-item skeleton rows — instead of a
+  generic opacity pulse. A `100deg` linear gradient (`--color-shimmer-base` →
+  `--color-shimmer-highlight` → `--color-shimmer-base`) animates its `background-position` over
+  `--shimmer-duration` (1000ms, matching the mocked scan delay so the sweep completes exactly once
+  before the populated state lands). `role="status"` stays on the "Reading the receipt." caption so
+  the loading state is still announced to assistive tech. Base/highlight reuse the existing neutral
+  surface roles rather than introducing new raw colors.
 
 ## Design tokens
 

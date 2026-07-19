@@ -240,18 +240,30 @@
   background: var(--color-on-primary);
 }
 
-/* ---- Skeleton loading (wireframe-handoff.md 29:2391 — between capture and populated items) ---- */
-@keyframes skeletonPulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+/* ---- Skeleton loading (wireframe-handoff.md 29:2391 — between capture and populated items) ----
+ * Moving shimmer sweep (issue #58), replacing the earlier opacity pulse. `--shimmer-duration` and
+ * the base/highlight colors are token-driven (tokens.css) so timing/color stay a single source of
+ * truth rather than a magic number per element. */
+@keyframes shimmerSweep {
+  0% { background-position: 150% 0; }
+  100% { background-position: -50% 0; }
+}
+.skelThumb,
+.skelLine {
+  background: linear-gradient(
+    100deg,
+    var(--color-shimmer-base) 35%,
+    var(--color-shimmer-highlight) 50%,
+    var(--color-shimmer-base) 65%
+  );
+  background-size: 250% 100%;
+  animation: shimmerSweep var(--shimmer-duration) ease-in-out infinite;
 }
 .skelThumb {
   flex: 0 0 auto;
   width: 48px;
   height: 64px;
   border-radius: var(--radius-sm);
-  background: var(--color-surface-neutral);
-  animation: skeletonPulse 1.1s ease-in-out infinite;
 }
 .skelLines {
   flex: 1 1 auto;
@@ -262,8 +274,22 @@
 .skelLine {
   height: 10px;
   border-radius: var(--radius-sm);
-  background: var(--color-surface-neutral);
-  animation: skeletonPulse 1.1s ease-in-out infinite;
+}
+.skelItemName {
+  height: var(--font-size-body);
+}
+.skelItemChips {
+  height: var(--avatar-lg);
+  border-radius: var(--radius-full);
+}
+.itemRowSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
 }
 .loadingCaption {
   font-size: var(--font-size-label);

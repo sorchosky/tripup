@@ -90,6 +90,13 @@
   --glow-spread: 20px;   /* how far the blurred copy bleeds past the sharp card's edge */
   --glow-opacity: 0.55;
 
+  /* ---- Shimmer skeleton (issue #58) — a moving highlight sweep across loading placeholders (receipt
+   * card, line-item rows) between capture and populated states. Replaces the earlier opacity-pulse
+   * skeleton. Base/highlight reuse existing neutral surface roles rather than new raw colors. */
+  --color-shimmer-base: var(--color-surface-neutral);
+  --color-shimmer-highlight: rgba(255, 255, 255, 0.85);
+  --shimmer-duration: 1000ms;
+
   /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */
   --avatar-sm: 24px;   /* rank badges, poll rows */
   --avatar-md: 28px;   /* footer subtotals, home/trip avatar groups */
