@@ -5,8 +5,7 @@
 .current { margin-top: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
 .currentRow { display: flex; align-items: flex-end; gap: var(--space-4); flex-wrap: wrap; }
 
-.profile,
-.profileSmall {
+.profile {
   display: flex;
   flex-direction: column;
   align-items: center;
