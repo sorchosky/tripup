@@ -53,17 +53,8 @@
   height: 64px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
-  background: #fbfaf7;
-  overflow: hidden;
-  padding: 6px 5px;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5px;
+  object-fit: cover;
 }
-.thumbLine { height: 2px; border-radius: 1px; background: #d8d2c6; }
-.thumbLine.short { width: 60%; }
-.thumbLine.mid { width: 80%; }
-.thumbTotal { height: 3px; border-radius: 1px; background: var(--color-text); margin-top: auto; width: 70%; }
 
 .receiptMeta {
   flex: 1 1 auto;

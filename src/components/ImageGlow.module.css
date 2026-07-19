@@ -1,0 +1,13 @@
+/* ImageGlow — see tokens.css → "Blurred-image glow" for the token trio this consumes. */
+
+.glow {
+  position: absolute;
+  inset: calc(-1 * var(--glow-spread));
+  width: calc(100% + 2 * var(--glow-spread));
+  height: calc(100% + 2 * var(--glow-spread));
+  object-fit: cover;
+  filter: blur(var(--glow-blur));
+  opacity: var(--glow-opacity);
+  z-index: 0;
+  pointer-events: none;
+}

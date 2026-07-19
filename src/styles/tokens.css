@@ -83,6 +83,13 @@
   /* ---- Opacity (itinerary anchor-to-now demoted state, issue #12) ---- */
   --opacity-demoted: 0.5;
 
+  /* ---- Blurred-image glow (issue #59) — a blurred copy of a photo bled out behind its card, standing
+   * in for a drop shadow (Sunday-app reference). Reserve for photo surfaces (poll-reveal winner card
+   * today; receipt/settle-up hero once those get real photos) — not a generic shadow replacement. */
+  --glow-blur: 32px;     /* backdrop blur radius on the bled-out copy */
+  --glow-spread: 20px;   /* how far the blurred copy bleeds past the sharp card's edge */
+  --glow-opacity: 0.55;
+
   /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */
   --avatar-sm: 24px;   /* rank badges, poll rows */
   --avatar-md: 28px;   /* footer subtotals, home/trip avatar groups */

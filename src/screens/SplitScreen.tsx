@@ -19,6 +19,7 @@ import { ArrowLeft, Ellipsis, Camera, X } from '../components/icons';
 import { DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
+import receiptPhoto from '../assets/photos/receipt-cervejaria-ramiro.png';
 import styles from './SplitScreen.module.css';
 
 type Stage = 'empty' | 'capturing' | 'loading' | 'populated';
@@ -141,14 +142,7 @@ export default function SplitScreen() {
             <section className={styles.section}>
               <Eyebrow>Captured receipt</Eyebrow>
               <div className={styles.receiptCard}>
-                <div className={styles.thumb} aria-hidden>
-                  <span className={`${styles.thumbLine} ${styles.mid}`} />
-                  <span className={styles.thumbLine} />
-                  <span className={`${styles.thumbLine} ${styles.short}`} />
-                  <span className={styles.thumbLine} />
-                  <span className={`${styles.thumbLine} ${styles.mid}`} />
-                  <span className={styles.thumbTotal} />
-                </div>
+                <img src={receiptPhoto} alt="Scanned receipt from Cervejaria Ramiro" className={styles.thumb} />
                 <div className={styles.receiptMeta}>
                   <span className={styles.merchant}>{DINNER_RECEIPT.merchant}</span>
                   <span className={styles.receiptSub}>{DINNER_RECEIPT.locationDate}</span>
