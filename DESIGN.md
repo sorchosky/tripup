@@ -120,6 +120,13 @@ Two-family system:
   still exist (kept for that follow-up); only the rendered row is gone.
 - **Sticky footer bar:** glass-chrome container, live per-person subtotal row (avatar chip + amount)
   above a full-width primary button.
+- **Blurred-image glow** (issue #59, `src/components/ImageGlow.tsx`): a blurred, bled-out copy of a
+  photo sits behind its card, standing in for a neutral drop shadow with an ambient, photo-colored one
+  (Sunday-app reference). Used on the poll-reveal winner card now that it has a real photo
+  (`cervejaria-ramiro.webp`); reserved for other photo surfaces once they get real files (settle-up hero,
+  issue #61). Governed by three tokens in `tokens.css` — `--glow-blur` (32px), `--glow-spread` (20px,
+  how far the copy bleeds past the sharp card), `--glow-opacity` (0.55). Don't apply it to non-photo
+  cards — it's a photo-specific pattern, not a general elevation replacement.
 
 ## Design tokens
 

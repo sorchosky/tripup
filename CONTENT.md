@@ -82,6 +82,23 @@ photo/fallback pairing (Ari vs. Nic/Ren) needed to be demonstrated.
 > Debt consolidation reads fine with 3 people given the confirmed expense set below (~2 transfers to
 > settle). No 4th participant needed — the hi-fi mocks settle this.
 
+### Photo assets (issue #59)
+
+Real user-supplied photos, dropped into `src/assets/photos/`. Everything below is now a real file, not
+a placeholder — the gradient/line-art SVGs and fake receipt lines they replaced are gone.
+
+| Slot | File | Used by |
+| --- | --- | --- |
+| Lisbon skyline | `lisbon-skyline.jpg` | Home hero `TripCard` (`src/assets/skylines.tsx` → `LisbonSkyline`) |
+| Tokyo skyline | `tokyo-skyline.jpg` | Home row `TripCard` for the Tokyo trip |
+| Paris skyline | `paris-skyline.jpg` | Home row `TripCard` for the Paris weekend trip |
+| Cervejaria Ramiro (dining room) | `cervejaria-ramiro.webp` | Poll-reveal winner card (`PollClosedScreen`), with the blurred-glow treatment (`ImageGlow`) — see DESIGN.md → Component patterns |
+| Cervejaria Ramiro receipt | `receipt-cervejaria-ramiro.png` | Receipt capture, populated state (`SplitScreen`) |
+
+No other image slot in the app has a supplied file — everything else (participant avatars besides
+Ari, the settle-up hero per issue #61) stays on today's placeholder per the scope contract in
+`CLAUDE.md` ("don't invent art").
+
 ## Expenses
 
 Consistent expense set used across log / balances / settle-up. Sourced from the receipt on the

@@ -10,10 +10,18 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Pill, Eyebrow } from '../components/ui';
+import { ImageGlow } from '../components/ImageGlow';
 import { ArrowLeft, Check, Ellipsis } from '../components/icons';
 import { DINNER_POLL, TRIP } from '../data/mock';
 import { useTrip } from '../state/TripContext';
+import cervejariaRamiroPhoto from '../assets/photos/cervejaria-ramiro.webp';
 import styles from './PollClosedScreen.module.css';
+
+/** Only the poll winner (Cervejaria Ramiro) has a supplied photo — a real hero photo swap, not a
+ * generic "always show winner.name's photo" mapping (no other venue has a file to show). */
+const WINNER_PHOTOS: Record<string, string> = {
+  'cervejaria-ramiro': cervejariaRamiroPhoto,
+};
 
 export default function PollClosedScreen() {
   const navigate = useNavigate();
@@ -27,6 +35,7 @@ export default function PollClosedScreen() {
   const ranked = [...state.poll.options].sort((a, b) => b.votes - a.votes);
   const winner = ranked.find((o) => o.id === (state.poll.winnerId ?? DINNER_POLL.winnerId)) ?? ranked[0];
   const votesIn = state.poll.options.reduce((n, o) => n + o.votes, 0);
+  const winnerPhoto = WINNER_PHOTOS[winner.id];
 
   return (
     <Screen
@@ -51,18 +60,22 @@ export default function PollClosedScreen() {
 
         <div className={styles.spacer} />
 
-        <div className={styles.winnerCard}>
-          <div className={styles.media}>
-            <span className={styles.winnerBadge}>Winner</span>
-          </div>
-          <div className={styles.winnerBody}>
-            <p className={styles.venue}>{winner.name}</p>
-            <p className={styles.venueMeta}>{DINNER_POLL.winnerMeta}</p>
-          </div>
-          <div className={styles.separator} />
-          <div className={styles.addedRow}>
-            <Check size={16} />
-            <span>Added to {TRIP.name}</span>
+        <div className={styles.winnerWrap}>
+          {winnerPhoto ? <ImageGlow src={winnerPhoto} className={styles.winnerGlow} /> : null}
+          <div className={styles.winnerCard}>
+            <div className={winnerPhoto ? styles.mediaPhoto : styles.media}>
+              {winnerPhoto ? <img src={winnerPhoto} alt={winner.name} className={styles.mediaImage} /> : null}
+              <span className={styles.winnerBadge}>Winner</span>
+            </div>
+            <div className={styles.winnerBody}>
+              <p className={styles.venue}>{winner.name}</p>
+              <p className={styles.venueMeta}>{DINNER_POLL.winnerMeta}</p>
+            </div>
+            <div className={styles.separator} />
+            <div className={styles.addedRow}>
+              <Check size={16} />
+              <span>Added to {TRIP.name}</span>
+            </div>
           </div>
         </div>
 

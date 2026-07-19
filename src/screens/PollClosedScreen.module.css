@@ -29,8 +29,18 @@
   height: var(--space-5);
 }
 
-/* ---- Winner card ---- */
+/* ---- Winner card ----
+ * .winnerWrap holds the card and (when a photo is supplied — issue #59) an ImageGlow bled out behind
+ * it, standing in for the card's normal box-shadow with an ambient, photo-colored one. */
+.winnerWrap {
+  position: relative;
+}
+.winnerGlow {
+  border-radius: var(--radius-lg);
+}
 .winnerCard {
+  position: relative;
+  z-index: 1;
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -44,6 +54,18 @@
   background:
     radial-gradient(120% 140% at 18% 12%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 45%),
     linear-gradient(145deg, #d98a3d 0%, #b5532f 42%, #7a3b52 100%);
+}
+.mediaPhoto {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 160 / 90;
+}
+.mediaImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .winnerBadge {
   position: absolute;
