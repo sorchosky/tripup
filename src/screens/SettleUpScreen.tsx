@@ -12,14 +12,16 @@
  * dispatches SETTLE; /settle/done stays the post-confirm destination (chosen over an inline sheet
  * success state — see PR).
  *
- * Restyled toward a photo-hero-with-blurred-glow treatment (issue #61, Sunday-app inspired, not a
- * clone): the dinner photo from #59 anchors the hero with an ImageGlow bleeding out behind it (same
- * pattern as the poll-reveal winner card), a frosted badge gives the "You're owed" framing right on the
- * photo, and the footer CTA + per-debtor request tag go full-pill for a more confident, of-a-piece look
- * with the photo treatment — a screen-scoped choice (className override), not a change to the global
- * `Button`/tag radius locked by the hi-fi mocks elsewhere. This app only ever renders Ari's (the payer's)
- * perspective, so the framing is "You're owed," not a toggling "You're owed / You're paying" — noted in
- * the PR rather than inventing a per-viewer switch the app doesn't otherwise support.
+ * Hero rebuilt around a trip-metadata block + meal-cost donut (issue #99), replacing the earlier
+ * photo-hero-with-blurred-glow treatment from issue #61 (ImageGlow + the "You're owed" photo badge —
+ * see #94) and the binary SettleRing progress ring from issue #39. The restaurant photo and from/to
+ * naming are gone — the per-debtor list below already names names — and in their place: "Ramiro dinner
+ * / Lisbon 2026" as plain metadata, and a `MealCostDonut` plotting the full receipt total
+ * (`DINNER_RECEIPT.totalCents`) split into Ari's own share vs. what's still owed back, driven off the
+ * same `transfers` the debtor list renders (see the `oweTotal` derivation below), so the donut and the
+ * figure recompute together whenever the split or an exclusion changes. The footer CTA + per-debtor
+ * request tag keep the full-pill treatment from #61 (a screen-scoped choice — className override — not
+ * a change to the global `Button`/tag radius locked by the hi-fi mocks elsewhere).
  */
 
 import { Fragment, useState } from 'react';
@@ -27,14 +29,12 @@ import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Avatar, Button, SegmentedControl } from '../components/ui';
 import { BottomSheet } from '../components/BottomSheet';
-import { SettleRing } from '../components/SettleRing';
-import { ImageGlow } from '../components/ImageGlow';
+import { MealCostDonut } from '../components/MealCostDonut';
 import { ArrowLeft, Info, Check } from '../components/icons';
 import { participantById, DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
 import type { Assignment, Transfer } from '../lib/settle';
-import cervejariaRamiroPhoto from '../assets/photos/cervejaria-ramiro.webp';
 import styles from './SettleUpScreen.module.css';
 
 /** Which receipt lines a person is currently splitting, as display text (e.g. "Couvert, Arroz de marisco"). */
@@ -132,20 +132,12 @@ export default function SettleUpScreen() {
             so everyone just squares up with them.
           </p>
 
-          <div className={styles.heroWrap}>
-            <ImageGlow src={cervejariaRamiroPhoto} className={styles.heroGlow} />
-            <div className={styles.heroCard}>
-              <div className={styles.heroMedia}>
-                <img src={cervejariaRamiroPhoto} alt="" className={styles.heroImage} />
-                <span className={styles.heroBadge}>{state.settled ? "You're even" : "You're owed"}</span>
-              </div>
-              <div className={styles.heroBody}>
-                <SettleRing outstandingCents={oweTotal} settled={state.settled} />
-                <p className={styles.heroSub}>
-                  {count === 1 ? 'From 1 person' : `From ${count} people`} · Lisbon 2026 · Ramiro Dinner
-                </p>
-              </div>
+          <div className={styles.heroCard}>
+            <div className={styles.meta}>
+              <h2 className={styles.metaTitle}>Ramiro dinner</h2>
+              <p className={styles.metaSub}>Lisbon 2026</p>
             </div>
+            <MealCostDonut totalCents={DINNER_RECEIPT.totalCents} outstandingCents={oweTotal} />
           </div>
 
           <div className={styles.sectionHead}>
