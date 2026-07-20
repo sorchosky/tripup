@@ -9,7 +9,7 @@
 
 import { useMemo, useRef, useState, type ReactNode, type UIEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Screen, NavHeader } from '../components/Screen';
+import { Screen, NavHeader, isScrolled } from '../components/Screen';
 import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, Menu, type MenuItemDef } from '../components/ui';
 import { ArrowLeft, Ellipsis, Vote, CalendarPlus, Edit, Users, Trash2, Check, MapPin, ChevronRight } from '../components/icons';
 import { TRIP, COFFEE_STOP_ITINERARY_ITEM, DINNER_ITINERARY_ITEM } from '../data/mock';
@@ -60,10 +60,14 @@ export default function TripDetailScreen() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   // Issue #48: fades "Lisbon 2026" into the floating NavHeader once the in-body <h1> scrolls under it.
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
+  // Issue #87: fades the header's backdrop blur in once the body has scrolled at all — transparent,
+  // no blur, at rest.
+  const [headerBackdropVisible, setHeaderBackdropVisible] = useState(false);
 
   const dayGroups = useMemo(() => groupItineraryByDay(state.itinerary), [state.itinerary]);
 
   function handleScroll(e: UIEvent<HTMLDivElement>) {
+    setHeaderBackdropVisible(isScrolled(e));
     const titleEl = titleRef.current;
     if (!titleEl) return;
     const headerBottom = e.currentTarget.getBoundingClientRect().top + NAV_HEADER_HEIGHT;
@@ -117,6 +121,7 @@ export default function TripDetailScreen() {
           leftAriaLabel="Back to trips"
           centerTitle={TRIP.name}
           centerTitleVisible={showHeaderTitle}
+          backdropVisible={headerBackdropVisible}
           rightIcon={<Ellipsis />}
           rightAriaLabel="Trip options"
           onRight={() => setTripMenuOpen((open) => !open)}

@@ -30,6 +30,17 @@ interface ScreenProps {
   floatingFooter?: boolean;
 }
 
+/**
+ * Scroll-gate trigger (issue #87) — whether the content body has scrolled past the top, for any
+ * screen with a scroll body + nav header to drive `NavHeader`'s `backdropVisible` prop. Generalized
+ * here rather than reimplemented per screen: it reads the same `onScroll` signal TripDetailScreen
+ * already uses for `centerTitleVisible` (issue #48), just checking `scrollTop` instead of a title's
+ * bounding rect, so any screen's `onScroll` handler can call it directly.
+ */
+export function isScrolled(e: UIEvent<HTMLDivElement>): boolean {
+  return e.currentTarget.scrollTop > 0;
+}
+
 export function Screen({ nav, children, footer, tabBar, bleed, onScroll, floatingFooter }: ScreenProps) {
   const scrollPadTop = nav ? styles.scrollPadTopNav : '';
   const scrollPadBottom =

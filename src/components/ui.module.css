@@ -136,7 +136,10 @@
    gradient fade of the surface color plus a light blur, distinct from the opaque `.glass` treatment
    reserved for the footer/tab-bar. Sits behind the icon buttons and title (z-index 0 vs. their
    default stacking), extends a little past the header's own height so the fade reads as continuous
-   rather than cutting off hard at 56px. */
+   rather than cutting off hard at 56px.
+   Scroll-gated (issue #87): transparent/unblurred at rest so a static screen reads as chrome-light;
+   `.navBackdropVisible` (driven by `NavHeader`'s `backdropVisible` prop) fades it in once the body has
+   scrolled. */
 .navBackdrop {
   position: absolute;
   z-index: 0;
@@ -146,6 +149,15 @@
   -webkit-backdrop-filter: blur(var(--blur-header));
   backdrop-filter: blur(var(--blur-header));
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+/* Active state (issue #87) also reaches up through the 54px StatusBar (`.statusBar` above) so
+   status-bar content scrolling underneath is blurred too — only the backdrop layer extends that far,
+   not the header's own layout/height. */
+.navBackdropVisible {
+  opacity: 1;
+  top: -54px;
 }
 .navTitle {
   position: relative;
