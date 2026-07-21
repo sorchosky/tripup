@@ -476,3 +476,7 @@ export function SegmentedControl<T extends string>({ options, value, onChange, a
 }
 
 export const glassClass = styles.glass;
+
+/* ------------------------------ Toast ------------------------------ */
+
+export { Toast } from './Toast';
