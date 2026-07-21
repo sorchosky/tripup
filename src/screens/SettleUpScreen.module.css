@@ -54,39 +54,55 @@
  * (locked at --radius-md by the hi-fi mocks elsewhere), not a change to the global default. */
 .pillCta { border-radius: var(--radius-full); }
 
-/* ---- Consolidated debts list ---- */
+/* ---- Consolidated debts list (issue #100: accordion rows) ----
+ * Each card's header is a full-width button (avatar + name + amount + chevron); expanding it reveals
+ * the itemized shares — from settle.ts's personItemShares — that add up to the row's subtotal. */
 .debtors { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-5); }
 .debtorCard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-4);
 }
+.debtorRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
 .debtorWho { display: flex; align-items: center; gap: var(--space-3); flex: 1 1 auto; min-width: 0; }
-.debtorNames { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
-.debtorName { font-weight: var(--font-weight-semibold); font-size: var(--font-size-label); color: var(--color-text); }
-.debtorItems {
-  font-size: var(--font-size-caption);
-  color: var(--color-text-muted);
-  white-space: nowrap;
+.debtorName {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-label);
+  color: var(--color-text);
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 190px;
+  white-space: nowrap;
 }
-.debtorRight { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); flex: 0 0 auto; }
+.debtorRight { display: flex; align-items: center; gap: var(--space-3); flex: 0 0 auto; }
 .debtorAmount { font-weight: var(--font-weight-extrabold); font-size: var(--font-size-body); color: var(--color-text); white-space: nowrap; }
-.requestTag {
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-caption);
-  color: var(--color-on-primary);
-  background: var(--color-text);
-  border-radius: var(--radius-full);
-  padding: var(--space-1) var(--space-3);
+.chevron { color: var(--color-text-muted); flex: 0 0 auto; }
+
+.debtorItemsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 0.5px solid var(--color-border);
 }
+.debtorItemRow { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+.debtorItemLabel { font-size: var(--font-size-caption); color: var(--color-text-muted); }
+.debtorItemAmount { font-size: var(--font-size-caption); font-weight: var(--font-weight-medium); color: var(--color-text); white-space: nowrap; }
 
 /* ---- Reminder tip ---- */
 .tipRow {

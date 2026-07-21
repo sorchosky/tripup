@@ -67,6 +67,38 @@ export function computeShares(receipt: Receiptish, assignment: Assignment): Reco
   return shares;
 }
 
+export interface ItemShare {
+  id: string;
+  label: string;
+  /** This person's cut of that one line, in euro cents. */
+  amountCents: number;
+}
+
+/**
+ * The line items a person is accountable for, with their per-item cut — the accordion breakdown behind
+ * a debtor row (issue #100). Same fractional-split math as `computeShares`, but rounded per item instead
+ * of once for the person; the last line absorbs the rounding drift so the items always sum to exactly
+ * what `computeShares` gives that person, and the accordion never shows amounts that don't add up.
+ */
+export function personItemShares(receipt: Receiptish, assignment: Assignment, personId: string): ItemShare[] {
+  const included = receipt.items
+    .map((item) => {
+      const people = assignment[item.id] ?? item.defaultSharedBy;
+      if (!people.includes(personId)) return null;
+      return { id: item.id, label: item.label, exact: item.amountCents / people.length };
+    })
+    .filter((x): x is { id: string; label: string; exact: number } => x !== null);
+
+  if (included.length === 0) return [];
+
+  const shares = included.map((it) => ({ id: it.id, label: it.label, amountCents: Math.round(it.exact) }));
+  const exactTotal = included.reduce((sum, it) => sum + it.exact, 0);
+  const drift = Math.round(exactTotal) - shares.reduce((sum, it) => sum + it.amountCents, 0);
+  if (drift !== 0) shares[shares.length - 1].amountCents += drift;
+
+  return shares;
+}
+
 /**
  * Net balance per person = what they paid − what they owe. The payer covered the whole total; everyone
  * (payer included) owes their share.
