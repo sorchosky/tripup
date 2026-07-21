@@ -48,7 +48,7 @@
   gap: var(--space-3);
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
 }
 .debtorWho { display: flex; align-items: center; gap: var(--space-3); flex: 1 1 auto; min-width: 0; }

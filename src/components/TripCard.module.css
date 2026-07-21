@@ -68,7 +68,7 @@
   padding: var(--space-2) var(--space-3);
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
 }
 .rowThumb {
   flex: 0 0 auto;

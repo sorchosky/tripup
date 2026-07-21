@@ -86,9 +86,17 @@ Two-family system:
 - `44px` — the device frame itself, and the glass footer bar (matches frame radius — footer reads as
   part of the device chrome, not a floating card).
 - `24px` — winner-card image/media block.
-- `16px` — winner-card outer container.
-- `8px` — item rows, receipt card, primary button, inline warning banner. This is the default
-  "component" radius — use it unless a node above overrides it.
+- `16px` — **full-width cells** — any full-bleed row/card that presents a distinct item of real
+  content edge-to-edge across the screen's padding: item/line rows (receipt line items in
+  `SplitScreen`), the `DebtorList` accordion rows (`SettleUpScreen`, and their recap on
+  `SettlementConfirmationScreen`), receipt/summary card containers, poll/activity feed cards
+  (`ActivityScreen`), the itinerary timeline row and open-poll banner (`TripDetailScreen`), search
+  result rows (`AddParticipantScreen`), poll-voting option rows (`PollVotingScreen`), the `TripCard`
+  row variant, and the winner-card outer container (`PollClosedScreen`). Reclassified from `8px`
+  (issue #135) — full-width cells now read as a size step up from compact controls.
+- `8px` — the default "component" radius for buttons, form inputs/fields, pills-in-menus, and other
+  small/compact or nested elements (primary button, inline warning banner, text inputs, dropdown/menu
+  items, "add item" affordance buttons). Use it unless a node above overrides it.
 - `6px` — receipt thumbnail, small nested elements.
 
 ### Elevation / shadow
@@ -203,7 +211,9 @@ never used in either mock) stays `TBD` until a screen that needs it is drafted.
 - **Spacing scale (8pt):** unchanged from the existing placeholder — the hi-fi mocks are consistent with
   an 8pt step set (4 / 8 / 12 / 16 / 24 / 32 …); no revision needed.
 - **Color roles (semantic):** locked — see "Color roles" table above.
-- **Corner radius scale:** locked — see "Corner radius" above (6 / 8 / 16 / 24 / 999 / 44).
+- **Corner radius scale:** locked — see "Corner radius" above (6 / 8 / 16 / 24 / 999 / 44). `16px`
+  covers full-width cells generally (item rows, `DebtorList` rows, the `TripCard` row variant, etc.),
+  not just the winner-card container it originally shipped with (issue #135).
 - **Elevation levels:** locked — see "Elevation / shadow" above (card / floating-glass / primary-button
   are three distinct steps, not one generic shadow).
 
