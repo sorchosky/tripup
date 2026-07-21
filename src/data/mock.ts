@@ -360,6 +360,24 @@ export const BREAKFAST_OPTIONS: Venue[] = [
 ];
 
 /**
+ * Typeahead source for Create poll's option fields (issue #93, replacing the old "AI Suggest" chip).
+ * The top 3 rows of the dropdown are always `AI_SUGGESTED_SPOTS`; this list backs the rows below them
+ * — a broader sample of real Lisbon venues/landmarks so the field still surfaces something useful once
+ * the AI picks are exhausted or don't match what's typed. Names are pulled straight from CONTENT.md
+ * (Poll, Landmarks, Itinerary options) and the venues already seeded elsewhere in this file — no
+ * fictional spots invented for the dropdown. `CreatePollScreen` de-dupes against `AI_SUGGESTED_SPOTS`
+ * before rendering, so a name never appears twice across the two groups.
+ */
+export const LISBON_POLL_SUGGESTIONS: string[] = [
+  ...AI_SUGGESTED_SPOTS,
+  ...LANDMARKS.map((l) => l.name),
+  ...LUNCH_OPTIONS.map((v) => v.name),
+  ...COFFEE_OPTIONS.map((v) => v.name),
+  ...BREAKFAST_OPTIONS.map((v) => v.name),
+  LODGING.name,
+];
+
+/**
  * Itinerary timeline shown on the trip hub (screen 2) — chronological, day-grouped (issue #12; see
  * CONTENT.md → Itinerary for the locked day-by-day sequence). `day` is a real ISO date inside the
  * locked trip range (2026-06-10 – 2026-06-18); `time` is only set for time-sensitive events (wireframe

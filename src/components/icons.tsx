@@ -261,6 +261,15 @@ export function Star({ size = 18, className, strokeWidth = 2 }: IconProps) {
   );
 }
 
+export function ArrowUpRight({ size = 18, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <path d="M7 17 17 7" />
+      <path d="M7 7h10v10" />
+    </svg>
+  );
+}
+
 export function Coffee({ size = 18, className, strokeWidth = 2 }: IconProps) {
   return (
     <svg {...base(size, className)} strokeWidth={strokeWidth}>
