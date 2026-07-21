@@ -156,9 +156,10 @@ export default function SettleUpScreen() {
     <Fragment>
       <Screen
         nav={<NavHeader onBack={() => navigate('/split')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to split" />}
+        floatingFooter
         footer={
-          <Button onClick={openConfirm} disabled={settleDisabled} className={styles.pillCta}>
-            Confirm &amp; settle
+          <Button variant="primary-glass" onClick={openConfirm} disabled={settleDisabled}>
+            Send requests
           </Button>
         }
       >
@@ -190,7 +191,7 @@ export default function SettleUpScreen() {
           </div>
           <DebtorList transfers={transfers} assignment={state.assignment} idPrefix="main" />
 
-          <div className={styles.tipRow}>
+          <div className={styles.tip}>
             <Info size={16} className={styles.tipIcon} />
             <p className={styles.tipText}>
               Reminders will send a push notification containing itemized shares to {joinNames(debtorNames)}.
