@@ -30,6 +30,7 @@
 .sectionHead { margin-bottom: var(--space-3); }
 
 .options { display: flex; flex-direction: column; gap: var(--space-2); }
+.optionWrap { position: relative; }
 .option {
   display: flex;
   align-items: center;
@@ -92,25 +93,40 @@
   cursor: pointer;
 }
 
-.assist { margin-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
-.assistChip {
-  align-self: flex-start;
-  display: inline-flex;
+/* Typeahead dropdown (issue #93) — anchored under the focused option row, above the row below it. */
+.typeahead {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--elevation-card);
+}
+.typeaheadRow {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 var(--space-4);
-  border-radius: var(--radius-full);
-  border: 1.5px solid var(--color-primary);
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-bottom: 0.5px solid var(--color-border);
   background: none;
-  color: var(--color-primary);
+  color: var(--color-text);
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-caption);
+  font-size: var(--font-size-body);
+  text-align: left;
   cursor: pointer;
 }
-.assistHint {
-  font-size: var(--font-size-label);
-  color: var(--color-text-muted);
-  line-height: var(--line-height-body);
-}
+.typeaheadRow:last-child { border-bottom: 0; }
+.typeaheadRow:hover,
+.typeaheadRow:focus-visible { background: var(--color-surface); }
+.typeaheadIconAi { flex: 0 0 auto; color: var(--color-primary); }
+.typeaheadIconVenue { flex: 0 0 auto; color: var(--color-text-muted); }
