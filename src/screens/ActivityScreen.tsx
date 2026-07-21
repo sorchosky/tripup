@@ -14,8 +14,8 @@
  *   - The old "Settle up" (outstanding debtor cards) and "Settled" ("Everyone's even") sections are
  *     gone. In their place: a single chronological tail — poll winner, then "Requests sent" once
  *     `SETTLE` fires (`state.requestsSentAt`), then one payment-received cell per transfer, all
- *     "redeemed by Ari" — matching the request being sent and the money landing back with whoever
- *     fronted the tab. All three read off live state/derived data (`state.poll`, `state.requestsSentAt`,
+ *     "Redeemed" (issue #157 dropped the payer's name from the pill — a name-bearing status pill
+ *     varies in width per person). All three read off live state/derived data (`state.poll`, `state.requestsSentAt`,
  *     `derived.transfers`); the clock readings on the settle cells are the fixed narrative timestamps in
  *     `SETTLEMENT_TIMELINE` (mock.ts), same treatment as the poll's `closedAt`.
  */
@@ -133,7 +133,7 @@ export default function ActivityScreen() {
                       {participantById(t.fromId).name} paid {euros(t.amount)}
                     </span>
                   </div>
-                  <Pill tone="settled">Redeemed by Ari</Pill>
+                  <Pill tone="settled">Redeemed</Pill>
                 </div>
               ))}
             </div>
