@@ -50,6 +50,7 @@
   --color-owed: #8a5a08;             /* warning / needs-review */
   --color-owed-bg: #fef6da;
   --color-owed-border: rgba(212, 169, 71, 0.4);
+  --color-danger: #ff3b30;           /* destructive / error — Apple system-red (light-mode value; named for a future dark variant) */
   --color-surface: #f6f6f4;          /* app/device background */
   --color-surface-raised: #ffffff;   /* cards */
   --color-surface-neutral: #efede7;  /* inactive chips, secondary buttons */

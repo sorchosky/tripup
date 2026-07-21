@@ -110,7 +110,7 @@
   cursor: pointer;
 }
 .menuItem:active { background: var(--color-surface-neutral); }
-.menuItemDestructive { color: var(--color-owed); }
+.menuItemDestructive { color: var(--color-danger); }
 
 /* ---------- Status bar ---------- */
 .statusBar {
