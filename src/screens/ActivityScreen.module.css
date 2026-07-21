@@ -27,7 +27,7 @@
   text-align: left;
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: var(--elevation-card);
   padding: var(--space-4);
   cursor: pointer;
@@ -53,7 +53,7 @@
   width: 100%;
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
 }
 .debtorWho { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
@@ -67,7 +67,7 @@
   gap: var(--space-3);
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
 }
 .settledText { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
@@ -102,7 +102,7 @@
   gap: var(--space-3);
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
   opacity: 0.7;
 }

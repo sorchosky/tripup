@@ -63,8 +63,8 @@
 
   /* ---- Corner radius scale — LOCKED, from hi-fi mocks ---- */
   --radius-sm: 6px;    /* receipt thumbnail, small nested elements */
-  --radius-md: 8px;    /* default component radius: item rows, cards, buttons */
-  --radius-lg: 16px;   /* winner-card outer container */
+  --radius-md: 8px;    /* default component radius: buttons, inputs, pills, compact/nested elements */
+  --radius-lg: 16px;   /* full-width cells: item/line rows, receipt & debtor list rows, winner-card outer container */
   --radius-xl: 24px;   /* winner-card media block */
   --radius-device: 44px; /* device frame + glass footer bar */
   --radius-full: 999px;  /* pills, avatar chips */
