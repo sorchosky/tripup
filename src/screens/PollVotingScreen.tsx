@@ -2,15 +2,25 @@
  * Screen 5 — Poll voting (live). The votes arrive on a timer so the counts, the bars and the leader all
  * update on screen: Ari's vote lands first, then Ren, then Nic. Each vote is a real CAST_VOTE action, so
  * the tally the next screen reveals is whatever actually came in here. Ari can also close early.
+ *
+ * Issue #104: arriving here fresh off "Send poll to participants" (Create poll) carries a `pollSent`
+ * flag in router `location.state` — read once on mount, then cleared via a `replace` navigate so
+ * back/forward through history doesn't replay the toast. The exact confirmation copy is locked in
+ * issue #105/CONTENT.md; this ticket only wires the trigger mechanism using the existing `Toast`
+ * pattern (see `AddParticipantScreen`'s "{Name} has been added to the trip." usage).
  */
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
-import { Button, Avatar } from '../components/ui';
+import { Button, Avatar, Toast } from '../components/ui';
 import { ArrowLeft } from '../components/icons';
 import { useTrip } from '../state/TripContext';
 import styles from './PollVotingScreen.module.css';
+
+// Placeholder — locked wording lands in issue #105 (CONTENT.md), wired in from there rather than
+// invented here. Kept visibly a placeholder per CLAUDE.md's "don't invent copy" rule.
+const POLL_SENT_TOAST_MESSAGE_TBD = 'TBD: poll-sent toast copy (see issue #105)';
 
 /** Who votes for what, and when — the choreography behind the "live" feel. */
 const VOTE_SEQUENCE: { voterId: string; optionId: string; delay: number }[] = [
@@ -21,7 +31,9 @@ const VOTE_SEQUENCE: { voterId: string; optionId: string; delay: number }[] = [
 
 export default function PollVotingScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { state, dispatch, derived } = useTrip();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const timers = VOTE_SEQUENCE.map(({ voterId, optionId, delay }) =>
@@ -29,6 +41,17 @@ export default function PollVotingScreen() {
     );
     return () => timers.forEach(clearTimeout);
   }, [dispatch]);
+
+  // On-mount toast trigger (issue #104): only fires when arriving fresh off a send, and clears the
+  // flag immediately so navigating back to this screen later doesn't replay it.
+  useEffect(() => {
+    const navState = location.state as { pollSent?: boolean } | null;
+    if (navState?.pollSent) {
+      setToastMessage(POLL_SENT_TOAST_MESSAGE_TBD);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const votedIds = new Set(state.poll.options.flatMap((o) => o.votedBy));
   const allIn = derived.votesIn >= state.participants.length;
@@ -40,56 +63,59 @@ export default function PollVotingScreen() {
   }
 
   return (
-    <Screen
-      nav={<NavHeader onBack={() => navigate('/trip')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to trip" />}
-      floatingFooter
-      footer={
-        <Button variant="primary-glass" onClick={close}>
-          {allIn ? 'See the result' : 'Close poll now'}
-        </Button>
-      }
-    >
-      <div className={styles.body}>
-        <h1 className={styles.title}>{state.poll.question}</h1>
+    <>
+      <Screen
+        nav={<NavHeader onBack={() => navigate('/trip')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to trip" />}
+        floatingFooter
+        footer={
+          <Button variant="primary-glass" onClick={close}>
+            {allIn ? 'See the result' : 'Close poll now'}
+          </Button>
+        }
+      >
+        <div className={styles.body}>
+          <h1 className={styles.title}>{state.poll.question}</h1>
 
-        <div className={styles.status}>
-          <span className={styles.voterDots}>
-            {state.participants.map((p) => (
-              <span key={p.id} className={votedIds.has(p.id) ? '' : styles.voterDim}>
-                <Avatar personId={p.id} size="sm" variant={votedIds.has(p.id) ? 'filled' : 'outline'} />
-              </span>
-            ))}
-          </span>
-          <span className={styles.statusText}>
-            {derived.votesIn}/{state.participants.length} voted
-            {!allIn && stillOut.length > 0 ? ` · waiting on ${stillOut.join(' & ')}` : ''}
-          </span>
-        </div>
+          <div className={styles.status}>
+            <span className={styles.voterDots}>
+              {state.participants.map((p) => (
+                <span key={p.id} className={votedIds.has(p.id) ? '' : styles.voterDim}>
+                  <Avatar personId={p.id} size="sm" variant={votedIds.has(p.id) ? 'filled' : 'outline'} />
+                </span>
+              ))}
+            </span>
+            <span className={styles.statusText}>
+              {derived.votesIn}/{state.participants.length} voted
+              {!allIn && stillOut.length > 0 ? ` · waiting on ${stillOut.join(' & ')}` : ''}
+            </span>
+          </div>
 
-        <div className={styles.options}>
-          {state.poll.options.map((o) => {
-            const lead = derived.leaderId === o.id;
-            const pct = state.participants.length > 0 ? (o.votes / state.participants.length) * 100 : 0;
-            return (
-              <div key={o.id} className={`${styles.option} ${lead ? styles.optionLead : ''}`}>
-                <div className={styles.optionTop}>
-                  <span className={`${styles.optionName} ${lead ? '' : styles.optionNameMuted}`}>{o.name}</span>
-                  <span className={styles.count}>
-                    {lead ? <span className={styles.leadTag}>Leading</span> : null}
-                    {o.votes} {o.votes === 1 ? 'vote' : 'votes'}
-                  </span>
+          <div className={styles.options}>
+            {state.poll.options.map((o) => {
+              const lead = derived.leaderId === o.id;
+              const pct = state.participants.length > 0 ? (o.votes / state.participants.length) * 100 : 0;
+              return (
+                <div key={o.id} className={`${styles.option} ${lead ? styles.optionLead : ''}`}>
+                  <div className={styles.optionTop}>
+                    <span className={`${styles.optionName} ${lead ? '' : styles.optionNameMuted}`}>{o.name}</span>
+                    <span className={styles.count}>
+                      {lead ? <span className={styles.leadTag}>Leading</span> : null}
+                      {o.votes} {o.votes === 1 ? 'vote' : 'votes'}
+                    </span>
+                  </div>
+                  <div className={styles.track}>
+                    <div
+                      className={`${styles.fill} ${lead ? '' : styles.fillMuted}`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
                 </div>
-                <div className={styles.track}>
-                  <div
-                    className={`${styles.fill} ${lead ? '' : styles.fillMuted}`}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </Screen>
+      </Screen>
+      <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />
+    </>
   );
 }
