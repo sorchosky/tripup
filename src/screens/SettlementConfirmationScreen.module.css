@@ -60,4 +60,5 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.debtorMeta { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-1); flex: 0 0 auto; }
 .debtorAmount { font-weight: var(--font-weight-extrabold); font-size: var(--font-size-body); color: var(--color-text); white-space: nowrap; }
