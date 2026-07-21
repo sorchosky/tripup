@@ -11,10 +11,24 @@ import { useMemo, useRef, useState, type ReactNode, type UIEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader, isScrolled } from '../components/Screen';
 import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, Menu, type MenuItemDef } from '../components/ui';
-import { ArrowLeft, Ellipsis, Vote, CalendarPlus, Edit, Users, Trash2, Check, MapPin, ChevronRight } from '../components/icons';
+import {
+  ArrowLeft,
+  Ellipsis,
+  Vote,
+  CalendarPlus,
+  Edit,
+  Users,
+  Trash2,
+  Check,
+  MapPin,
+  Star,
+  Coffee,
+  Utensils,
+  ChevronRight,
+} from '../components/icons';
 import { TRIP, COFFEE_STOP_ITINERARY_ITEM, DINNER_ITINERARY_ITEM } from '../data/mock';
 import { useTrip } from '../state/TripContext';
-import type { ItineraryItem, ItineraryStatus } from '../data/mock';
+import type { ItineraryItem, ItineraryStatus, ItineraryCategory } from '../data/mock';
 import { formatDateRange, formatItineraryDay } from '../lib/dates';
 import { groupItineraryByDay } from '../lib/itinerary';
 import styles from './TripDetailScreen.module.css';
@@ -25,15 +39,31 @@ function statusPill(status: ItineraryStatus) {
   return null;
 }
 
+/** Category → rail-node glyph (issue #91). See `ItineraryCategory` in mock.ts for how `coffee`/`lunch`
+ * extend the issue's four named categories within the same closed icon set. */
+const CATEGORY_ICON: Record<ItineraryCategory, ReactNode> = {
+  landmark: <MapPin size={14} />,
+  event: <MapPin size={14} />,
+  entertainment: <Star size={14} />,
+  breakfast: <Coffee size={14} />,
+  coffee: <Coffee size={14} />,
+  lunch: <Utensils size={14} />,
+  dinner: <Utensils size={14} />,
+};
+
 /**
- * Rail-node glyph + tone per row (issue #47's Oura-style timeline): `paid` reads as done (settled
- * check), `pending`/`planned` share the same "stop ahead" pin, `pending` just tinted with the owed
- * role so an unpaid dinner still reads distinctly on the rail, not only via its status pill.
+ * Rail-node glyph + tone per row (issue #47's Oura-style timeline, refined by #91): `paid` still reads
+ * as done via the settled check — that "it's handled" signal is worth keeping distinct from what kind
+ * of stop it was — while `pending`/`planned` swap the old generic pin for a category-appropriate icon
+ * (landmark/event → pin, entertainment → star, breakfast/coffee → coffee cup, lunch/dinner → utensils).
+ * `pending` keeps its owed tint so an unpaid dinner still reads distinctly on the rail, not only via
+ * its status pill.
  */
-function nodeTone(status: ItineraryStatus): { icon: ReactNode; toneClass: string } {
-  if (status === 'paid') return { icon: <Check size={14} strokeWidth={2.5} />, toneClass: styles.nodePaid };
-  if (status === 'pending') return { icon: <MapPin size={14} />, toneClass: styles.nodePending };
-  return { icon: <MapPin size={14} />, toneClass: styles.nodePlanned };
+function nodeTone(item: ItineraryItem): { icon: ReactNode; toneClass: string } {
+  if (item.status === 'paid') return { icon: <Check size={14} strokeWidth={2.5} />, toneClass: styles.nodePaid };
+  const icon = CATEGORY_ICON[item.category];
+  if (item.status === 'pending') return { icon, toneClass: styles.nodePending };
+  return { icon, toneClass: styles.nodePlanned };
 }
 
 /**
@@ -178,7 +208,7 @@ export default function TripDetailScreen() {
           </div>
           <div className={styles.timeline}>
             {group.items.map((item, index) => {
-              const { icon, toneClass } = nodeTone(item.status);
+              const { icon, toneClass } = nodeTone(item);
               const route = routeForItem(item);
               const isLast = index === group.items.length - 1;
               return (
@@ -196,13 +226,12 @@ export default function TripDetailScreen() {
                       if (route) navigate(route);
                     }}
                   >
-                    <span className={`${styles.time} ${item.time ? '' : styles.timeEmpty}`}>{item.time ?? '·'}</span>
+                    {item.time ? <span className={styles.time}>{item.time}</span> : null}
                     <div className={styles.eventBody}>
                       <div className={styles.eventTitleRow}>
                         <span className={styles.eventTitle}>{item.title}</span>
                         {statusPill(item.status)}
                       </div>
-                      <p className={styles.eventSub}>{item.subtitle}</p>
                     </div>
                     <ChevronRight size={18} className={styles.chevron} />
                   </button>

@@ -107,7 +107,6 @@
   font-size: var(--font-size-label);
   color: var(--color-text);
 }
-.timeEmpty { color: var(--color-avatar-outline); }
 .eventBody { flex: 1 1 auto; min-width: 0; }
 .eventTitleRow {
   display: flex;
@@ -116,5 +115,4 @@
   gap: var(--space-2);
 }
 .eventTitle { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
-.eventSub { margin-top: 2px; font-size: var(--font-size-label); color: var(--color-text-muted); }
 .chevron { flex: 0 0 auto; color: var(--color-text-muted); }

@@ -357,21 +357,30 @@ export const BREAKFAST_OPTIONS: Venue[] = [
  */
 export type ItineraryStatus = 'planned' | 'pending' | 'paid';
 
+/**
+ * Drives the rail-node icon (issue #91): landmark/event → MapPin, entertainment → Star, breakfast →
+ * Coffee, dinner → Utensils (per the issue). `coffee` and `lunch` extend that same closed icon set to
+ * the two seed items the issue's four categories don't cover — `coffee` reuses the Coffee glyph (a
+ * coffee stop, same as breakfast's beverage-forward icon), `lunch` reuses Utensils alongside `dinner`
+ * (both are sit-down meals). See `nodeTone` in TripDetailScreen.tsx for the icon map itself.
+ */
+export type ItineraryCategory = 'landmark' | 'event' | 'entertainment' | 'breakfast' | 'coffee' | 'lunch' | 'dinner';
+
 export interface ItineraryItem {
   id: string;
   day: string;
   time: string | null;
   title: string;
-  subtitle: string;
+  category: ItineraryCategory;
   status: ItineraryStatus;
 }
 
 export const INITIAL_ITINERARY: ItineraryItem[] = [
-  { id: 'checkin', day: '2026-06-10', time: '15:00', title: 'Check in — Dear Lisbon', subtitle: 'Gallery House · São Bento', status: 'paid' },
-  { id: 'belem', day: '2026-06-11', time: null, title: 'Belém Tower & Pastéis de Belém', subtitle: 'Riverfront walk · pastel de nata stop', status: 'planned' },
-  { id: 'oceanario', day: '2026-06-15', time: '11:00', title: LANDMARKS[2].name, subtitle: 'Parque das Nações · aquarium visit', status: 'planned' },
-  { id: 'breakfast', day: '2026-06-17', time: '08:30', title: `Breakfast — ${BREAKFAST_OPTIONS[0].name}`, subtitle: 'Build-your-own, minimalist Scandinavian', status: 'planned' },
-  { id: 'lunch', day: '2026-06-17', time: '13:00', title: `Lunch — ${LUNCH_OPTIONS[0].name}`, subtitle: `${LUNCH_OPTIONS[0].cuisine} · ${LUNCH_OPTIONS[0].vibe}`, status: 'planned' },
+  { id: 'checkin', day: '2026-06-10', time: '15:00', title: 'Check in — Dear Lisbon', category: 'landmark', status: 'paid' },
+  { id: 'belem', day: '2026-06-11', time: null, title: 'Belém Tower & Pastéis de Belém', category: 'landmark', status: 'planned' },
+  { id: 'oceanario', day: '2026-06-15', time: '11:00', title: LANDMARKS[2].name, category: 'landmark', status: 'planned' },
+  { id: 'breakfast', day: '2026-06-17', time: '08:30', title: `Breakfast — ${BREAKFAST_OPTIONS[0].name}`, category: 'breakfast', status: 'planned' },
+  { id: 'lunch', day: '2026-06-17', time: '13:00', title: `Lunch — ${LUNCH_OPTIONS[0].name}`, category: 'lunch', status: 'planned' },
 ];
 
 /** The itinerary card the poll winner writes in (screen 6). Kept here so the copy/venue stay canonical. */
@@ -380,7 +389,7 @@ export const DINNER_ITINERARY_ITEM: ItineraryItem = {
   day: '2026-06-17',
   time: '21:00',
   title: 'Dinner — Cervejaria Ramiro',
-  subtitle: DINNER_POLL.winnerMeta,
+  category: 'dinner',
   status: 'pending',
 };
 
@@ -390,6 +399,6 @@ export const COFFEE_STOP_ITINERARY_ITEM: ItineraryItem = {
   day: '2026-06-17',
   time: null,
   title: `Coffee run — ${COFFEE_OPTIONS[0].name}`,
-  subtitle: 'Minimalist, specialty coffee',
+  category: 'coffee',
   status: 'planned',
 };

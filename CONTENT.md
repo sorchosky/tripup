@@ -161,14 +161,23 @@ seeded sequence in `INITIAL_ITINERARY`/`DINNER_ITINERARY_ITEM` in `src/data/mock
 "Itinerary options" candidate pool below. Dates fall inside the locked trip range (Jun 10–18, 2026);
 the narrative "today" (Jun 17) is the day the dinner poll resolves, per "The trip" above.
 
-| Date | Time | Item | Status |
-| --- | --- | --- | --- |
-| Jun 10 | 15:00 | Check in — Dear Lisbon (Gallery House · São Bento) | paid |
-| Jun 11 | — | Belém Tower & Pastéis de Belém | planned |
-| Jun 15 | 11:00 | Oceanário de Lisboa | planned |
-| Jun 17 | 08:30 | Breakfast — Hygge Kaffe | planned |
-| Jun 17 | 13:00 | Lunch — Tapa do BairroAlto | planned |
-| Jun 17 | 21:00 | Dinner — Cervejaria Ramiro | written in dynamically when the poll closes (pending → paid on settle) |
+Per issue #91, cells no longer carry a subtitle line — title + optional time only — and the rail-node
+icon is now driven by `category` instead of a generic pin: `landmark`/`event` → pin, `entertainment` →
+star, `breakfast` → coffee cup, `dinner` → fork-and-knife. The seed data below also uses `coffee`
+(same coffee-cup icon as `breakfast`) for the FAB's quick "Add to itinerary" stop and `lunch` (same
+fork-and-knife icon as `dinner`) for the midday meal — both extend the issue's four named categories
+within the same closed icon set rather than inventing a fifth glyph. A `paid` item still shows the
+settled check regardless of category — that "it's handled" signal stays distinct from what kind of
+stop it was.
+
+| Date | Time | Item | Category | Status |
+| --- | --- | --- | --- | --- |
+| Jun 10 | 15:00 | Check in — Dear Lisbon | landmark | paid |
+| Jun 11 | — | Belém Tower & Pastéis de Belém | landmark | planned |
+| Jun 15 | 11:00 | Oceanário de Lisboa | landmark | planned |
+| Jun 17 | 08:30 | Breakfast — Hygge Kaffe | breakfast | planned |
+| Jun 17 | 13:00 | Lunch — Tapa do BairroAlto | lunch | planned |
+| Jun 17 | 21:00 | Dinner — Cervejaria Ramiro | dinner | written in dynamically when the poll closes (pending → paid on settle) |
 
 Breakfast/lunch picks are one of the two locked options each from "Itinerary options" below — Hygge
 Kaffe and Tapa do BairroAlto were chosen for this pass; the other two (Breakfast Lovers Chiado, Lisbon
