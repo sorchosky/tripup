@@ -53,7 +53,10 @@ export default function SettlementConfirmationScreen() {
       bleed
       floatingFooter
       footer={
-        <Button variant="primary-glass" onClick={() => navigate('/trip')}>
+        <Button
+          variant="primary-glass"
+          onClick={() => navigate('/trip', { state: { paidToast: true } })}
+        >
           Back to the trip
         </Button>
       }
