@@ -48,12 +48,6 @@ import { euros } from '../lib/format';
 import { personItemShares, type Assignment, type Transfer } from '../lib/settle';
 import styles from './SettleUpScreen.module.css';
 
-function joinNames(names: string[]): string {
-  if (names.length <= 1) return names[0] ?? '';
-  if (names.length === 2) return `${names[0]} and ${names[1]}`;
-  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
-}
-
 /** The per-debtor "who pays whom" recap.
  *
  * Each row is an accordion (issue #100): avatar, name, amount, chevron up front; expanding reveals the
@@ -122,7 +116,6 @@ export default function SettleUpScreen() {
   const { transfers } = derived;
 
   const oweTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
-  const debtorNames = transfers.map((t) => participantById(t.fromId).name);
 
   // The settle math has to actually resolve to something before the CTA is live: no transfers means
   // there's nothing to confirm (everyone's already square), and once the trip is settled there's
@@ -175,7 +168,7 @@ export default function SettleUpScreen() {
         <div className={styles.tip}>
           <Info size={16} className={styles.tipIcon} />
           <p className={styles.tipText}>
-            Reminders will send a push notification containing itemized shares to {joinNames(debtorNames)}.
+            We&apos;ll send a push notification containing itemized shares to participants.
           </p>
         </div>
       </div>

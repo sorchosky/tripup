@@ -245,6 +245,11 @@ reference copy ("Two transfers close it out") implies the final settlement resol
 Once expense amounts are locked, confirm the algorithm's output matches that narrative and update the
 copy if it doesn't.
 
+**Settle Up info-tip (issue #154):** locked copy for `SettleUpScreen`'s info-tip line, generic across
+who owes what so the line's width never varies with which debtors are named:
+
+> "We'll send a push notification containing itemized shares to participants."
+
 ## Activity feed (issue #57; eyebrows + settle lifecycle reworked in #104)
 
 New surface — a computed digest of the same live trip state used elsewhere (poll, settle-up), not a
