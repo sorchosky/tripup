@@ -113,7 +113,9 @@ export interface ReceiptItem {
   qty: number;
   label: string;
   amountCents: number;
-  /** Participant ids this line is split across. The wine defaults to Ari only (Ren + Nic excluded). */
+  /** Participant ids this line is split across. Every line — including the wine — starts even across
+   *  all three; exclusion (e.g. Ren + Nic off the wine) is a manual deselect via TOGGLE_ASSIGNEE, not
+   *  a pre-set default (issue #97). */
   defaultSharedBy: string[];
   /** One line carries a mocked low-confidence OCR flag (the Vinho Verde), per the hi-fi mock. */
   needsReview?: boolean;
@@ -134,7 +136,7 @@ export const DINNER_RECEIPT = {
     { id: 'couvert', qty: 3, label: 'Couvert (bread & olives)', amountCents: 750, defaultSharedBy: ['ari', 'ren', 'nic'] },
     { id: 'arroz', qty: 2, label: 'Arroz de marisco', amountCents: 4400, defaultSharedBy: ['ari', 'ren', 'nic'] },
     { id: 'gambas', qty: 1, label: 'Gambas à guilho', amountCents: 1850, defaultSharedBy: ['ari', 'ren', 'nic'] },
-    { id: 'vinho', qty: 2, label: 'Vinho Verde (bottle)', amountCents: 3200, defaultSharedBy: ['ari'], needsReview: true },
+    { id: 'vinho', qty: 2, label: 'Vinho Verde (bottle)', amountCents: 3200, defaultSharedBy: ['ari', 'ren', 'nic'], needsReview: true },
     { id: 'nata', qty: 3, label: 'Pastéis de nata', amountCents: 600, defaultSharedBy: ['ari', 'ren', 'nic'] },
   ] as ReceiptItem[],
 };
