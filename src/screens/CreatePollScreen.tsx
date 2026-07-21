@@ -14,6 +14,11 @@
  * whatever's there, not appending) rather than requiring a per-field pick. A materially different job
  * from the standalone "AI Suggest" chip issue #93 removed (that chip suggested into one focused field);
  * this is a bulk autofill, not a reintroduction of that chip.
+ *
+ * Issue #175: using the CTA dismisses the card too (same end state as its `X` button), since the
+ * recommendation's been taken; "Clear" restores it, since a blanked form is a fresh start where the
+ * shortcut applies again. Issue #174: the card's body copy names the actual mechanism — inference
+ * from spots the group liked on other trips, not a replay of the organizer's own past-Lisbon likes.
  */
 
 import { useState } from 'react';
@@ -25,10 +30,12 @@ import { AI_SUGGESTED_SPOTS, LISBON_POLL_SUGGESTIONS } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import styles from './CreatePollScreen.module.css';
 
-// Locked copy — CONTENT.md → "AI autofill card" (issue #113). Voice-passed against BRAND.md (short,
-// fact-first, no exclamation point) from the mock's starting-point line.
+// Locked copy — CONTENT.md → "AI autofill card" (issue #113, copy revised issue #174). Voice-passed
+// against BRAND.md (short, fact-first, no exclamation point). Body now names the actual mechanism —
+// inference from spots liked on other trips, drawing on the whole group's preferences, not a replay
+// of the organizer's own past-Lisbon likes.
 const AI_CARD_TITLE = 'Recommend with AI';
-const AI_CARD_BODY = "We'll fill in spots you've liked on past trips.";
+const AI_CARD_BODY = "We'll infer spots you'll like here from ones the group's liked on other trips.";
 const AI_CARD_CTA = 'Add AI recommendations';
 
 interface OptionRow {
@@ -131,10 +138,13 @@ export default function CreatePollScreen() {
   }
   // Replaces the option rows outright with one row per AI_SUGGESTED_SPOTS entry, in that array's
   // order — overwrites any already-typed values rather than only filling blanks, per the issue's
-  // explicit "replace... rather than appending" framing.
+  // explicit "replace... rather than appending" framing. Using the CTA reaches the same dismissed
+  // end state as the card's own `X` button (issue #175) — the recommendation has been taken, so the
+  // shortcut has nothing left to offer until the form is cleared.
   function autofillWithAI() {
     setOptions(AI_SUGGESTED_SPOTS.map((name) => blankRow(name)));
     setFocusedKey(null);
+    setAiCardDismissed(true);
   }
 
   const filledCount = options.filter((o) => o.value.trim().length > 0).length;
@@ -151,6 +161,8 @@ export default function CreatePollScreen() {
           onRight={() => {
             setQuestion('');
             setOptions([blankRow(), blankRow()]);
+            // A cleared form is a fresh start — the AI shortcut is relevant again (issue #175).
+            setAiCardDismissed(false);
           }}
         />
       }

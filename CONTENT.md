@@ -170,15 +170,22 @@ The "where to eat" decision used on screens 4–6. Sourced from the `poll-status
   Create poll — a screen-level, bulk-fill shortcut to the same `AI_SUGGESTED_SPOTS` data the per-field
   typeahead above already surfaces one row at a time (not a return of the old standalone "AI Suggest"
   chip issue #93 replaced — that chip suggested into one focused field; this bulk-fills the whole list).
-  Locked copy:
+  Locked copy (revised issue #174):
   - Title: "Recommend with AI"
-  - Body: "We'll fill in spots you've liked on past trips." — voice-passed from the mock's starting
-    point ("We'll recommend nearby spots for you based on places you've liked on your previous trips.")
-    down to one short, fact-first sentence per `BRAND.md`.
+  - Body: "We'll infer spots you'll like here from ones the group's liked on other trips." — replaces
+    the earlier "We'll fill in spots you've liked on past trips.", which read as a literal replay of
+    the *organizer's* own past-*Lisbon* likes. The real mechanism is inference: `AI_SUGGESTED_SPOTS`
+    are Lisbon picks inferred from spots liked on itineraries in *other* cities, and the inference
+    draws on the *whole group's* preferences, not just the organizer's. One short, fact-first sentence
+    per `BRAND.md`.
   - CTA: "Add AI recommendations", with the `Sparkles` icon (same glyph as the typeahead's AI rows,
     issue #103).
   - Tapping the CTA replaces the option rows outright with one row per `AI_SUGGESTED_SPOTS` entry, in
     that array's order — overwrites any already-typed values rather than only filling blanks.
+  - Visibility lifecycle (issue #175): the card dismisses either via its `X` button or by using the
+    CTA (taking the recommendation removes the offer, same end state as `X`). Dismissal is local to
+    the screen visit; hitting "Clear" blanks the form *and* restores the card, since a cleared form is
+    a fresh start where the shortcut is relevant again.
 
 > Supersedes an earlier placeholder candidate list (A Nossa Casa, Taberna Sal Grosso, Black Pavilion
 > Restaurant) drafted before the hi-fi poll mock existed. The mock is the rendered screen, so it's
