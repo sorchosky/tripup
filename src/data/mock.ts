@@ -133,10 +133,10 @@ export const DINNER_RECEIPT = {
   payerId: 'ari',
   totalCents: 10800,
   items: [
+    { id: 'vinho', qty: 2, label: 'Vinho Verde (bottle)', amountCents: 3200, defaultSharedBy: ['ari', 'ren', 'nic'], needsReview: true },
     { id: 'couvert', qty: 3, label: 'Couvert (bread & olives)', amountCents: 750, defaultSharedBy: ['ari', 'ren', 'nic'] },
     { id: 'arroz', qty: 2, label: 'Arroz de marisco', amountCents: 4400, defaultSharedBy: ['ari', 'ren', 'nic'] },
     { id: 'gambas', qty: 1, label: 'Gambas à guilho', amountCents: 1850, defaultSharedBy: ['ari', 'ren', 'nic'] },
-    { id: 'vinho', qty: 2, label: 'Vinho Verde (bottle)', amountCents: 3200, defaultSharedBy: ['ari', 'ren', 'nic'], needsReview: true },
     { id: 'nata', qty: 3, label: 'Pastéis de nata', amountCents: 600, defaultSharedBy: ['ari', 'ren', 'nic'] },
   ] as ReceiptItem[],
 };
