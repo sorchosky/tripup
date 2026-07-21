@@ -121,10 +121,10 @@ Consistent expense set used across log / balances / settle-up. Sourced from the 
 
 | Item | Qty | Amount | Default split | Exclusion |
 | --- | --- | --- | --- | --- |
+| Vinho Verde (bottle) | ×2 | €32.00 | Ari, Ren, Nic | **Ren, Nic** (manual deselect) |
 | Couvert (bread & olives) | ×3 | €7.50 | Ari, Ren, Nic | — |
 | Arroz de marisco | ×2 | €44.00 | Ari, Ren, Nic | — |
 | Gambas à guilho | ×1 | €18.50 | Ari, Ren, Nic | — |
-| Vinho Verde (bottle) | ×2 | €32.00 | Ari, Ren, Nic | **Ren, Nic** (manual deselect) |
 | Pastéis de nata | ×3 | €6.00 | Ari, Ren, Nic | — |
 
 - **Total:** €108.00 · 5 items.
