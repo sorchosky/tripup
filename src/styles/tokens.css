@@ -101,9 +101,11 @@
 
   /* ---- Blurred-image glow (issue #59) — a blurred copy of a photo bled out behind its card, standing
    * in for a drop shadow (Sunday-app reference). Reserve for photo surfaces (poll-reveal winner card
-   * today; receipt/settle-up hero once those get real photos) — not a generic shadow replacement. */
-  --glow-blur: 32px;     /* backdrop blur radius on the bled-out copy */
-  --glow-spread: 20px;   /* how far the blurred copy bleeds past the sharp card's edge */
+   * today; receipt/settle-up hero once those get real photos) — not a generic shadow replacement.
+   * Kept small enough (issue #94) that spread + blur falloff settles inside the 390px frame's side
+   * padding (--space-5, 24px) instead of hard-cropping against the device frame's overflow:hidden. */
+  --glow-blur: 12px;     /* backdrop blur radius on the bled-out copy */
+  --glow-spread: 6px;    /* how far the blurred copy bleeds past the sharp card's edge */
   --glow-opacity: 0.55;
 
   /* ---- Shimmer skeleton (issue #58) — a moving highlight sweep across loading placeholders (receipt
