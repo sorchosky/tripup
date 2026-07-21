@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './ui.module.css';
 import { participantById } from '../data/mock';
 import { Bell, Compass, User, Plus, X } from './icons';
+import { useTrip } from '../state/TripContext';
 
 /* ------------------------------ Status bar / chrome ------------------------------ */
 
@@ -165,11 +166,15 @@ export function TabBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentKey = activeTabKey(location.pathname);
+  // #105: a dot on the Activity tab when there's unread activity (requests sent / payments landed)
+  // the user hasn't opened the feed for yet. ActivityScreen clears it on mount.
+  const { state } = useTrip();
 
   return (
     <div className={`${styles.tabBar} ${styles.glass}`}>
       {TABS.map(({ key, label, Icon, path, enabled }) => {
         const active = enabled && key === currentKey;
+        const showUnreadBadge = key === 'activity' && state.activityUnread;
         return (
           <button
             key={key}
@@ -179,7 +184,10 @@ export function TabBar() {
             aria-current={active ? 'page' : undefined}
             onClick={enabled ? () => navigate(path) : undefined}
           >
-            <Icon size={22} />
+            <span className={styles.tabIconAnchor}>
+              <Icon size={22} />
+              {showUnreadBadge ? <span className={styles.tabBadge} aria-label="New activity" /> : null}
+            </span>
             <span className={styles.tabLabel}>{label}</span>
           </button>
         );

@@ -62,6 +62,13 @@ export interface TripState {
    * Activity feed (#104) gates its "Requests sent" + payment-received cells on this being set.
    */
   requestsSentAt: string | null;
+  /**
+   * Unread flag for the Activity tab's badge (#105). Flips true the moment SETTLE fires — the same
+   * event that stamps `requestsSentAt` and starts the Activity feed's "Requests sent" + payment-
+   * received cells — so the badge and the feed content it's pointing at always agree. Cleared by
+   * VIEW_ACTIVITY, dispatched when the Activity screen mounts.
+   */
+  activityUnread: boolean;
 }
 
 export type TripAction =
@@ -72,6 +79,7 @@ export type TripAction =
   | { type: 'ADD_ITINERARY_ITEM'; item: ItineraryItem }
   | { type: 'TOGGLE_ASSIGNEE'; itemId: string; personId: string }
   | { type: 'SETTLE' }
+  | { type: 'VIEW_ACTIVITY' }
   | { type: 'RESET' };
 
 function seedAssignment(): Assignment {
@@ -92,6 +100,7 @@ function initialState(): TripState {
     assignment: seedAssignment(),
     settled: false,
     requestsSentAt: null,
+    activityUnread: false,
   };
 }
 
@@ -163,7 +172,14 @@ function reducer(state: TripState, action: TripAction): TripState {
         // Stamps the moment the Activity feed's "Requests sent" cell (and, downstream, the
         // payment-received cells) starts showing (#104).
         requestsSentAt: SETTLEMENT_TIMELINE.requestsSentAt,
+        // New activity to check on the hub — cleared on VIEW_ACTIVITY (#105).
+        activityUnread: true,
       };
+    }
+
+    case 'VIEW_ACTIVITY': {
+      if (!state.activityUnread) return state;
+      return { ...state, activityUnread: false };
     }
 
     case 'RESET':
