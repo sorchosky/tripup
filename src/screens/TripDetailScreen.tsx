@@ -94,6 +94,9 @@ export default function TripDetailScreen() {
   const [tripMenuOpen, setTripMenuOpen] = useState(false);
   const tripMenuBtnRef = useRef<HTMLButtonElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  // Issue #107: the newly-added dinner row, so a `scrollToDinner` arrival can bring it into view without
+  // needing a direct ref into Screen's own scroll container (see the effect below).
+  const dinnerRowRef = useRef<HTMLButtonElement>(null);
   // Issue #48: fades "Lisbon 2026" into the floating NavHeader once the in-body <h1> scrolls under it.
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
   // Issue #87: fades the header's backdrop blur in once the body has scrolled at all — transparent,
@@ -119,6 +122,19 @@ export default function TripDetailScreen() {
   }, []);
 
   const dayGroups = useMemo(() => groupItineraryByDay(state.itinerary), [state.itinerary]);
+
+  // Issue #107: PollClosedScreen's "View in Lisbon 2026" CTA sets this flag so the hub lands scrolled to
+  // the newly-written dinner row instead of the top the hub normally opens to. `scrollIntoView` scrolls
+  // whatever ancestor is actually the overflow container (Screen's `.scroll` div) via a real native
+  // scroll, so it fires the same `onScroll` → `handleScroll` path a user-driven scroll would, keeping
+  // `showHeaderTitle`/`headerBackdropVisible` correct. Any other arrival at `/trip` carries no
+  // location.state, so the "always opens at top" behavior is unaffected.
+  useEffect(() => {
+    if ((location.state as { scrollToDinner?: boolean } | null)?.scrollToDinner) {
+      dinnerRowRef.current?.scrollIntoView({ block: 'end' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleScroll(e: UIEvent<HTMLDivElement>) {
     setHeaderBackdropVisible(isScrolled(e));
@@ -246,6 +262,7 @@ export default function TripDetailScreen() {
                   </div>
                   <button
                     type="button"
+                    ref={item.id === DINNER_ITINERARY_ITEM.id ? dinnerRowRef : undefined}
                     className={styles.event}
                     onClick={() => {
                       if (route) navigate(route);
