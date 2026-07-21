@@ -8,6 +8,11 @@
  * back/forward through history doesn't replay the toast. The exact confirmation copy is locked in
  * issue #105/CONTENT.md; this ticket only wires the trigger mechanism using the existing `Toast`
  * pattern (see `AddParticipantScreen`'s "{Name} has been added to the trip." usage).
+ *
+ * Issue #106: the back arrow returns to Activity, not Trip Detail — this screen is reached from the
+ * send flow (Create poll) rather than from Trip Detail, so Activity is the more natural "where was I"
+ * destination. Trip Detail's open-poll banner and Activity's own poll cards still route to `/poll`
+ * (open) / `/poll/closed` (closed) unchanged.
  */
 
 import { useEffect, useState } from 'react';
@@ -65,7 +70,7 @@ export default function PollVotingScreen() {
   return (
     <>
       <Screen
-        nav={<NavHeader onBack={() => navigate('/trip')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to trip" />}
+        nav={<NavHeader onBack={() => navigate('/activity')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to activity" />}
         floatingFooter
         footer={
           <Button variant="primary-glass" onClick={close}>
