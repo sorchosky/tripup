@@ -228,6 +228,18 @@ yet) — locked reference data available for screen 2 (trip detail/itinerary) or
 | Hygge Kaffe | Build-your-own, minimalist Scandinavian | R. Tomás Ribeiro 95B, 1050-227 Lisboa, Portugal | 38.7315413, -9.1490725 | 4.8 | $$ | +351 931 329 691 |
 | Breakfast Lovers Chiado | Bright, extensive Eggs Benedict menu | R. Vítor Cordon 26, 1200-484 Lisboa, Portugal | 38.7080494, -9.141487 | 4.9 | — | +351 939 531 673 |
 
+## Toast copy
+
+Locked strings for the transient top-pinned `Toast` banner (issue #90's component). Collected here so a
+future toast reuses a locked line instead of inventing one inline.
+
+- **Add participant** (`AddParticipantScreen.tsx`, on `ADD_PARTICIPANT`): "{Name} has been added to the
+  trip." — e.g. "Ren has been added to the trip."
+- **Poll sent** (`PollVotingScreen.tsx`, on arrival via the `pollSent` flag from `CreatePollScreen`'s
+  send, issue #104/#105): **"Poll sent as a push notification."** — framed as a push-notification
+  confirmation rather than a generic "poll sent" line, matching `BRAND.md`'s fact-first, dry voice (no
+  exclamation point, states plainly what happened).
+
 ## Receipt scan (mock)
 
 Canned scan result that populates the Log-expense form — no OCR. Matches the Cervejaria Ramiro dinner
