@@ -43,7 +43,7 @@
 .responseText { font-size: var(--font-size-label); color: var(--color-text-muted); }
 .responseOption { color: var(--color-text); font-weight: var(--font-weight-semibold); }
 
-/* ---- Payment-received cells (redeemed by Ari, one per transfer) ---- */
+/* ---- Payment-received cells ("Redeemed", one per transfer) ---- */
 .debtors { display: flex; flex-direction: column; gap: var(--space-2); }
 .debtorCard {
   display: flex;

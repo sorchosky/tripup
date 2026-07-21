@@ -291,10 +291,12 @@ requests" on `SettleUpScreen`):
 **Payments-received cells** — shown once requests have been sent and there's at least one consolidated
 transfer; one cell per transfer, auto-added the moment `requestsSentAt` is set (not a separate action):
 - Eyebrow: "**Jun 17 · 10:12 PM**" — `SETTLEMENT_TIMELINE.redeemedAt`.
-- One card per transfer: "{Debtor} paid {euros(amount)}" + a `Pill tone="settled"` "Redeemed by Ari"
-  label — with the locked result this reads **"Nic paid €25.33 · Redeemed by Ari."** (the minimum-
+- One card per transfer: "{Debtor} paid {euros(amount)}" + a `Pill tone="settled"` "Redeemed"
+  label — with the locked result this reads **"Nic paid €25.33 · Redeemed."** (the minimum-
   transfer solve on the locked expense data resolves to a single transfer, so today that's the one
-  payments cell that renders — the mechanism supports more if the underlying balances ever do).
+  payments cell that renders — the mechanism supports more if the underlying balances ever do). The
+  pill deliberately drops the payer's name (issue #157) — a name-bearing pill would vary in width per
+  person.
 
 **Empty state** — shown when none of the above apply (before any vote is cast, no expense logged yet,
 no requests sent yet). Genuinely reachable — a user can tap the Activity tab the moment the app opens,

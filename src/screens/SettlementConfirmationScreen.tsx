@@ -27,9 +27,10 @@ import styles from './SettlementConfirmationScreen.module.css';
  *
  * `SETTLEMENT_TIMELINE.redeemedAt` (mock.ts) is a single trip-wide narrative timestamp — it's when
  * the Activity feed (#104) starts narrating that time has passed and every transfer reads as
- * "Redeemed by Ari." It isn't a per-payee signal, so there's no real basis in the mock data to mark
- * one payee's row Paid ahead of another's without inventing data that doesn't exist (CLAUDE.md: don't
- * invent values to make a screen look finished). This screen is reached the instant "Send requests"
+ * "Redeemed" (issue #157 dropped the payer's name from the pill). It isn't a per-payee signal, so
+ * there's no real basis in the mock data to mark one payee's row Paid ahead of another's without
+ * inventing data that doesn't exist (CLAUDE.md: don't invent values to make a screen look finished).
+ * This screen is reached the instant "Send requests"
  * fires — before any of that narrative time has passed — so every payee genuinely is still Pending at
  * this point in the story.
  *
