@@ -105,7 +105,7 @@ export default function SplitScreen() {
                 </div>
               ))}
             </div>
-            <Button onClick={() => navigate('/settle')}>Go to settle up</Button>
+            <Button onClick={() => navigate('/settle')}>Go to Settle Up</Button>
           </>
         ) : undefined
       }
@@ -116,7 +116,7 @@ export default function SplitScreen() {
           <div className={styles.steps}>
             <span className={styles.stepActive}>Scan &amp; assign</span>
             <span className={styles.stepDot} aria-hidden />
-            <span className={styles.stepInactive}>Settle up</span>
+            <span className={styles.stepInactive}>Settle Up</span>
           </div>
         </div>
 
