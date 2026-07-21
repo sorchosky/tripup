@@ -40,8 +40,11 @@
 .amount {
   font-family: var(--font-family-display);
   font-weight: var(--font-weight-extrabold);
-  font-size: var(--font-size-title);
-  letter-spacing: var(--tracking-title);
+  /* Scaled up from --font-size-title to --font-size-display alongside issue #133's --ring-size bump
+     (132px → 176px) so the centered label keeps pace with the bigger ring instead of reading small
+     inside it. */
+  font-size: var(--font-size-display);
+  letter-spacing: var(--tracking-display);
   color: var(--color-text);
 }
 

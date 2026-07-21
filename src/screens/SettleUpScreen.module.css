@@ -21,23 +21,24 @@
   line-height: var(--line-height-body);
   margin-bottom: var(--space-5);
 }
-.ledeStrong { color: var(--color-text); font-weight: var(--font-weight-semibold); }
 
 .sectionHead { margin-bottom: var(--space-3); }
 
-/* ---- Metadata + meal-cost donut hero (issue #99, replacing the #61 photo hero and the #39 ring) ----
- * A plain card: trip metadata above a MealCostDonut. No photo, no from/to naming — the debtor list
- * below already names names, so the hero stays about the money, not the people. */
+/* ---- Metadata + meal-cost donut hero (issue #99, replacing the #61 photo hero and the #39 ring;
+ * card chrome removed by issue #133) ----
+ * Trip metadata above a MealCostDonut, sitting directly on the screen's subdued page background —
+ * no card background/border/radius/shadow, so it reads as distinct from the `.debtorCard` accordion
+ * rows below rather than another card in the same family. No photo, no from/to naming — the debtor
+ * list already names names, so the hero stays about the money, not the people. Vertical padding
+ * (rather than the old card's all-around padding) keeps the metadata/donut group from sitting flush
+ * against the title above and the "Consolidated debts" eyebrow below now that there's no card edge
+ * to imply that spacing on its own. */
 .heroCard {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  background: var(--color-surface-raised);
-  border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--elevation-card);
-  padding: var(--space-5);
+  padding: var(--space-2) 0 var(--space-3);
   margin-bottom: var(--space-5);
 }
 .meta { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); text-align: center; }
