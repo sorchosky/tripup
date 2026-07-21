@@ -5,9 +5,9 @@
  *
  * Issue #104: arriving here fresh off "Send poll to participants" (Create poll) carries a `pollSent`
  * flag in router `location.state` — read once on mount, then cleared via a `replace` navigate so
- * back/forward through history doesn't replay the toast. The exact confirmation copy is locked in
- * issue #105/CONTENT.md; this ticket only wires the trigger mechanism using the existing `Toast`
- * pattern (see `AddParticipantScreen`'s "{Name} has been added to the trip." usage).
+ * back/forward through history doesn't replay the toast. Issue #105 locks the confirmation copy itself
+ * (see `POLL_SENT_TOAST_MESSAGE` below, mirrored in `CONTENT.md` → "Toast copy") using the same `Toast`
+ * pattern as `AddParticipantScreen`'s "{Name} has been added to the trip." toast.
  *
  * Issue #106: the back arrow returns to Activity, not Trip Detail — this screen is reached from the
  * send flow (Create poll) rather than from Trip Detail, so Activity is the more natural "where was I"
@@ -23,9 +23,9 @@ import { ArrowLeft } from '../components/icons';
 import { useTrip } from '../state/TripContext';
 import styles from './PollVotingScreen.module.css';
 
-// Placeholder — locked wording lands in issue #105 (CONTENT.md), wired in from there rather than
-// invented here. Kept visibly a placeholder per CLAUDE.md's "don't invent copy" rule.
-const POLL_SENT_TOAST_MESSAGE_TBD = 'TBD: poll-sent toast copy (see issue #105)';
+// Locked wording — CONTENT.md → "Toast copy" (issue #105). Framed as a push-notification confirmation
+// per BRAND.md's fact-first, dry voice, matching the existing add-participant toast's register.
+const POLL_SENT_TOAST_MESSAGE = 'Poll sent as a push notification.';
 
 /** Who votes for what, and when — the choreography behind the "live" feel. */
 const VOTE_SEQUENCE: { voterId: string; optionId: string; delay: number }[] = [
@@ -52,7 +52,7 @@ export default function PollVotingScreen() {
   useEffect(() => {
     const navState = location.state as { pollSent?: boolean } | null;
     if (navState?.pollSent) {
-      setToastMessage(POLL_SENT_TOAST_MESSAGE_TBD);
+      setToastMessage(POLL_SENT_TOAST_MESSAGE);
       navigate(location.pathname, { replace: true, state: null });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
