@@ -9,7 +9,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
-import { Pill, Eyebrow } from '../components/ui';
+import { Button, Pill, Eyebrow } from '../components/ui';
 import { ImageGlow } from '../components/ImageGlow';
 import { ArrowLeft, Check } from '../components/icons';
 import { DINNER_POLL, TRIP } from '../data/mock';
@@ -46,6 +46,12 @@ export default function PollClosedScreen() {
           leftIcon={<ArrowLeft />}
           leftAriaLabel="Back to trip"
         />
+      }
+      floatingFooter
+      footer={
+        <Button variant="primary" onClick={() => navigate('/trip')}>
+          View in {TRIP.name}
+        </Button>
       }
     >
       <div className={styles.body}>
