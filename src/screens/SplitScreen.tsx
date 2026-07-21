@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Avatar, Button } from '../components/ui';
-import { ArrowLeft, Ellipsis, Camera, X } from '../components/icons';
+import { ArrowLeft, Camera, X } from '../components/icons';
 import { DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
@@ -42,6 +42,14 @@ export default function SplitScreen() {
     const timer = setTimeout(() => setStage('populated'), SCAN_DELAY_MS);
     return () => clearTimeout(timer);
   }, [stage]);
+
+  // "Clear" (issue #96) — resets this screen back to its blank capture/manual-entry state, and
+  // reseeds the receipt's assignment data so a fresh capture doesn't inherit stale exclusions.
+  function clearSplit() {
+    dispatch({ type: 'RESET_ASSIGNMENT' });
+    setAddItemOpen(false);
+    setStage('empty');
+  }
 
   if (stage === 'capturing') {
     return (
@@ -82,8 +90,8 @@ export default function SplitScreen() {
           onBack={() => navigate(-1)}
           leftIcon={<ArrowLeft />}
           leftAriaLabel="Back"
-          rightIcon={<Ellipsis />}
-          rightAriaLabel="Split options"
+          rightText={stage === 'populated' ? 'Clear' : undefined}
+          onRight={stage === 'populated' ? clearSplit : undefined}
         />
       }
       footer={
