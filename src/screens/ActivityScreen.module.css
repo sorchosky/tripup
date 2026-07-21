@@ -1,4 +1,7 @@
-/* ActivityScreen — computed digest: active poll, who's responded, and who still owes what. */
+/* ActivityScreen — computed digest: active poll, who's responded, and the settle-up lifecycle
+   (requests sent → payments redeemed). Issue #104: eyebrows read as date/time stamps now, and the
+   settle-up half of the feed is a static (non-clickable) chronological tail, not the old
+   click-through "Settle up"/"Settled" cards. */
 
 .body { padding-bottom: var(--space-5); }
 .title {
@@ -40,7 +43,7 @@
 .responseText { font-size: var(--font-size-label); color: var(--color-text-muted); }
 .responseOption { color: var(--color-text); font-weight: var(--font-weight-semibold); }
 
-/* ---- Settle-up debtor cards ---- */
+/* ---- Payment-received cells (redeemed by Ari, one per transfer) ---- */
 .debtors { display: flex; flex-direction: column; gap: var(--space-2); }
 .debtorCard {
   display: flex;
@@ -48,28 +51,15 @@
   justify-content: space-between;
   gap: var(--space-3);
   width: 100%;
-  text-align: left;
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-4);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
 }
-.debtorCard:active { background: var(--color-surface-neutral); }
 .debtorWho { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
 .debtorName { font-weight: var(--font-weight-semibold); font-size: var(--font-size-label); color: var(--color-text); }
-.requestTag {
-  flex: 0 0 auto;
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-caption);
-  color: var(--color-on-primary);
-  background: var(--color-text);
-  border-radius: var(--radius-sm);
-  padding: var(--space-1) var(--space-3);
-}
 
-/* ---- Settled confirmation card ---- */
+/* ---- Single-line status cell ("Requests sent") ---- */
 .settledCard {
   display: flex;
   align-items: center;
@@ -82,7 +72,7 @@
 }
 .settledText { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-text); }
 
-/* ---- Empty state (no active poll, no outstanding transfers, nothing settled yet) ---- */
+/* ---- Empty state (no active poll, no decided poll, no requests sent yet) ---- */
 .empty {
   margin-top: var(--space-3);
   border: 1.5px dashed var(--color-border);

@@ -225,13 +225,22 @@ reference copy ("Two transfers close it out") implies the final settlement resol
 Once expense amounts are locked, confirm the algorithm's output matches that narrative and update the
 copy if it doesn't.
 
-## Activity feed (issue #57)
+## Activity feed (issue #57; eyebrows + settle lifecycle reworked in #104)
 
 New surface — a computed digest of the same live trip state used elsewhere (poll, settle-up), not a
 separate persisted event log. No new names/amounts; every line below reuses the Poll/Expenses/Settlement
 data above. Written from `BRAND.md` (short, dry, state the fact then earn the joke).
 
-**Active poll section** — shown while `poll.status === 'open'`:
+Issue #104 replaced the old static section-label eyebrows ("Active poll", "Poll decided", "Settle up",
+"Settled") with a date/time stamp on every cell, and turned the settle-up half of the feed into a real
+chronological tail — poll winner → requests sent → payments redeemed — instead of two mutually-exclusive
+"outstanding" / "settled" sections. The trip's narrative day is fixed at Jun 17 (`NARRATIVE_TODAY` in
+`src/lib/dates.ts`), so every timestamp below is a deliberate mock constant on that date, not real
+wall-clock time — same treatment the poll's `closedAt` already had.
+
+**Active poll cell** — shown while `poll.status === 'open'`:
+- Eyebrow: date-only, "**Jun 17**" — no fixed clock reading exists for individual votes in the mock
+  data, so the eyebrow doesn't fabricate one (per `CLAUDE.md`'s "don't invent" rule).
 - Card headline: the poll question, unchanged — "Where should we eat tonight?" — with the same
   `Pill tone="neutral"` "Poll open" label used on the Trip Detail banner (same token, same job, per C5).
 - Sub-line: "{votesIn} of {totalVoters} in." — e.g. with the demo's 2 early votes: "2 of 3 in."
@@ -239,26 +248,31 @@ data above. Written from `BRAND.md` (short, dry, state the fact then earn the jo
   "Nic voted." This is the "free-flowing feed of others responding" the issue asks for, entirely
   derived from `poll.options[].votedBy` — no invented timestamps or ordering beyond vote order.
 
-**Poll decided section** — shown once `poll.status === 'closed'` (supersedes the open-poll card):
+**Poll decided cell** — shown once `poll.status === 'closed'` (supersedes the open-poll cell):
+- Eyebrow: "**Jun 17 · 6:32 PM**" — `state.poll.closedAt`, the same locked time `PollClosedScreen`
+  already shows as "Closed 6:32 PM."
 - Card headline: "{Winner} wins, {winner votes} to {runner-up votes}." — with the locked result this
   reads **"Cervejaria Ramiro wins, 2 to 1."** (Real numbers, not the "Trattoria wins, 4 to 2" tone
   reference from `BRAND.md` — see the Poll section above for why that line doesn't apply verbatim.)
 - Pill: reuses the exact "Poll closed" label/tone from `PollClosedScreen`, not a new variant.
 
-**Settle-up section** — shown when `!settled` and there's at least one consolidated transfer:
-- One card per transfer: "{Debtor} owes {euros(amount)}" + the same "Request" tag used on
-  `SettleUpScreen`'s debtor cards — with the locked result this reads **"Nic owes €25.33 · Request."**
-  (the minimum-transfer solve on the locked expense data resolves to a single transfer, not the ~2 this
-  section originally assumed).
-- Sub-line: "{N} transfer(s) close(s) it out." — singular-safe ("One transfer closes it out.") since the
-  actual data hits the 1-transfer case, not just "Two transfers close it out."
+**Requests-sent cell** — shown once `state.requestsSentAt` is set (the `SETTLE` action, fired by "Send
+requests" on `SettleUpScreen`):
+- Eyebrow: "**Jun 17 · 10:05 PM**" — `SETTLEMENT_TIMELINE.requestsSentAt` (`src/data/mock.ts`), shortly
+  after the dinner receipt is logged at 21:44.
+- Card: "**Requests sent.**" with a `Pill tone="neutral"` "Awaiting payment" label — the ask has gone
+  out, nothing's landed back yet, so it reads as pending rather than settled/success.
 
-**Settled section** — shown once `settled` is true (replaces the settle-up cards):
-- Card: "Everyone's even." (matches `SettlementConfirmationScreen`'s title) with a `Pill tone="settled"`
-  "Settled up" label.
+**Payments-received cells** — shown once requests have been sent and there's at least one consolidated
+transfer; one cell per transfer, auto-added the moment `requestsSentAt` is set (not a separate action):
+- Eyebrow: "**Jun 17 · 10:12 PM**" — `SETTLEMENT_TIMELINE.redeemedAt`.
+- One card per transfer: "{Debtor} paid {euros(amount)}" + a `Pill tone="settled"` "Redeemed by Ari"
+  label — with the locked result this reads **"Nic paid €25.33 · Redeemed by Ari."** (the minimum-
+  transfer solve on the locked expense data resolves to a single transfer, so today that's the one
+  payments cell that renders — the mechanism supports more if the underlying balances ever do).
 
 **Empty state** — shown when none of the above apply (before any vote is cast, no expense logged yet,
-nothing outstanding to settle). Genuinely reachable — a user can tap the Activity tab the moment the app
-opens, before touching the poll — so it gets real in-voice copy rather than a blank screen:
+no requests sent yet). Genuinely reachable — a user can tap the Activity tab the moment the app opens,
+before touching the poll — so it gets real in-voice copy rather than a blank screen:
 - "**Nothing moving yet.** Vote in a poll or log an expense, and it'll show up here." Same dashed-border
   empty-card treatment as `HomeScreen`'s "Nothing behind you yet." (same token, same job, per C5).

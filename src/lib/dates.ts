@@ -42,3 +42,23 @@ export function formatItineraryDay(dateISO: string): string {
   const date = new Date(`${dateISO}T00:00:00Z`);
   return `${WEEKDAY_FORMAT.format(date)} · ${MONTH_FORMAT.format(date)} ${date.getUTCDate()}`;
 }
+
+/**
+ * "Jun 17 · 6:32 PM" — a date/time eyebrow for a single feed cell (Activity feed, issue #104).
+ * `dateISO` is a plain "YYYY-MM-DD"; `time` is an already-formatted clock string ("6:32 PM") pulled
+ * from mock data (`DINNER_POLL.closedAt`, `SETTLEMENT_TIMELINE`, …) — this only assembles the label,
+ * it never invents a time.
+ */
+export function formatFeedEyebrow(dateISO: string, time: string): string {
+  const date = new Date(`${dateISO}T00:00:00Z`);
+  return `${MONTH_FORMAT.format(date)} ${date.getUTCDate()} · ${time}`;
+}
+
+/**
+ * "Jun 17" — date-only feed eyebrow for a cell with no fixed clock reading in the mock data (an
+ * in-progress poll: individual votes aren't timestamped, so a clock time here would be invented).
+ */
+export function formatFeedEyebrowDateOnly(dateISO: string): string {
+  const date = new Date(`${dateISO}T00:00:00Z`);
+  return `${MONTH_FORMAT.format(date)} ${date.getUTCDate()}`;
+}
