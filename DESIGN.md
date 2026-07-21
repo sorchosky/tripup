@@ -154,7 +154,12 @@ Two-family system:
   fraction, since this is a composition of two amounts, not a meter filling toward completion. Chart
   geometry (radius/stroke/circumference) is unitless SVG viewBox coordinates, same precedent as
   `icons.tsx` — only its rendered footprint comes from a token (`--ring-size`, name unchanged from #39
-  to avoid unnecessary token churn).
+  to avoid unnecessary token churn). Issue #133 removed the card background/border/radius/shadow that
+  used to sit behind the donut on the Settle Up hero — it now renders directly on the screen's
+  `--color-surface` page background, reading as distinct from the `.debtorCard` accordion rows below
+  rather than another card in the same family — and bumped `--ring-size` from `132px` to `176px` (still
+  well inside the 390px device frame's 342px content column), scaling the centered label's font up from
+  `--font-size-title` to `--font-size-display` to match.
 - **Segmented control** (issue #40, `ui.tsx`/`ui.module.css`): a 2/3-way tab-style switch for an
   in-place step, not a boolean toggle — `--color-surface-neutral` track, `--color-surface-raised` +
   `--color-text` active segment (with `--elevation-card` for separation), `--color-text-muted`
@@ -292,16 +297,19 @@ One entry per screen, in build order. Purpose/states are stubs until the wireflo
   per-debtor rows already carry that); copy stays BRAND.md voice throughout. This app only ever renders
   the payer's (Ari's) perspective, so the framing is "You're owed," not a toggling "You're owed / You're
   paying" state.
-- Key states: the hero card (issue #99) shows plain trip metadata — "Ramiro dinner" / "Lisbon 2026" —
-  above a `MealCostDonut` plotting the full receipt total split into Ari's own share vs. the live
-  `oweTotal`, with "{euros(oweTotal)} still outstanding" centered; both segments and the label recompute
-  with the split/exclusion state. The per-debtor "Consolidated debts" rows stay alongside the donut
-  rather than being subsumed by it — the donut communicates the overall cost split at a glance, the rows
-  still carry who-owes-what detail it can't. CTA disabled until the settle math resolves to something
-  real (`transfers.length === 0` or already `state.settled`, issue #41); tapping "Confirm & settle" opens
-  a partial-height confirm sheet (issue #40, not a route) with a Review/Pay segmented control — Review
-  recaps the same transfer rows as the main screen, Pay holds a mocked payment-method choice and the
-  button that actually dispatches `SETTLE`.
+- Key states: the hero (issue #99, card chrome removed by issue #133) shows plain trip metadata —
+  "Ramiro dinner" / "Lisbon 2026" — above a `MealCostDonut` plotting the full receipt total split into
+  Ari's own share vs. the live `oweTotal`, with "{euros(oweTotal)} still outstanding" centered; both
+  segments and the label recompute with the split/exclusion state. As of #133 the donut sits directly on
+  the screen's subdued page background rather than inside its own card — distinct from the
+  `.debtorCard`-styled "Consolidated debts" rows below — and the "{countWord} close it out." transfer-
+  count lede that used to sit above it is gone. The per-debtor "Consolidated debts" rows stay alongside
+  the donut rather than being subsumed by it — the donut communicates the overall cost split at a
+  glance, the rows still carry who-owes-what detail it can't. CTA disabled until the settle math
+  resolves to something real (`transfers.length === 0` or already `state.settled`, issue #41); tapping
+  "Confirm & settle" opens a partial-height confirm sheet (issue #40, not a route) with a Review/Pay
+  segmented control — Review recaps the same transfer rows as the main screen, Pay holds a mocked
+  payment-method choice and the button that actually dispatches `SETTLE`.
 - Notes: The other strongest hi-fi candidate (debt logic + confirmation).
 
 ### 10. Settlement confirmation

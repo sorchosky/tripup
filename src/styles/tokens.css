@@ -119,8 +119,11 @@
    * the MealCostDonut) — the chart's internal geometry (radius, stroke) lives in viewBox-space unitless
    * numbers in MealCostDonut.tsx, same precedent as the existing icon SVGs (src/components/icons.tsx) —
    * this token only governs its rendered footprint, so the container size stays a real design decision
-   * instead of an inline literal. ---- */
-  --ring-size: 132px;
+   * instead of an inline literal. Bumped 132px → 176px by issue #133 once the donut moved off its card
+   * background straight onto the screen surface (docs/wireframe-handoff.md's original card inset no
+   * longer constrains the available width) — still comfortably inside the 390px device frame's
+   * 342px content column (device width minus the two --space-5 side margins). ---- */
+  --ring-size: 176px;
 
   /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */
   --avatar-sm: 24px;   /* rank badges, poll rows */

@@ -23,6 +23,13 @@
  * full-pill treatment from #61 (a screen-scoped choice — className override — not a change to the
  * global `Button` radius locked by the hi-fi mocks elsewhere).
  *
+ * Issue #133 strips the donut's card chrome (background/border/radius/shadow) so it sits directly on
+ * the screen's subdued page background — distinct from the `.debtorCard` accordion rows below rather
+ * than another card in the same family — drops the "{countWord} close it out." transfer-count lede
+ * that used to sit above it, and bumps `--ring-size` 132px → 176px (with the centered label's font
+ * scaled up to match, --font-size-title → --font-size-display) now that the donut has the full content
+ * column to itself.
+ *
  * Consolidated debts are accordion rows (issue #100), replacing the earlier static row + "Request" tag:
  * avatar, name, amount, and a chevron up front; expanding a row reveals the itemized shares — from
  * `personItemShares` in src/lib/settle.ts — that add up to that person's subtotal, so a debtor can see
@@ -114,8 +121,6 @@ export default function SettleUpScreen() {
   const { dispatch, state, derived } = useTrip();
   const { transfers } = derived;
 
-  const count = transfers.length;
-  const countWord = count === 1 ? 'One transfer' : count === 2 ? 'Two transfers' : `${count} transfers`;
   const oweTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
   const debtorNames = transfers.map((t) => participantById(t.fromId).name);
 
@@ -152,10 +157,7 @@ export default function SettleUpScreen() {
           </div>
         </div>
 
-        <p className={styles.lede}>
-          <span className={styles.ledeStrong}>{countWord} close it out.</span> Ari fronted the dinner,
-          so everyone just squares up with them.
-        </p>
+        <p className={styles.lede}>Ari fronted the dinner, so everyone just squares up with them.</p>
 
         <div className={styles.heroCard}>
           <div className={styles.meta}>
