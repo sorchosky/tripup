@@ -66,6 +66,13 @@ interface NavHeaderProps {
   centerTitle?: string;
   /** Whether `centerTitle` is faded in. Defaults to false (faded out). */
   centerTitleVisible?: boolean;
+  /**
+   * Whether the header's backdrop blur is faded in (issue #87) — mirrors `centerTitleVisible`'s
+   * scroll-gated pattern. Defaults to false (transparent, no blur) so a screen at rest reads as
+   * chrome-light; screens with a scroll body pass their own `scrolled` signal (see `Screen`'s
+   * `isScrolled` helper) once content has moved under the header.
+   */
+  backdropVisible?: boolean;
 }
 
 export function NavHeader({
@@ -82,10 +89,14 @@ export function NavHeader({
   rightExpanded,
   centerTitle,
   centerTitleVisible = false,
+  backdropVisible = false,
 }: NavHeaderProps) {
   return (
     <div className={styles.navHeader}>
-      <span className={styles.navBackdrop} aria-hidden />
+      <span
+        className={`${styles.navBackdrop} ${backdropVisible ? styles.navBackdropVisible : ''}`}
+        aria-hidden
+      />
       {onBack || leftIcon ? (
         <button
           type="button"

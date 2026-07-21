@@ -85,7 +85,8 @@
   /* ---- Nav-header backdrop (issue #48) — a lighter, thinner separation than `.glass`: a gradient
    * fade of `--color-surface` at low alpha plus a light blur, so the floating nav header reads as
    * distinct from content scrolling underneath it without the opaque frosted-glass treatment reserved
-   * for the footer/tab-bar chrome. Not scroll-gated — always present at low intensity. */
+   * for the footer/tab-bar chrome. Scroll-gated (issue #87) — transparent at rest, fades in once the
+   * body scrolls (see `NavHeader`'s `backdropVisible` prop, `.navBackdropVisible` in ui.module.css). */
   --blur-header: 12px;
   --header-backdrop-top: rgba(246, 246, 244, 0.82);    /* --color-surface, near-opaque at the header's top edge */
   --header-backdrop-bottom: rgba(246, 246, 244, 0);    /* fades to fully transparent by the header's bottom edge */

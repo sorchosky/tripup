@@ -162,7 +162,7 @@ Two-family system:
   the loading state is still announced to assistive tech. Base/highlight reuse the existing neutral
   surface roles rather than introducing new raw colors.
 - **Nav-header backdrop + scroll-linked title** (issue #48, `NavHeader` in `src/components/ui.tsx` +
-  `.module.css`): the floating nav header always carries a lightweight separation layer behind its
+  `.module.css`): the floating nav header carries a lightweight separation layer behind its
   back/ellipsis buttons — a top-to-bottom gradient fade of `--color-surface` at low alpha
   (`--header-backdrop-top` → `--header-backdrop-bottom`) plus a light `--blur-header` (12px) blur.
   Deliberately distinct from the `.glass` treatment above (thinner, gradient rather than opaque,
@@ -172,6 +172,13 @@ Two-family system:
   `onScroll` signal comparing the heading's `getBoundingClientRect()` against the header's own height),
   and fade it back out at the top — the title span stays mounted at all times so the transition never
   shifts layout.
+  Scroll-gated (issue #87): the backdrop is transparent — no blur — at rest (`scrollTop` 0), reading as
+  chrome-light over a static screen, and fades in via a `backdropVisible` prop (mirroring
+  `centerTitleVisible`) once the body scrolls at all, using `Screen`'s generalized `isScrolled(e)`
+  helper on the same `onScroll` signal rather than each screen reimplementing the check. While active,
+  the backdrop layer extends up through the 54px `StatusBar` band (not the header's own layout height)
+  so status-bar content scrolling underneath is blurred too — at rest there's no blur over the status
+  bar either.
 - **Floating glass-accent primary button** (issue #52, `Screen`'s `floatingFooter` prop + `Button`'s
   `primary-glass` variant): on the create-poll and poll-voting footers, the primary CTA is pinned fixed
   at the bottom directly over scrolling content — no `.footerBar`/`.glass` card behind it. The button
