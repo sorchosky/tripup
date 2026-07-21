@@ -65,8 +65,8 @@ by the hi-fi mocks — no 4th participant appears (avatar rows are consistently 
 | Name | Role | Notes |
 | --- | --- | --- |
 | Ari | Organizer | Sets up the trip, the "you"/primary user in most flows. Has a placeholder photo avatar (see Avatars below); organizer/POV on all three trips. |
-| Ren | Participant | Shows up hangry (poll-notification reference); excluded from the wine split |
-| Nic | Participant | Excluded from the wine split |
+| Ren | Participant | Shows up hangry (poll-notification reference); manually deselected from the wine split |
+| Nic | Participant | Manually deselected from the wine split |
 | Josie | Participant | Joins the Tokyo trip (upcoming) — not part of the Lisbon scenario |
 | Michael | Participant | Joins the Paris weekend trip (past) — not part of the Lisbon scenario |
 | Genevieve | Participant | Joins the Paris weekend trip (past) — not part of the Lisbon scenario |
@@ -113,24 +113,29 @@ Ari, the settle-up hero per issue #61) stays on today's placeholder per the scop
 Consistent expense set used across log / balances / settle-up. Sourced from the receipt on the
 `receipt-capture-itemize` hi-fi mock — dinner at Cervejaria Ramiro, Lisbon, Jun 17, 21:44.
 
-| Item | Qty | Amount | Assigned to | Excluded |
+| Item | Qty | Amount | Default split | Exclusion |
 | --- | --- | --- | --- | --- |
 | Couvert (bread & olives) | ×3 | €7.50 | Ari, Ren, Nic | — |
 | Arroz de marisco | ×2 | €44.00 | Ari, Ren, Nic | — |
 | Gambas à guilho | ×1 | €18.50 | Ari, Ren, Nic | — |
-| Vinho Verde (bottle) | ×2 | €32.00 | Ari only | **Ren, Nic** |
+| Vinho Verde (bottle) | ×2 | €32.00 | Ari, Ren, Nic | **Ren, Nic** (manual deselect) |
 | Pastéis de nata | ×3 | €6.00 | Ari, Ren, Nic | — |
 
 - **Total:** €108.00 · 5 items.
-- **Per-person subtotal (as shown on the footer):** Ari €57.34 · Ren €25.33 · Nic €25.33.
+- Every line — including the Vinho Verde — starts split evenly across all three, so the exclusion
+  reads as a live interaction rather than a pre-set state (issue #97). The user deselects Ren and Nic
+  from the wine on-screen via the chip toggle; the app doesn't seed the exclusion for them.
+- **Per-person subtotal once wine is manually excluded (as shown on the footer):** Ari €57.34 ·
+  Ren €25.33 · Nic €25.33.
 - One line (Vinho Verde) carries an OCR "needs a second look" warning in the mock — keep that
   affordance tied to a real line, not a decorative one-off.
 - Restaurant/venue name: **Cervejaria Ramiro** (also the poll winner — same venue across the demo,
   which is what makes the flow read as one coherent trip rather than disconnected screens).
 
 Notes:
-- The **wine exclusion** (Ren + Nic left off) is a graded moment — it's how the exclusion logic is
-  shown. Confirmed in the hi-fi mock via the outlined (unassigned) avatar chips on the Vinho Verde row.
+- The **wine exclusion** (Ren + Nic deselected from the Vinho Verde line) is a graded moment — it's
+  how the exclusion logic is shown, driven live by the user rather than defaulted. Confirmed in the
+  hi-fi mock via the outlined (unassigned) avatar chips on the Vinho Verde row once toggled off.
 
 ## Poll
 
@@ -224,7 +229,8 @@ expense above, so the demo stays internally consistent.
 
 - **Merchant:** Cervejaria Ramiro
 - **Total:** €108.00 (5 items)
-- **Suggested split:** even across items as itemized above, with Vinho Verde excluding Ren and Nic
+- **Suggested split:** even across items as itemized above; Vinho Verde starts even too, with Ren
+  and Nic excluded only once manually deselected on-screen
 
 ## Settlement
 
