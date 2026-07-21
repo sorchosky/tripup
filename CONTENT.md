@@ -275,6 +275,14 @@ who owes what so the line's width never varies with which debtors are named:
 
 > "We'll send a push notification containing itemized shares to participants."
 
+**"You've been paid" toast (issue #109):** shown on Trip Detail after Ari returns from
+`SettlementConfirmationScreen`'s "Back to the trip" CTA, confirming the notification that screen already
+promises ("You'll receive a notification when the trip participants have paid you back."). Addressed to
+Ari in second person, no participant name (avoids the same name-in-status problem flagged for the
+Activity "Redeemed by Ari" line — this toast is a general nudge, not a per-payee status):
+
+- "You've been paid. View payment details in the Activity tab."
+
 ## Activity feed (issue #57; eyebrows + settle lifecycle reworked in #104)
 
 New surface — a computed digest of the same live trip state used elsewhere (poll, settle-up), not a

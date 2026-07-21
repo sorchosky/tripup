@@ -7,10 +7,10 @@
  * tappable itinerary row.
  */
 
-import { useMemo, useRef, useState, type ReactNode, type UIEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState, type ReactNode, type UIEvent } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Screen, NavHeader, isScrolled } from '../components/Screen';
-import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, Menu, type MenuItemDef } from '../components/ui';
+import { Eyebrow, Pill, AvatarGroup, TabBar, Fab, Menu, Toast, type MenuItemDef } from '../components/ui';
 import {
   ArrowLeft,
   Ellipsis,
@@ -82,8 +82,14 @@ function routeForItem(item: ItineraryItem): string | null {
 // (Screen.module.css) — the same literal-height convention those already use.
 const NAV_HEADER_HEIGHT = 56;
 
+// Issue #109: the "You've been paid" toast fires a beat after landing back on the hub rather than the
+// instant it mounts — the same staged-timer feel as PollVotingScreen's VOTE_SEQUENCE, so it reads as a
+// notification arriving, not a static confirmation baked into the page.
+const PAID_TOAST_DELAY_MS = 900;
+
 export default function TripDetailScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { state, dispatch } = useTrip();
   const [tripMenuOpen, setTripMenuOpen] = useState(false);
   const tripMenuBtnRef = useRef<HTMLButtonElement>(null);
@@ -93,6 +99,24 @@ export default function TripDetailScreen() {
   // Issue #87: fades the header's backdrop blur in once the body has scrolled at all — transparent,
   // no blur, at rest.
   const [headerBackdropVisible, setHeaderBackdropVisible] = useState(false);
+  // Issue #109: fires only when arriving via SettlementConfirmationScreen's "Back to the trip" CTA (the
+  // `paidToast` location.state flag it sets), and only once per settle-up completion — a fresh
+  // navigation to /trip from anywhere else (tab bar, back button) carries no location.state, so this
+  // doesn't refire on every future visit even though `state.requestsSentAt` stays set for the rest of
+  // the trip.
+  const [paidToastMessage, setPaidToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const shouldShowPaidToast = Boolean(
+      (location.state as { paidToast?: boolean } | null)?.paidToast && state.requestsSentAt,
+    );
+    if (!shouldShowPaidToast) return;
+    const timer = window.setTimeout(() => {
+      setPaidToastMessage("You've been paid. View payment details in the Activity tab.");
+    }, PAID_TOAST_DELAY_MS);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dayGroups = useMemo(() => groupItineraryByDay(state.itinerary), [state.itinerary]);
 
@@ -142,6 +166,7 @@ export default function TripDetailScreen() {
   ];
 
   return (
+    <>
     <Screen
       onScroll={handleScroll}
       nav={
@@ -242,5 +267,7 @@ export default function TripDetailScreen() {
         </section>
       ))}
     </Screen>
+    <Toast message={paidToastMessage} onDismiss={() => setPaidToastMessage(null)} />
+    </>
   );
 }
