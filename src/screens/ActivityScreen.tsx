@@ -20,6 +20,7 @@
  *     `SETTLEMENT_TIMELINE` (mock.ts), same treatment as the poll's `closedAt`.
  */
 
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { Eyebrow, Pill, Avatar, TabBar } from '../components/ui';
@@ -33,7 +34,13 @@ const TODAY_ISO = NARRATIVE_TODAY.toISOString().slice(0, 10);
 
 export default function ActivityScreen() {
   const navigate = useNavigate();
-  const { state, derived } = useTrip();
+  const { state, dispatch, derived } = useTrip();
+
+  // Opening the Activity tab is what the #105 badge is warning about — clear it the moment this
+  // screen mounts, same instant the TabBar (rendered here too) stops showing the dot.
+  useEffect(() => {
+    dispatch({ type: 'VIEW_ACTIVITY' });
+  }, [dispatch]);
 
   const votesIn = state.poll.options.reduce((n, o) => n + o.votes, 0);
   const votedRows = state.poll.options.flatMap((o) => o.votedBy.map((id) => ({ id, optionName: o.name })));
