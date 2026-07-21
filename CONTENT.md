@@ -60,11 +60,12 @@ one trip in it.
 ## Participants
 
 The reference group from the scenario. Ari is the Organizer; Ren and Nic are Participants. Confirmed
-by the hi-fi mocks — no 4th participant appears (avatar rows are consistently A / R / N).
+by the hi-fi mocks — no 4th participant appears (avatar rows are consistently Ar / Re / Ni, per
+issue #98's two-initial fallback).
 
 | Name | Role | Notes |
 | --- | --- | --- |
-| Ari | Organizer | Sets up the trip, the "you"/primary user in most flows. Has a placeholder photo avatar (see Avatars below); organizer/POV on all three trips. |
+| Ari | Organizer | Sets up the trip, the "you"/primary user in most flows. Renders as a two-initial avatar like everyone else (see Avatars below); organizer/POV on all three trips. |
 | Ren | Participant | Shows up hangry (poll-notification reference); manually deselected from the wine split |
 | Nic | Participant | Manually deselected from the wine split |
 | Josie | Participant | Joins the Tokyo trip (upcoming) — not part of the Lisbon scenario |
@@ -73,11 +74,16 @@ by the hi-fi mocks — no 4th participant appears (avatar rows are consistently 
 
 ### Avatars
 
-Ari is the only participant with a photo avatar (`avatarUrl`) — a placeholder gradient-silhouette SVG
-(`src/assets/avatar-ari.svg`), since egress is blocked here and a real headshot can't be fetched. It's
-marked as a placeholder in code and swapped for a real photo later. Ren, Nic, Josie, Michael, and
-Genevieve all render as initials (the `Avatar` component's fallback) — per the issue, only the
-photo/fallback pairing (Ari vs. Nic/Ren) needed to be demonstrated.
+All participants — Ari included — render as a two-initial fallback (the `Avatar` component's
+default): the first two letters of the name for single-name participants (Ar / Re / Ni / Jo / Mi /
+Ge), or first+last initial where a surname exists. No participant currently carries an `avatarUrl`.
+
+Issue #98 overrides #59 (the photorealistic-images super-ticket, which had deliberately given Ari a
+placeholder photo avatar to demonstrate the photo/fallback pairing). Per #98's explicit instruction,
+that pairing is retired: Ari's `avatarUrl` was removed from `src/data/mock.ts` so Ari renders initials
+app-wide, matching everyone else, and reads clearly on the receipt/settle-up rows. The unused
+`src/assets/avatar-ari.svg` file is left in place (nothing else references it) but is no longer wired
+into any component.
 
 > Debt consolidation reads fine with 3 people given the confirmed expense set below (~2 transfers to
 > settle). No 4th participant needed — the hi-fi mocks settle this.
@@ -104,9 +110,9 @@ a placeholder — the gradient/line-art SVGs and fake receipt lines they replace
 | Cervejaria Ramiro (dining room) | `cervejaria-ramiro.webp` | Poll-reveal winner card (`PollClosedScreen`), with the blurred-glow treatment (`ImageGlow`) — see DESIGN.md → Component patterns |
 | Cervejaria Ramiro receipt | `receipt-cervejaria-ramiro.png` | Receipt capture, populated state (`SplitScreen`) |
 
-No other image slot in the app has a supplied file — everything else (participant avatars besides
-Ari, the settle-up hero per issue #61) stays on today's placeholder per the scope contract in
-`CLAUDE.md` ("don't invent art").
+No other image slot in the app has a supplied file — everything else (participant avatars, including
+Ari as of issue #98; the settle-up hero per issue #61) stays on today's placeholder (two-initial
+fallback, for avatars) per the scope contract in `CLAUDE.md` ("don't invent art").
 
 ## Expenses
 
