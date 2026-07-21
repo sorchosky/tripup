@@ -22,7 +22,7 @@ export default function HomeScreen() {
   return (
     <Screen tabBar={<TabBar />}>
       <div className={styles.top}>
-        <Compass size={24} />
+        <Compass size={28} />
         <span className={styles.wordmark}>TripUp</span>
       </div>
 
