@@ -166,6 +166,19 @@ The "where to eat" decision used on screens 4–6. Sourced from the `poll-status
   Hygge Kaffe, Breakfast Lovers Chiado) above, plus Lodging (Dear Lisbon - Gallery House). Mirrored in
   code as `LISBON_POLL_SUGGESTIONS` in `src/data/mock.ts`; `CreatePollScreen` de-dupes it against
   `AI_SUGGESTED_SPOTS` so a name never shows twice across the two groups.
+- **"Recommend with AI" autofill card (issue #113):** a dismissible card below the option rows on
+  Create poll — a screen-level, bulk-fill shortcut to the same `AI_SUGGESTED_SPOTS` data the per-field
+  typeahead above already surfaces one row at a time (not a return of the old standalone "AI Suggest"
+  chip issue #93 replaced — that chip suggested into one focused field; this bulk-fills the whole list).
+  Locked copy:
+  - Title: "Recommend with AI"
+  - Body: "We'll fill in spots you've liked on past trips." — voice-passed from the mock's starting
+    point ("We'll recommend nearby spots for you based on places you've liked on your previous trips.")
+    down to one short, fact-first sentence per `BRAND.md`.
+  - CTA: "Add AI recommendations", with the `Sparkles` icon (same glyph as the typeahead's AI rows,
+    issue #103).
+  - Tapping the CTA replaces the option rows outright with one row per `AI_SUGGESTED_SPOTS` entry, in
+    that array's order — overwrites any already-typed values rather than only filling blanks.
 
 > Supersedes an earlier placeholder candidate list (A Nossa Casa, Taberna Sal Grosso, Black Pavilion
 > Restaurant) drafted before the hi-fi poll mock existed. The mock is the rendered screen, so it's
