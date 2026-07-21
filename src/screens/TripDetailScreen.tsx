@@ -226,8 +226,8 @@ export default function TripDetailScreen() {
                       if (route) navigate(route);
                     }}
                   >
-                    {item.time ? <span className={styles.time}>{item.time}</span> : null}
                     <div className={styles.eventBody}>
+                      {item.time ? <span className={styles.time}>{item.time}</span> : null}
                       <div className={styles.eventTitleRow}>
                         <span className={styles.eventTitle}>{item.title}</span>
                         {statusPill(item.status)}
