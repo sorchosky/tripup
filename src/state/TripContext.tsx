@@ -7,6 +7,9 @@
  *   - CAST_VOTE        → live vote counts tick up                        [screen 5]
  *   - CLOSE_POLL       → winner resolves AND writes into the itinerary   [screen 6]
  *   - TOGGLE_ASSIGNEE  → per-item exclusion; balances recalculate        [screen 7]
+ *   - RESET_ASSIGNMENT → "Clear" on Split reseeds the receipt split,
+ *                         independent of the poll/participants/settled
+ *                         state a full app RESET would also touch        [screen 7]
  *   - SETTLE           → transfers confirmed; the dinner flips to paid,
  *                         requests-sent timestamp stamped                [screens 9–10, Activity]
  *
@@ -78,6 +81,7 @@ export type TripAction =
   | { type: 'CLOSE_POLL' }
   | { type: 'ADD_ITINERARY_ITEM'; item: ItineraryItem }
   | { type: 'TOGGLE_ASSIGNEE'; itemId: string; personId: string }
+  | { type: 'RESET_ASSIGNMENT' }
   | { type: 'SETTLE' }
   | { type: 'VIEW_ACTIVITY' }
   | { type: 'RESET' };
@@ -158,6 +162,13 @@ function reducer(state: TripState, action: TripAction): TripState {
         ? current.filter((id) => id !== action.personId)
         : [...current, action.personId];
       return { ...state, assignment: { ...state.assignment, [action.itemId]: next } };
+    }
+
+    case 'RESET_ASSIGNMENT': {
+      // Scoped to the receipt split (issue #96's "Clear") — reseeds item assignments back to the
+      // receipt's default split, unlike the sweeping 'RESET' below which also wipes the poll,
+      // roster, and settled status. Split's "Clear" only owns the receipt/assignment data.
+      return { ...state, assignment: seedAssignment() };
     }
 
     case 'SETTLE': {
