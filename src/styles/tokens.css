@@ -90,6 +90,7 @@
   --blur-header: 12px;
   --header-backdrop-top: rgba(246, 246, 244, 0.82);    /* --color-surface, near-opaque at the header's top edge */
   --header-backdrop-bottom: rgba(246, 246, 244, 0);    /* fades to fully transparent by the header's bottom edge */
+  --header-blur-feather: 8px;  /* issue #88 — mask-image fade so the backdrop-filter's own edge is soft, not a hard blur/no-blur line */
 
   /* ---- Glass-accent primary button (issue #52) — the poll create/vote CTAs float fixed over scrolling
    * content with no `.glass` footer card behind them, so the button itself carries the glass read:

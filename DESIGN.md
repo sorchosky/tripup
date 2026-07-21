@@ -167,7 +167,11 @@ Two-family system:
   (`--header-backdrop-top` → `--header-backdrop-bottom`) plus a light `--blur-header` (12px) blur.
   Deliberately distinct from the `.glass` treatment above (thinner, gradient rather than opaque,
   no elevation/shadow) — it's chrome separation, not the frosted-glass footer/tab-bar/nav-button
-  material. On the trip hub, `NavHeader`'s `centerTitle`/`centerTitleVisible` props additionally fade
+  material. The backdrop's downward overhang and a `mask-image` fade both key off
+  `--header-blur-feather` (8px, issue #88) so the `backdrop-filter` itself tapers out over that last
+  8px instead of cutting off in a hard blur/no-blur line — the background gradient already fades, but
+  a backdrop-filter needs its own mask to soften. On the trip hub, `NavHeader`'s
+  `centerTitle`/`centerTitleVisible` props additionally fade
   the page's in-body `<h1>` into the header's center once it scrolls underneath (tracked via `Screen`'s
   `onScroll` signal comparing the heading's `getBoundingClientRect()` against the header's own height),
   and fade it back out at the top — the title span stays mounted at all times so the transition never
