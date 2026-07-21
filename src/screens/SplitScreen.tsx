@@ -47,6 +47,8 @@ export default function SplitScreen() {
     return (
       <Screen bleed>
         <div className={styles.capture}>
+          <img src={receiptPhoto} alt="" aria-hidden className={styles.captureBackdrop} />
+          <div className={styles.captureScrim} aria-hidden />
           <button
             type="button"
             className={styles.captureCancel}
