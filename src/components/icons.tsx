@@ -130,6 +130,17 @@ export function Camera({ size = 20, className, strokeWidth = 2 }: IconProps) {
   );
 }
 
+export function Receipt({ size = 20, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z" />
+      <path d="M8 7h8" />
+      <path d="M8 11h8" />
+      <path d="M8 15h5" />
+    </svg>
+  );
+}
+
 export function Compass({ size = 24, className, strokeWidth = 2 }: IconProps) {
   return (
     <svg {...base(size, className)} strokeWidth={strokeWidth}>

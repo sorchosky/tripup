@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Avatar, Button } from '../components/ui';
-import { ArrowLeft, Camera, X } from '../components/icons';
+import { ArrowLeft, Camera, Receipt, X } from '../components/icons';
 import { DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
@@ -123,7 +123,7 @@ export default function SplitScreen() {
         {stage === 'empty' ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon} aria-hidden>
-              <Camera size={26} />
+              <Receipt size={26} />
             </div>
             <p className={styles.emptyTitle}>No receipt yet.</p>
             <p className={styles.emptySub}>Snap the tab and we&apos;ll do the math from there.</p>
