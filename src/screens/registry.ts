@@ -32,7 +32,7 @@ export const SCREENS: ScreenDef[] = [
   { id: '6', path: '/poll/closed', title: 'Poll closed → itinerary', designRef: 'DESIGN.md §Screens 6', note: 'HI-FI. Result resolves and writes into the itinerary.' },
   // Screens 7 + 8 are fused into one "Scan & assign" step, matching the hi-fi mock.
   { id: '7-8', path: '/split', title: 'Scan & assign (log expense + exclusions)', designRef: 'DESIGN.md §Screens 7–8', note: 'HI-FI. Receipt + itemized split; per-item exclusion; live subtotals.' },
-  { id: '9', path: '/settle', title: 'Debt consolidation / Settle up', designRef: 'DESIGN.md §Screens 9', note: 'Minimum-transfer settlement (real logic).' },
+  { id: '9', path: '/settle', title: 'Debt consolidation / Settle Up', designRef: 'DESIGN.md §Screens 9', note: 'Minimum-transfer settlement (real logic).' },
   { id: '10', path: '/settle/done', title: 'Settlement confirmation', designRef: 'DESIGN.md §Screens 10', note: 'Settled — everyone’s even.' },
   // Cross-cutting hub screen, added per issue #57 — deliberately beyond the ≤10-screen budget above
   // (destination for #55; surfaces the active poll and settle-up state from anywhere via the tab bar).

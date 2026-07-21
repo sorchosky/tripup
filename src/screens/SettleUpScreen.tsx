@@ -149,11 +149,11 @@ export default function SettleUpScreen() {
     >
       <div className={styles.body}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Settle up</h1>
+          <h1 className={styles.title}>Settle Up</h1>
           <div className={styles.steps}>
             <span className={styles.stepDone}>Scan &amp; assign</span>
             <span className={styles.stepDot} aria-hidden />
-            <span className={styles.stepActive}>Settle up</span>
+            <span className={styles.stepActive}>Settle Up</span>
           </div>
         </div>
 
