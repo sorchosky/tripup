@@ -111,10 +111,11 @@
   --color-shimmer-highlight: rgba(255, 255, 255, 0.85);
   --shimmer-duration: 1000ms;
 
-  /* ---- Settlement progress ring (issue #39) — the ring's internal geometry (radius, stroke) lives in
-   * viewBox-space unitless numbers in SettleRing.tsx, same precedent as the existing icon SVGs
-   * (src/components/icons.tsx) — this token only governs its rendered footprint, so the container size
-   * stays a real design decision instead of an inline literal. ---- */
+  /* ---- Settle Up hero chart footprint (issue #39, repurposed by #99 from a binary progress ring to
+   * the MealCostDonut) — the chart's internal geometry (radius, stroke) lives in viewBox-space unitless
+   * numbers in MealCostDonut.tsx, same precedent as the existing icon SVGs (src/components/icons.tsx) —
+   * this token only governs its rendered footprint, so the container size stays a real design decision
+   * instead of an inline literal. ---- */
   --ring-size: 132px;
 
   /* ---- Avatar-initial chip sizing (DESIGN.md → Component patterns) ---- */

@@ -1,4 +1,4 @@
-/* SettleRing — see tokens.css → "Settlement progress ring" for the sizing token this consumes. */
+/* MealCostDonut — see tokens.css → "Settlement progress ring" for the sizing token this reuses. */
 
 .wrap {
   position: relative;
@@ -14,14 +14,16 @@
   height: 100%;
 }
 
-.track {
+/* Already-accounted-for portion of the meal cost (Ari's own share) — neutral, not a status color;
+   the point of this segment is "not part of the debt," not "good." */
+.paidArc {
   stroke: var(--color-surface-neutral);
 }
 
-/* Continuous amber → green interpolation driven by the same fraction that draws the arc (--progress,
-   set inline per render) — never a flat two-state color swap. */
-.arc {
-  stroke: color-mix(in srgb, var(--color-settled) var(--progress, 0%), var(--color-owed));
+/* Still-outstanding portion (oweTotal) — the segment the eye should land on, so it gets the
+   warning/needs-review role rather than the neutral one. */
+.outstandingArc {
+  stroke: var(--color-owed);
 }
 
 .center {
