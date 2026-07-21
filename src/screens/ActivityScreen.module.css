@@ -28,7 +28,6 @@
   background: var(--color-surface-raised);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--elevation-card);
   padding: var(--space-4);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
