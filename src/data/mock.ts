@@ -7,21 +7,21 @@
  */
 
 import type { ComponentType } from 'react';
-import ariAvatar from '../assets/avatar-ari.svg';
 import { LisbonSkyline, TokyoSkyline, ParisSkyline } from '../assets/skylines';
 
 export interface Participant {
   id: string;
   name: string;
   role: 'organizer' | 'participant';
-  /** Placeholder headshot (CONTENT.md → Participants). Omitted participants fall back to initials. */
+  /** Placeholder headshot (CONTENT.md → Participants). Omitted participants fall back to two-initial avatars. */
   avatarUrl?: string;
 }
 
 // Reference group from the scenario (CONTENT.md → Participants). Ari organizes; Ren + Nic participate.
 // Josie/Michael/Genevieve join the Tokyo/Paris trips (CONTENT.md → Other trips).
+// Ari renders initials app-wide (issue #98 overrides #59's photo/fallback demo pairing).
 export const PARTICIPANTS: Participant[] = [
-  { id: 'ari', name: 'Ari', role: 'organizer', avatarUrl: ariAvatar },
+  { id: 'ari', name: 'Ari', role: 'organizer' },
   { id: 'ren', name: 'Ren', role: 'participant' },
   { id: 'nic', name: 'Nic', role: 'participant' },
   { id: 'josie', name: 'Josie', role: 'participant' },

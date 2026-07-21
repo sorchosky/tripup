@@ -333,8 +333,17 @@ const variantClass: Record<AvatarVariant, string> = {
   outline: styles.avatarOutline,
 };
 
+/** Two-initial fallback: first+last initial when a surname exists, else the name's first two letters. */
+function initialsFor(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length > 1) {
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
+  return (parts[0] ?? '').slice(0, 2).toUpperCase();
+}
+
 interface AvatarProps {
-  /** Participant id (initial is derived from the roster) or a literal single character. */
+  /** Participant id (initials are derived from the roster) or a literal string (used as-is, max 2 chars). */
   personId?: string;
   initial?: string;
   size?: AvatarSize;
@@ -354,12 +363,12 @@ export function Avatar({
   ariaPressed,
 }: AvatarProps) {
   const person = personId ? participantById(personId) : undefined;
-  const letter = initial ?? (person ? person.name.charAt(0) : '?');
+  const letters = initial ?? (person ? initialsFor(person.name) : '?');
   const cls = `${styles.avatar} ${sizeClass[size]} ${variantClass[variant]} ${onClick ? styles.avatarButton : ''}`;
   const content = person?.avatarUrl ? (
     <img className={styles.avatarPhoto} src={person.avatarUrl} alt="" aria-hidden />
   ) : (
-    letter
+    letters
   );
   if (onClick) {
     return (
