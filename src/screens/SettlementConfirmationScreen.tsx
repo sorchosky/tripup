@@ -9,7 +9,8 @@
  * the chevron/expand affordance or the old "Request" tag (already gone as of #102), since there's
  * nothing left to request from here. The footer drops the `.glass` footer-bar card: "Back to the trip"
  * is a bare floating button (`floatingFooter`, matching the #52/#101 pattern used by SettleUpScreen's
- * CTA), not the boxed footer this screen used to have.
+ * CTA), not the boxed footer this screen used to have — which per #52 pairs `floatingFooter` with the
+ * `primary-glass` `Button` variant (issue #132 audit: this had drifted to the flat `primary` default).
  */
 
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +31,11 @@ export default function SettlementConfirmationScreen() {
     <Screen
       bleed
       floatingFooter
-      footer={<Button onClick={() => navigate('/trip')}>Back to the trip</Button>}
+      footer={
+        <Button variant="primary-glass" onClick={() => navigate('/trip')}>
+          Back to the trip
+        </Button>
+      }
     >
       <div className={styles.body}>
         <div className={styles.badge}>
