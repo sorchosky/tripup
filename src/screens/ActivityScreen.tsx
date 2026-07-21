@@ -141,10 +141,28 @@ export default function ActivityScreen() {
         ) : null}
 
         {!hasContent ? (
-          <div className={styles.empty}>
-            <span className={styles.emptyStrong}>Nothing moving yet.</span> Vote in a poll or log an
-            expense, and it&apos;ll show up here.
-          </div>
+          <>
+            <div className={styles.empty}>
+              <span className={styles.emptyStrong}>Nothing moving yet.</span> Vote in a poll or log an
+              expense, and it&apos;ll show up here.
+            </div>
+            {/* Feed-in-waiting: muted skeleton cells, not fabricated activity — see CLAUDE.md's
+                placeholder rule and issue #106. */}
+            <div className={styles.placeholders} aria-hidden>
+              <div className={styles.placeholderCard}>
+                <span className={`${styles.placeholderLine} ${styles.placeholderEyebrow}`} />
+                <span className={`${styles.placeholderLine} ${styles.placeholderTitle}`} />
+              </div>
+              <div className={styles.placeholderCard}>
+                <span className={`${styles.placeholderLine} ${styles.placeholderEyebrow}`} />
+                <span className={`${styles.placeholderLine} ${styles.placeholderTitleShort}`} />
+              </div>
+              <div className={styles.placeholderCard}>
+                <span className={`${styles.placeholderLine} ${styles.placeholderEyebrow}`} />
+                <span className={`${styles.placeholderLine} ${styles.placeholderTitle}`} />
+              </div>
+            </div>
+          </>
         ) : null}
       </div>
     </Screen>
