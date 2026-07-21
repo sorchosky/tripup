@@ -5,7 +5,8 @@
  * typeahead (issue #93, replacing the old standalone "AI Suggest" chip): the first 3 rows are AI
  * picks pulled from past trips, everything below is a broader sample of real Lisbon venues — tapping
  * a row fills the field and closes the dropdown. "Send poll to participants" opens it to the rest of
- * the group — one tap sends, landing on the poll-sent confirmation (#55) before live voting (screen 5).
+ * the group — one tap sends and drops straight into live voting (screen 5), confirmed by a toast
+ * there rather than a separate confirmation screen (issue #104, superseding #55's `PollSentScreen`).
  */
 
 import { useState } from 'react';
@@ -137,7 +138,10 @@ export default function CreatePollScreen() {
           disabled={!canSend}
           onClick={() => {
             dispatch({ type: 'OPEN_POLL' });
-            navigate('/poll/sent');
+            // The send confirmation now surfaces as a toast on the voting screen (issue #104)
+            // instead of a dedicated `/poll/sent` screen — `pollSent` is the on-mount trigger flag
+            // `PollVotingScreen` reads once and clears.
+            navigate('/poll', { state: { pollSent: true } });
           }}
         >
           Send poll to participants
