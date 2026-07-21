@@ -181,7 +181,13 @@
   margin-top: var(--space-3);
 }
 
-/* ---- Mocked camera capture (receipt-scan is mocked per the scope contract — no real OCR/camera) ---- */
+/* ---- Mocked camera capture (receipt-scan is mocked per the scope contract — no real OCR/camera) ----
+ * The receipt photo sits as the lowest layer, full-bleed behind every other element (#95) — this is
+ * the "you're pointing a camera at the actual receipt" illusion, not a real live feed. A dark scrim
+ * above it (same tone as `--color-text`, decomposed to rgba for the alpha channel — matching the
+ * BottomSheet `.scrim` convention) keeps the dashed viewfinder/hint/shutter legible over a busy photo.
+ * Every layer gets an explicit position + z-index so paint order is unambiguous rather than relying on
+ * DOM order against the absolutely-positioned backdrop. */
 .capture {
   position: relative;
   display: flex;
@@ -191,11 +197,27 @@
   gap: var(--space-4);
   padding: var(--space-5);
   background: var(--color-text);
+  overflow: hidden;
+}
+.captureBackdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.captureScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(22, 25, 42, 0.5);
 }
 .captureCancel {
   position: absolute;
   top: var(--space-4);
   left: var(--space-4);
+  z-index: 3;
   width: 44px;
   height: 44px;
   border-radius: var(--radius-full);
@@ -208,6 +230,8 @@
   padding: 0;
 }
 .captureViewfinder {
+  position: relative;
+  z-index: 2;
   width: 220px;
   height: 300px;
   border: 1.5px dashed rgba(255, 255, 255, 0.5);
@@ -217,11 +241,20 @@
   color: rgba(255, 255, 255, 0.55);
 }
 .captureHint {
+  position: relative;
+  z-index: 2;
   font-size: var(--font-size-label);
   color: rgba(255, 255, 255, 0.75);
   text-align: center;
 }
+/* Pinned near the frame bottom, safe-area aware — matches the `env(safe-area-inset-bottom)` pattern
+   used by the floating footer/tab-bar hosts in Screen.module.css, rather than sitting in flex flow. */
 .shutter {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
   width: 72px;
   height: 72px;
   border-radius: var(--radius-full);
@@ -232,7 +265,7 @@
   cursor: pointer;
   padding: 0;
 }
-.shutter:active { transform: scale(0.96); }
+.shutter:active { transform: translateX(-50%) scale(0.96); }
 .shutterRing {
   width: 58px;
   height: 58px;
