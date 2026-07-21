@@ -144,10 +144,15 @@
   position: absolute;
   z-index: 0;
   inset: 0;
-  bottom: -24px;
+  bottom: calc(-1 * var(--header-blur-feather));
   background: linear-gradient(to bottom, var(--header-backdrop-top), var(--header-backdrop-bottom));
   -webkit-backdrop-filter: blur(var(--blur-header));
   backdrop-filter: blur(var(--blur-header));
+  /* issue #88 — feather the blur's own bottom edge over --header-blur-feather so the backdrop-filter
+     boundary fades out instead of cutting off in a hard line (the background gradient already fades,
+     but backdrop-filter itself does not without a mask). */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--header-blur-feather)), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--header-blur-feather)), transparent 100%);
   pointer-events: none;
   opacity: 0;
   transition: opacity 200ms ease;
