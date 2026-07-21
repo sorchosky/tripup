@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Button } from '../components/ui';
-import { ArrowLeft, ArrowUpRight, Plus, Star, Trash2 } from '../components/icons';
+import { ArrowLeft, ArrowUpRight, Plus, Sparkles, Trash2 } from '../components/icons';
 import { AI_SUGGESTED_SPOTS, LISBON_POLL_SUGGESTIONS } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import styles from './CreatePollScreen.module.css';
@@ -61,7 +61,7 @@ function SpotTypeahead({
           onClick={() => onSelect(name)}
         >
           <span>{name}</span>
-          <Star size={14} className={styles.typeaheadIconAi} />
+          <Sparkles size={14} className={styles.typeaheadIconAi} />
         </button>
       ))}
       {venues.map((name) => (
