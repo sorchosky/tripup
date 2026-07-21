@@ -7,10 +7,10 @@
  * solver in src/lib/settle.ts from the live balances — not hand-authored — so "you're owed €50.66" is a
  * fact about the data, and every transfer resolves to Ari because Ari fronted the whole receipt.
  *
- * "Confirm & settle" (#40) opens a partial-height confirm sheet instead of settling immediately — a
- * two-step Review/Pay segmented control inside it. Advancing to Pay and confirming is what actually
- * dispatches SETTLE; /settle/done stays the post-confirm destination (chosen over an inline sheet
- * success state — see PR).
+ * The confirm sheet from #40 (a two-step Review/Pay segmented control gating the SETTLE dispatch) is
+ * gone as of #102: "Send requests" dispatches SETTLE and navigates straight to /settle/done — no
+ * intermediate review/pay step. #103 replaces that destination with a dedicated request-sent
+ * confirmation; until then it's the existing SettlementConfirmationScreen.
  *
  * Hero rebuilt around a trip-metadata block + meal-cost donut (issue #99), replacing the earlier
  * photo-hero-with-blurred-glow treatment from issue #61 (ImageGlow + the "You're owed" photo badge —
@@ -29,13 +29,12 @@
  * exactly what they're squaring up before #103's request-sent confirmation reuses these same rows.
  */
 
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
-import { Eyebrow, Avatar, Button, SegmentedControl } from '../components/ui';
-import { BottomSheet } from '../components/BottomSheet';
+import { Eyebrow, Avatar, Button } from '../components/ui';
 import { MealCostDonut } from '../components/MealCostDonut';
-import { ArrowLeft, Info, Check, ChevronDown, ChevronUp } from '../components/icons';
+import { ArrowLeft, Info, ChevronDown, ChevronUp } from '../components/icons';
 import { participantById, DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
@@ -48,22 +47,12 @@ function joinNames(names: string[]): string {
   return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
 }
 
-/** The per-debtor "who pays whom" recap — the exact same rows on the main screen and the confirm
- * sheet's Review step, so the numbers a person confirms are the numbers they already saw (#40).
+/** The per-debtor "who pays whom" recap.
  *
  * Each row is an accordion (issue #100): avatar, name, amount, chevron up front; expanding reveals the
  * itemized shares (from `personItemShares`) that add up to that subtotal — a person can see exactly
- * what they're being asked to square up, not just the total. `idPrefix` keeps the expanded panel's
- * `id`/`aria-controls` pair unique when this list is mounted twice at once (main screen + confirm sheet). */
-function DebtorList({
-  transfers,
-  assignment,
-  idPrefix,
-}: {
-  transfers: Transfer[];
-  assignment: Assignment;
-  idPrefix: string;
-}) {
+ * what they're being asked to square up, not just the total. */
+function DebtorList({ transfers, assignment }: { transfers: Transfer[]; assignment: Assignment }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   function toggle(personId: string) {
@@ -79,7 +68,7 @@ function DebtorList({
     <div className={styles.debtors}>
       {transfers.map((t) => {
         const isOpen = expanded.has(t.fromId);
-        const panelId = `${idPrefix}-debtor-items-${t.fromId}`;
+        const panelId = `debtor-items-${t.fromId}`;
         const items = personItemShares(DINNER_RECEIPT, assignment, t.fromId);
         return (
           <div key={t.fromId} className={styles.debtorCard}>
@@ -120,14 +109,10 @@ function DebtorList({
   );
 }
 
-type ConfirmStep = 'review' | 'pay';
-
 export default function SettleUpScreen() {
   const navigate = useNavigate();
   const { dispatch, state, derived } = useTrip();
   const { transfers } = derived;
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [step, setStep] = useState<ConfirmStep>('review');
 
   const count = transfers.length;
   const countWord = count === 1 ? 'One transfer' : count === 2 ? 'Two transfers' : `${count} transfers`;
@@ -140,111 +125,58 @@ export default function SettleUpScreen() {
   // a faked async "computing" window — transfers/balances are synchronous and always resolved.
   const settleDisabled = transfers.length === 0 || state.settled;
 
-  function openConfirm() {
-    setStep('review');
-    setConfirmOpen(true);
-  }
-
-  function confirmPay() {
+  // #102: no confirm sheet — "Send requests" dispatches SETTLE and navigates straight on. #103 swaps
+  // /settle/done for a dedicated request-sent confirmation; until then it's the existing screen there.
+  function sendRequests() {
     dispatch({ type: 'SETTLE' });
-    // The sheet unmounts along with the rest of this screen on navigation, so no separate closing
-    // animation is needed on top of the route change.
     navigate('/settle/done');
   }
 
   return (
-    <Fragment>
-      <Screen
-        nav={<NavHeader onBack={() => navigate('/split')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to split" />}
-        floatingFooter
-        footer={
-          <Button variant="primary-glass" onClick={openConfirm} disabled={settleDisabled}>
-            Send requests
-          </Button>
-        }
-      >
-        <div className={styles.body}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>Settle up</h1>
-            <div className={styles.steps}>
-              <span className={styles.stepDone}>Scan &amp; assign</span>
-              <span className={styles.stepDot} aria-hidden />
-              <span className={styles.stepActive}>Settle up</span>
-            </div>
-          </div>
-
-          <p className={styles.lede}>
-            <span className={styles.ledeStrong}>{countWord} close it out.</span> Ari fronted the dinner,
-            so everyone just squares up with them.
-          </p>
-
-          <div className={styles.heroCard}>
-            <div className={styles.meta}>
-              <h2 className={styles.metaTitle}>Ramiro dinner</h2>
-              <p className={styles.metaSub}>Lisbon 2026</p>
-            </div>
-            <MealCostDonut totalCents={DINNER_RECEIPT.totalCents} outstandingCents={oweTotal} />
-          </div>
-
-          <div className={styles.sectionHead}>
-            <Eyebrow>Consolidated debts</Eyebrow>
-          </div>
-          <DebtorList transfers={transfers} assignment={state.assignment} idPrefix="main" />
-
-          <div className={styles.tip}>
-            <Info size={16} className={styles.tipIcon} />
-            <p className={styles.tipText}>
-              Reminders will send a push notification containing itemized shares to {joinNames(debtorNames)}.
-            </p>
+    <Screen
+      nav={<NavHeader onBack={() => navigate('/split')} leftIcon={<ArrowLeft />} leftAriaLabel="Back to split" />}
+      floatingFooter
+      footer={
+        <Button variant="primary-glass" onClick={sendRequests} disabled={settleDisabled}>
+          Send requests
+        </Button>
+      }
+    >
+      <div className={styles.body}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Settle up</h1>
+          <div className={styles.steps}>
+            <span className={styles.stepDone}>Scan &amp; assign</span>
+            <span className={styles.stepDot} aria-hidden />
+            <span className={styles.stepActive}>Settle up</span>
           </div>
         </div>
-      </Screen>
 
-      {confirmOpen ? (
-        <BottomSheet
-          title="Settle up"
-          variant="partial"
-          onClose={() => setConfirmOpen(false)}
-          footer={
-            <Button
-              onClick={step === 'review' ? () => setStep('pay') : confirmPay}
-              className={styles.pillCta}
-            >
-              {step === 'review' ? 'Continue to pay' : 'Confirm payment'}
-            </Button>
-          }
-        >
-          <SegmentedControl
-            ariaLabel="Settle up step"
-            value={step}
-            onChange={setStep}
-            options={[
-              { key: 'review', label: 'Review' },
-              { key: 'pay', label: 'Pay' },
-            ]}
-          />
+        <p className={styles.lede}>
+          <span className={styles.ledeStrong}>{countWord} close it out.</span> Ari fronted the dinner,
+          so everyone just squares up with them.
+        </p>
 
-          {step === 'review' ? (
-            <div className={styles.sheetSection}>
-              <p className={styles.sheetLede}>
-                {countWord} close it out — {euros(oweTotal)} total, from {joinNames(debtorNames)}.
-              </p>
-              <DebtorList transfers={transfers} assignment={state.assignment} idPrefix="sheet" />
-            </div>
-          ) : (
-            <div className={styles.sheetSection}>
-              <Eyebrow>Pay with</Eyebrow>
-              <div className={styles.paymentMethod}>
-                <span className={styles.paymentMethodLabel}>Apple Pay</span>
-                <Check size={16} className={styles.paymentMethodCheck} />
-              </div>
-              <p className={styles.sheetLede}>
-                Everyone&apos;s even, everyone&apos;s good. Confirm and Ari&apos;s tab closes for good.
-              </p>
-            </div>
-          )}
-        </BottomSheet>
-      ) : null}
-    </Fragment>
+        <div className={styles.heroCard}>
+          <div className={styles.meta}>
+            <h2 className={styles.metaTitle}>Ramiro dinner</h2>
+            <p className={styles.metaSub}>Lisbon 2026</p>
+          </div>
+          <MealCostDonut totalCents={DINNER_RECEIPT.totalCents} outstandingCents={oweTotal} />
+        </div>
+
+        <div className={styles.sectionHead}>
+          <Eyebrow>Consolidated debts</Eyebrow>
+        </div>
+        <DebtorList transfers={transfers} assignment={state.assignment} />
+
+        <div className={styles.tip}>
+          <Info size={16} className={styles.tipIcon} />
+          <p className={styles.tipText}>
+            Reminders will send a push notification containing itemized shares to {joinNames(debtorNames)}.
+          </p>
+        </div>
+      </div>
+    </Screen>
   );
 }
