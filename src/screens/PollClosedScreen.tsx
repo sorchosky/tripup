@@ -49,7 +49,10 @@ export default function PollClosedScreen() {
       }
       floatingFooter
       footer={
-        <Button variant="primary" onClick={() => navigate('/trip')}>
+        <Button
+          variant="primary"
+          onClick={() => navigate('/trip', { state: { scrollToDinner: true } })}
+        >
           View in {TRIP.name}
         </Button>
       }
