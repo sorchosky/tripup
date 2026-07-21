@@ -81,12 +81,19 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: var(--space-2) var(--space-5) var(--space-4);
+  /* issue #89 — extra bottom clearance (space-6, up from space-4) so the last row of scrollable
+     content always sits clear of the footer band below, rather than flush against it. */
+  padding: var(--space-2) var(--space-5) var(--space-6);
 }
 
 .footer {
   flex: 0 0 auto;
-  padding: 0 var(--space-5) var(--space-2);
+  /* issue #89 — a hairline top border gives the footer band a real edge to separate it from
+     scrolled content above (the search input previously read as flush against the last result
+     row with nothing marking where body content ends and footer chrome begins), plus safe-area
+     clearance below the search field on notched devices. */
+  border-top: 0.5px solid var(--color-border);
+  padding: var(--space-3) var(--space-5) calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
 }
 
 /* ---------- Partial-height overlay variant (#40) ---------- */
