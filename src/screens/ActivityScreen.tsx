@@ -1,18 +1,35 @@
 /**
  * Screen 11 — Activity feed (issue #57). The Activity tab's real destination: a computed digest of the
- * live trip state — the open poll and who's responded, the decided result, and who still owes what — so
- * the poll → split → settle journey has one place that ties it together instead of living only as a
- * banner on Trip Detail. No persisted event log; every card reads straight off `TripContext`/`derived`,
- * same source every other screen uses. New surface beyond the ≤10-screen inventory — see DESIGN.md.
+ * live trip state — the open poll and who's responded, the decided result, and the settle-up lifecycle
+ * — so the poll → split → settle journey has one place that ties it together instead of living only as
+ * a banner on Trip Detail. No persisted event log; every cell reads straight off `TripContext`/
+ * `derived`, same source every other screen uses. New surface beyond the ≤10-screen inventory — see
+ * DESIGN.md.
+ *
+ * Issue #104 reworks the feed's eyebrows and the settle-up half of the timeline:
+ *   - Every cell's eyebrow is now a date/time stamp ("Jun 17 · 6:32 PM"), not a static section label
+ *     ("Active poll" / "Poll decided" / "Settle up" / "Settled") — see `formatFeedEyebrow` in
+ *     `src/lib/dates.ts`. The open-poll section has no fixed clock reading in the mock data (votes
+ *     aren't individually timestamped), so its eyebrow is date-only rather than a fabricated time.
+ *   - The old "Settle up" (outstanding debtor cards) and "Settled" ("Everyone's even") sections are
+ *     gone. In their place: a single chronological tail — poll winner, then "Requests sent" once
+ *     `SETTLE` fires (`state.requestsSentAt`), then one payment-received cell per transfer, all
+ *     "redeemed by Ari" — matching the request being sent and the money landing back with whoever
+ *     fronted the tab. All three read off live state/derived data (`state.poll`, `state.requestsSentAt`,
+ *     `derived.transfers`); the clock readings on the settle cells are the fixed narrative timestamps in
+ *     `SETTLEMENT_TIMELINE` (mock.ts), same treatment as the poll's `closedAt`.
  */
 
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { Eyebrow, Pill, Avatar, TabBar } from '../components/ui';
-import { participantById } from '../data/mock';
+import { participantById, SETTLEMENT_TIMELINE } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
+import { formatFeedEyebrow, formatFeedEyebrowDateOnly, NARRATIVE_TODAY } from '../lib/dates';
 import styles from './ActivityScreen.module.css';
+
+const TODAY_ISO = NARRATIVE_TODAY.toISOString().slice(0, 10);
 
 export default function ActivityScreen() {
   const navigate = useNavigate();
@@ -23,26 +40,15 @@ export default function ActivityScreen() {
   const ranked = [...state.poll.options].sort((a, b) => b.votes - a.votes);
   const [winner, runnerUp] = ranked;
 
-  const dinnerLogged = state.itinerary.some((i) => i.id === 'dinner');
-  const showSettleUp = dinnerLogged && !state.settled && derived.transfers.length > 0;
-  const showSettled = dinnerLogged && state.settled;
-  // Grammar has to hold at 1 transfer too, not just the 2-transfer case the copy was drafted against
-  // (CONTENT.md) — the actual mock split resolves to a single transfer.
-  const transferCount = derived.transfers.length;
-  const settleUpSummary =
-    transferCount === 1
-      ? 'One transfer closes it out.'
-      : transferCount === 2
-        ? 'Two transfers close it out.'
-        : `${transferCount} transfers close it out.`;
-
   // Genuine empty state (issue #57): before the first vote, `poll.status` is 'none' — neither the
-  // open-poll nor the decided-poll section renders — and there's no expense yet either, so nothing
-  // else has anything to show. Reachable (a user can tap Activity right after opening the app), so it
-  // needs real in-voice copy rather than a blank screen below the title.
+  // open-poll nor the decided-poll cell renders — and there's no settle activity yet either, so
+  // nothing else has anything to show. Reachable (a user can tap Activity right after opening the
+  // app), so it needs real in-voice copy rather than a blank screen below the title.
   const showOpenPoll = state.poll.status === 'open';
   const showDecidedPoll = state.poll.status === 'closed' && !!winner;
-  const hasContent = showOpenPoll || showDecidedPoll || showSettleUp || showSettled;
+  const showRequestsSent = !!state.requestsSentAt;
+  const showPayments = showRequestsSent && derived.transfers.length > 0;
+  const hasContent = showOpenPoll || showDecidedPoll || showRequestsSent;
 
   return (
     <Screen tabBar={<TabBar />}>
@@ -52,7 +58,7 @@ export default function ActivityScreen() {
         {showOpenPoll ? (
           <section className={styles.section}>
             <div className={styles.sectionHead}>
-              <Eyebrow>Active poll</Eyebrow>
+              <Eyebrow>{formatFeedEyebrowDateOnly(TODAY_ISO)}</Eyebrow>
             </div>
             <button type="button" className={styles.pollCard} onClick={() => navigate('/poll')}>
               <div className={styles.pollCardHead}>
@@ -81,7 +87,7 @@ export default function ActivityScreen() {
         {showDecidedPoll ? (
           <section className={styles.section}>
             <div className={styles.sectionHead}>
-              <Eyebrow>Poll decided</Eyebrow>
+              <Eyebrow>{formatFeedEyebrow(TODAY_ISO, state.poll.closedAt)}</Eyebrow>
             </div>
             <button type="button" className={styles.pollCard} onClick={() => navigate('/poll/closed')}>
               <div className={styles.pollCardHead}>
@@ -94,36 +100,35 @@ export default function ActivityScreen() {
           </section>
         ) : null}
 
-        {showSettleUp ? (
+        {showRequestsSent ? (
           <section className={styles.section}>
             <div className={styles.sectionHead}>
-              <Eyebrow>Settle up</Eyebrow>
+              <Eyebrow>{formatFeedEyebrow(TODAY_ISO, SETTLEMENT_TIMELINE.requestsSentAt)}</Eyebrow>
             </div>
-            <div className={styles.debtors}>
-              {derived.transfers.map((t, i) => (
-                <button key={i} type="button" className={styles.debtorCard} onClick={() => navigate('/settle')}>
-                  <div className={styles.debtorWho}>
-                    <Avatar personId={t.fromId} size="sm" variant="neutral" />
-                    <span className={styles.debtorName}>
-                      {participantById(t.fromId).name} owes {euros(t.amount)}
-                    </span>
-                  </div>
-                  <span className={styles.requestTag}>Request</span>
-                </button>
-              ))}
+            <div className={styles.settledCard}>
+              <span className={styles.settledText}>Requests sent.</span>
+              <Pill tone="neutral">Awaiting payment</Pill>
             </div>
-            <p className={styles.sectionSub}>{settleUpSummary}</p>
           </section>
         ) : null}
 
-        {showSettled ? (
+        {showPayments ? (
           <section className={styles.section}>
             <div className={styles.sectionHead}>
-              <Eyebrow>Settled</Eyebrow>
+              <Eyebrow>{formatFeedEyebrow(TODAY_ISO, SETTLEMENT_TIMELINE.redeemedAt)}</Eyebrow>
             </div>
-            <div className={styles.settledCard}>
-              <span className={styles.settledText}>Everyone&apos;s even.</span>
-              <Pill tone="settled">Settled up</Pill>
+            <div className={styles.debtors}>
+              {derived.transfers.map((t) => (
+                <div key={t.fromId} className={styles.debtorCard}>
+                  <div className={styles.debtorWho}>
+                    <Avatar personId={t.fromId} size="sm" variant="neutral" />
+                    <span className={styles.debtorName}>
+                      {participantById(t.fromId).name} paid {euros(t.amount)}
+                    </span>
+                  </div>
+                  <Pill tone="settled">Redeemed by Ari</Pill>
+                </div>
+              ))}
             </div>
           </section>
         ) : null}

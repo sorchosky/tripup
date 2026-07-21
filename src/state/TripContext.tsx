@@ -7,7 +7,13 @@
  *   - CAST_VOTE        → live vote counts tick up                        [screen 5]
  *   - CLOSE_POLL       → winner resolves AND writes into the itinerary   [screen 6]
  *   - TOGGLE_ASSIGNEE  → per-item exclusion; balances recalculate        [screen 7]
- *   - SETTLE           → transfers confirmed; the dinner flips to paid   [screens 9–10]
+ *   - SETTLE           → transfers confirmed; the dinner flips to paid,
+ *                         requests-sent timestamp stamped                [screens 9–10, Activity]
+ *
+ * SETTLE (added #102 for "Send requests") is the single trigger for the whole settle lifecycle: it
+ * flips `settled`, flips the dinner itinerary item to paid, AND stamps `requestsSentAt` — the Activity
+ * feed (#104) reads that stamp to know when to show the "Requests sent" cell and, once it's set, the
+ * auto-added payment-received cells (derived off `derived.transfers`, not a second action/state).
  */
 
 import { createContext, useContext, useMemo, useReducer, type Dispatch, type ReactNode } from 'react';
@@ -18,6 +24,7 @@ import {
   INITIAL_ITINERARY,
   INITIAL_PARTICIPANT_IDS,
   PARTICIPANTS,
+  SETTLEMENT_TIMELINE,
   participantById,
   type ItineraryItem,
   type Participant,
@@ -49,6 +56,12 @@ export interface TripState {
   /** Per-receipt-item assignment for the dinner; seeded from each line's default split. */
   assignment: Assignment;
   settled: boolean;
+  /**
+   * When "Send requests" fired (SETTLE), stamped with `SETTLEMENT_TIMELINE.requestsSentAt` — the fixed
+   * narrative time, not `Date.now()` (see `src/lib/dates.ts` → `NARRATIVE_TODAY`). Null until then; the
+   * Activity feed (#104) gates its "Requests sent" + payment-received cells on this being set.
+   */
+  requestsSentAt: string | null;
 }
 
 export type TripAction =
@@ -78,6 +91,7 @@ function initialState(): TripState {
     itinerary: INITIAL_ITINERARY,
     assignment: seedAssignment(),
     settled: false,
+    requestsSentAt: null,
   };
 }
 
@@ -138,6 +152,7 @@ function reducer(state: TripState, action: TripAction): TripState {
     }
 
     case 'SETTLE': {
+      if (state.requestsSentAt) return state; // idempotent — one send per trip
       return {
         ...state,
         settled: true,
@@ -145,6 +160,9 @@ function reducer(state: TripState, action: TripAction): TripState {
         itinerary: state.itinerary.map((i) =>
           i.id === DINNER_ITINERARY_ITEM.id ? { ...i, status: 'paid' } : i,
         ),
+        // Stamps the moment the Activity feed's "Requests sent" cell (and, downstream, the
+        // payment-received cells) starts showing (#104).
+        requestsSentAt: SETTLEMENT_TIMELINE.requestsSentAt,
       };
     }
 

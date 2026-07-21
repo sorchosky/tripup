@@ -139,6 +139,18 @@ export const DINNER_RECEIPT = {
   ] as ReceiptItem[],
 };
 
+/**
+ * Settle-up lifecycle timestamps (issue #104). Same fixed-narrative-day treatment as
+ * `DINNER_POLL.closedAt`/`DINNER_RECEIPT.locationDate` (see `src/lib/dates.ts` → `NARRATIVE_TODAY`) —
+ * deliberate demo constants, not `Date.now()`, so the Activity feed's timeline stays on Jun 17
+ * regardless of when the demo is actually run. Requests go out shortly after the receipt is logged
+ * (21:44); the payout reads back a few minutes later, once Ari's redeemed it.
+ */
+export const SETTLEMENT_TIMELINE = {
+  requestsSentAt: '10:05 PM',
+  redeemedAt: '10:12 PM',
+};
+
 export interface Expense {
   id: string;
   label: string;
