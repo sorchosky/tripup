@@ -93,6 +93,48 @@
   cursor: pointer;
 }
 
+/* AI-autofill card (issue #113) — same card recipe as ActivityScreen's .pollCard/.debtorCard. */
+.aiCard {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-raised);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+.aiCardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.aiCardTitle {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+}
+.aiCardDismiss {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.aiCardBody {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-label);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-body);
+}
+.aiCardCta { margin-top: var(--space-4); }
+
 /* Typeahead dropdown (issue #93) — anchored under the focused option row, above the row below it. */
 .typeahead {
   position: absolute;

@@ -7,16 +7,29 @@
  * a row fills the field and closes the dropdown. "Send poll to participants" opens it to the rest of
  * the group — one tap sends and drops straight into live voting (screen 5), confirmed by a toast
  * there rather than a separate confirmation screen (issue #104, superseding #55's `PollSentScreen`).
+ *
+ * Issue #113: below the option rows / "Add option," a dismissible "Recommend with AI" card offers a
+ * screen-level shortcut to the same `AI_SUGGESTED_SPOTS` data already surfacing one row at a time in
+ * `SpotTypeahead` above — tapping its CTA bulk-fills the whole option list in one tap (replacing
+ * whatever's there, not appending) rather than requiring a per-field pick. A materially different job
+ * from the standalone "AI Suggest" chip issue #93 removed (that chip suggested into one focused field);
+ * this is a bulk autofill, not a reintroduction of that chip.
  */
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Button } from '../components/ui';
-import { ArrowLeft, ArrowUpRight, Plus, Sparkles, Trash2 } from '../components/icons';
+import { ArrowLeft, ArrowUpRight, Plus, Sparkles, Trash2, X } from '../components/icons';
 import { AI_SUGGESTED_SPOTS, LISBON_POLL_SUGGESTIONS } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import styles from './CreatePollScreen.module.css';
+
+// Locked copy — CONTENT.md → "AI autofill card" (issue #113). Voice-passed against BRAND.md (short,
+// fact-first, no exclamation point) from the mock's starting-point line.
+const AI_CARD_TITLE = 'Recommend with AI';
+const AI_CARD_BODY = "We'll fill in spots you've liked on past trips.";
+const AI_CARD_CTA = 'Add AI recommendations';
 
 interface OptionRow {
   key: string;
@@ -99,6 +112,9 @@ export default function CreatePollScreen() {
   const [options, setOptions] = useState<OptionRow[]>(() => [blankRow(), blankRow()]);
   // Which option row's typeahead is open, if any — only one dropdown shows at a time (issue #93).
   const [focusedKey, setFocusedKey] = useState<string | null>(null);
+  // Dismissing the AI-autofill card is local-only, for the remainder of this screen visit — no
+  // persistence, matching the scope contract for this phase (issue #113).
+  const [aiCardDismissed, setAiCardDismissed] = useState(false);
 
   function updateOption(key: string, value: string) {
     setOptions((prev) => prev.map((o) => (o.key === key ? { ...o, value } : o)));
@@ -111,6 +127,13 @@ export default function CreatePollScreen() {
   }
   function selectSuggestion(key: string, name: string) {
     updateOption(key, name);
+    setFocusedKey(null);
+  }
+  // Replaces the option rows outright with one row per AI_SUGGESTED_SPOTS entry, in that array's
+  // order — overwrites any already-typed values rather than only filling blanks, per the issue's
+  // explicit "replace... rather than appending" framing.
+  function autofillWithAI() {
+    setOptions(AI_SUGGESTED_SPOTS.map((name) => blankRow(name)));
     setFocusedKey(null);
   }
 
@@ -210,6 +233,27 @@ export default function CreatePollScreen() {
             <Plus size={16} />
             Add option
           </button>
+
+          {!aiCardDismissed && (
+            <div className={styles.aiCard}>
+              <div className={styles.aiCardHead}>
+                <span className={styles.aiCardTitle}>{AI_CARD_TITLE}</span>
+                <button
+                  type="button"
+                  className={styles.aiCardDismiss}
+                  onClick={() => setAiCardDismissed(true)}
+                  aria-label="Dismiss AI recommendations card"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+              <p className={styles.aiCardBody}>{AI_CARD_BODY}</p>
+              <Button variant="primary" className={styles.aiCardCta} onClick={autofillWithAI}>
+                <Sparkles size={16} />
+                {AI_CARD_CTA}
+              </Button>
+            </div>
+          )}
         </section>
       </div>
     </Screen>
