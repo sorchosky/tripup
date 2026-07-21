@@ -123,6 +123,8 @@ export function computeBalances(
  * creditor. For n people this yields at most n−1 transfers, which is optimal for the balanced,
  * few-party case this app deals in (a full min-cash-flow is NP-hard in general; the greedy result is
  * what a person would do by hand and matches the "two transfers close it out" narrative here).
+ *
+ * See settle.test.ts's cycle fixture for a worked proof that this beats a naive pairwise mesh.
  */
 export function settle(balances: Balance[]): Transfer[] {
   const creditors = balances
