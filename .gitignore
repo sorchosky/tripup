@@ -3,6 +3,9 @@ dist
 dist-ssr
 *.local
 
+# Claude Code local agent scratch (isolated worktrees, session state)
+.claude/
+
 # Editor / OS
 .DS_Store
 .vscode/*
