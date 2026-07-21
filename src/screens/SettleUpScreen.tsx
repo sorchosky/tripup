@@ -19,9 +19,14 @@
  * / Lisbon 2026" as plain metadata, and a `MealCostDonut` plotting the full receipt total
  * (`DINNER_RECEIPT.totalCents`) split into Ari's own share vs. what's still owed back, driven off the
  * same `transfers` the debtor list renders (see the `oweTotal` derivation below), so the donut and the
- * figure recompute together whenever the split or an exclusion changes. The footer CTA + per-debtor
- * request tag keep the full-pill treatment from #61 (a screen-scoped choice — className override — not
- * a change to the global `Button`/tag radius locked by the hi-fi mocks elsewhere).
+ * figure recompute together whenever the split or an exclusion changes. The footer CTA keeps the
+ * full-pill treatment from #61 (a screen-scoped choice — className override — not a change to the
+ * global `Button` radius locked by the hi-fi mocks elsewhere).
+ *
+ * Consolidated debts are accordion rows (issue #100), replacing the earlier static row + "Request" tag:
+ * avatar, name, amount, and a chevron up front; expanding a row reveals the itemized shares — from
+ * `personItemShares` in src/lib/settle.ts — that add up to that person's subtotal, so a debtor can see
+ * exactly what they're squaring up before #103's request-sent confirmation reuses these same rows.
  */
 
 import { Fragment, useState } from 'react';
@@ -30,20 +35,12 @@ import { Screen, NavHeader } from '../components/Screen';
 import { Eyebrow, Avatar, Button, SegmentedControl } from '../components/ui';
 import { BottomSheet } from '../components/BottomSheet';
 import { MealCostDonut } from '../components/MealCostDonut';
-import { ArrowLeft, Info, Check } from '../components/icons';
+import { ArrowLeft, Info, Check, ChevronDown, ChevronUp } from '../components/icons';
 import { participantById, DINNER_RECEIPT } from '../data/mock';
 import { useTrip } from '../state/TripContext';
 import { euros } from '../lib/format';
-import type { Assignment, Transfer } from '../lib/settle';
+import { personItemShares, type Assignment, type Transfer } from '../lib/settle';
 import styles from './SettleUpScreen.module.css';
-
-/** Which receipt lines a person is currently splitting, as display text (e.g. "Couvert, Arroz de marisco"). */
-function itemsFor(personId: string, assignment: Assignment): string {
-  return DINNER_RECEIPT.items
-    .filter((item) => (assignment[item.id] ?? item.defaultSharedBy).includes(personId))
-    .map((item) => item.label)
-    .join(', ');
-}
 
 function joinNames(names: string[]): string {
   if (names.length <= 1) return names[0] ?? '';
@@ -52,25 +49,73 @@ function joinNames(names: string[]): string {
 }
 
 /** The per-debtor "who pays whom" recap — the exact same rows on the main screen and the confirm
- * sheet's Review step, so the numbers a person confirms are the numbers they already saw (#40). */
-function DebtorList({ transfers, assignment }: { transfers: Transfer[]; assignment: Assignment }) {
+ * sheet's Review step, so the numbers a person confirms are the numbers they already saw (#40).
+ *
+ * Each row is an accordion (issue #100): avatar, name, amount, chevron up front; expanding reveals the
+ * itemized shares (from `personItemShares`) that add up to that subtotal — a person can see exactly
+ * what they're being asked to square up, not just the total. `idPrefix` keeps the expanded panel's
+ * `id`/`aria-controls` pair unique when this list is mounted twice at once (main screen + confirm sheet). */
+function DebtorList({
+  transfers,
+  assignment,
+  idPrefix,
+}: {
+  transfers: Transfer[];
+  assignment: Assignment;
+  idPrefix: string;
+}) {
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  function toggle(personId: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(personId)) next.delete(personId);
+      else next.add(personId);
+      return next;
+    });
+  }
+
   return (
     <div className={styles.debtors}>
-      {transfers.map((t, i) => (
-        <div key={i} className={styles.debtorCard}>
-          <div className={styles.debtorWho}>
-            <Avatar personId={t.fromId} size="md" variant="neutral" />
-            <div className={styles.debtorNames}>
-              <span className={styles.debtorName}>{participantById(t.fromId).name}</span>
-              <span className={styles.debtorItems}>{itemsFor(t.fromId, assignment)}</span>
-            </div>
+      {transfers.map((t) => {
+        const isOpen = expanded.has(t.fromId);
+        const panelId = `${idPrefix}-debtor-items-${t.fromId}`;
+        const items = personItemShares(DINNER_RECEIPT, assignment, t.fromId);
+        return (
+          <div key={t.fromId} className={styles.debtorCard}>
+            <button
+              type="button"
+              className={styles.debtorRow}
+              onClick={() => toggle(t.fromId)}
+              aria-expanded={isOpen}
+              aria-controls={panelId}
+            >
+              <span className={styles.debtorWho}>
+                <Avatar personId={t.fromId} size="md" variant="neutral" />
+                <span className={styles.debtorName}>{participantById(t.fromId).name}</span>
+              </span>
+              <span className={styles.debtorRight}>
+                <span className={styles.debtorAmount}>{euros(t.amount)}</span>
+                {isOpen ? (
+                  <ChevronUp size={18} className={styles.chevron} />
+                ) : (
+                  <ChevronDown size={18} className={styles.chevron} />
+                )}
+              </span>
+            </button>
+            {isOpen ? (
+              <div id={panelId} className={styles.debtorItemsList}>
+                {items.map((item) => (
+                  <div key={item.id} className={styles.debtorItemRow}>
+                    <span className={styles.debtorItemLabel}>{item.label}</span>
+                    <span className={styles.debtorItemAmount}>{euros(item.amountCents)}</span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
-          <div className={styles.debtorRight}>
-            <span className={styles.debtorAmount}>{euros(t.amount)}</span>
-            <span className={styles.requestTag}>Request</span>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -143,7 +188,7 @@ export default function SettleUpScreen() {
           <div className={styles.sectionHead}>
             <Eyebrow>Consolidated debts</Eyebrow>
           </div>
-          <DebtorList transfers={transfers} assignment={state.assignment} />
+          <DebtorList transfers={transfers} assignment={state.assignment} idPrefix="main" />
 
           <div className={styles.tipRow}>
             <Info size={16} className={styles.tipIcon} />
@@ -183,7 +228,7 @@ export default function SettleUpScreen() {
               <p className={styles.sheetLede}>
                 {countWord} close it out — {euros(oweTotal)} total, from {joinNames(debtorNames)}.
               </p>
-              <DebtorList transfers={transfers} assignment={state.assignment} />
+              <DebtorList transfers={transfers} assignment={state.assignment} idPrefix="sheet" />
             </div>
           ) : (
             <div className={styles.sheetSection}>

@@ -75,6 +75,22 @@ export function ChevronRight({ size = 16, className, strokeWidth = 2 }: IconProp
   );
 }
 
+export function ChevronDown({ size = 16, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+export function ChevronUp({ size = 16, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg {...base(size, className)} strokeWidth={strokeWidth}>
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+  );
+}
+
 export function Plus({ size = 20, className, strokeWidth = 2 }: IconProps) {
   return (
     <svg {...base(size, className)} strokeWidth={strokeWidth}>
